@@ -14,12 +14,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     button={<Button desc="확인" onClick={() => {}} />}
                 />
             </Overlay> */}
-            {/* <Overlay>
+            <Overlay>
                 <Popup
                     desc="밥약을 요청했어요!!"
                     button={<Button desc="확인" onClick={() => {}} />}
                 />
-            </Overlay> */}
+            </Overlay>
         </Wrapper>
     );
 }
@@ -27,8 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 const Wrapper = styled.div`
     width: 100%;
     min-width: 375px;
-    max-width: 550px;
+    max-width: 512px;
     height: 100vh;
-    margin: 0 auto;
     position: relative;
 `;
