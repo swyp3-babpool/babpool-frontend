@@ -26,8 +26,15 @@ const GlobalStyle = styled.createGlobalStyle`
     #root {
         width: 100vw;
         height: 100vh;
+        display: flex;
+        justify-content: center;
         -webkit-overflow-scrolling: touch !important;
     }
+
+    body {
+        background-color: #c1c1c1;
+    }
+
 
     button {
         padding: 0;
