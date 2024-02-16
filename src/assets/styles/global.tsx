@@ -26,6 +26,8 @@ const GlobalStyle = styled.createGlobalStyle`
     #root {
         width: 100vw;
         height: 100vh;
+        display: flex;
+        justify-content: center;
         -webkit-overflow-scrolling: touch !important;
     }
 
