@@ -14,12 +14,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     button={<Button desc="확인" onClick={() => {}} />}
                 />
             </Overlay> */}
-            <Overlay>
+            {/* <Overlay>
                 <Popup
                     desc="밥약을 요청했어요!!"
                     button={<Button desc="확인" onClick={() => {}} />}
                 />
-            </Overlay>
+            </Overlay> */}
         </Wrapper>
     );
 }

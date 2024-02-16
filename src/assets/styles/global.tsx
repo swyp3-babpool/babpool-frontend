@@ -31,6 +31,11 @@ const GlobalStyle = styled.createGlobalStyle`
         -webkit-overflow-scrolling: touch !important;
     }
 
+    body {
+        background-color: #c1c1c1;
+    }
+
+
     button {
         padding: 0;
         overflow: visible;
