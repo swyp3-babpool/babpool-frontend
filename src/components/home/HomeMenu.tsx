@@ -20,7 +20,7 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
 
 export const HomeMenuContainer = styled.div<{ left: string }>`
     width: inherit;
-    height: calc(100% - 63px);
+    height: calc(100% - 64px);
     background-color: white;
     position: absolute;
     left: ${(props) => props.left};

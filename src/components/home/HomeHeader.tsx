@@ -28,7 +28,7 @@ export default function HomeHeader({ isOpenMenu, handleMenu }: HomeHeaderProps) 
 export const HeaderContainer = styled.header`
     width: inherit;
     height: auto;
-    min-height: 63px;
+    min-height: 64px;
     padding: 12px 20px;
     background-color: white;
     display: flex;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Txt from '../common/text';
-import C_Banner from '@/assets/banner/testBanner.jpg';
+import C_Banner from '@/assets/banner/banner.png';
 import { colors } from '@/assets/styles/theme';
 
 export default function HomeSection() {
@@ -36,11 +36,14 @@ export const HomeContainer = styled.section`
 export const BannerImage = styled.img`
     width: inherit;
     height: 30%;
+    min-height: 235px;
 `;
 
 export const GroupSection = styled.div`
     width: inherit;
     height: 70%;
+    min-height: 450px;
+    max-height: 600px;
     padding: 50px 38px;
     display: grid;
     place-items: center;
@@ -50,8 +53,8 @@ export const GroupContainer = styled.div`
     width: inherit;
     height: 100%;
     display: grid;
-    grid-template-columns: 140px 140px;
-    grid-template-rows: 160px 160px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-column: 1fr 1fr;
     grid-row: 1fr 1fr;
     gap: 20px;
@@ -60,16 +63,19 @@ export const GroupContainer = styled.div`
 `;
 
 export const GroupBox = styled.div`
-    width: 140px;
-    height: 160px;
+    width: 100%;
+    min-width: 140px;
+    max-width: 250px;
+    height: 100%;
     display: grid;
     place-items: center;
-    border: 1px solid ${colors.blue_light_20};
+    border: 2px solid ${colors.blue_light_20};
     border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     cursor: pointer;
 
     &:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
         transition: 0.2s;
     }
 `;
