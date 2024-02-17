@@ -1,43 +1,80 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
+import Txt from '../text';
 
 type PopupProps = {
-    desc: string; // 팝업 내용
+    text: string; // 팝업 내용
+    secondText?: string; // 팝업 내용
     button: React.ReactNode; // 팝업 버튼
+    secondButton?: React.ReactNode; // 팝업 버튼
 };
 
-export default function Popup({ desc, button }: PopupProps) {
+export default function Popup({ text, secondText, button, secondButton }: PopupProps) {
+
+    useEffect(() => {
+        document.body.style.cssText = `
+          position: fixed; 
+          top: -${window.scrollY}px;
+          overflow-y: scroll;
+          width: 100%;`;
+        return () => {
+          const scrollY = document.body.style.top;
+          document.body.style.cssText = '';
+          window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+        };
+      }, []);
+
     return (
         <PopupWrapper>
-            <PopupText>{desc}</PopupText>
-            {button}
-            <CloseButton src="/icon/ic_close.svg" alt="닫기 버튼" width={40} height={40} />
+            <PopupTextContainer>
+                <Txt variant="h3">{text}</Txt>
+                {secondText && <Txt variant="h3">{secondText}</Txt>}
+            </PopupTextContainer>
+            <ButtonContainer>
+                {button}
+                {secondButton && secondButton}
+            </ButtonContainer>
+            <CloseButton />
         </PopupWrapper>
     );
 }
 
+
 export const PopupWrapper = styled.div`
     width: 335px;
-    height: 190px;
+    height: 200px;
     padding: 0 18px;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 2px solid #D2C3F9;
+    border: 2px solid #d2c3f9;
     border-radius: 20px;
     background-color: white;
     gap: 40px;
 `;
 
-export const PopupText = styled.p`
-    font-size: 18px;
-    font-weight: 600;
-    margin-top: 20px;
+export const PopupTextContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    bottom: 20px;
 `;
 
-export const CloseButton = styled.img`
+export const ButtonContainer = styled.div`
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    position: absolute;
+    bottom: 20px;
+`;
+
+export const CloseButton = styled(CloseIcon)`
     position: absolute;
     top: 10px;
     right: 10px;
