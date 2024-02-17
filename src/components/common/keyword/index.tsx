@@ -1,43 +1,55 @@
 import { colors } from '@/assets/styles/theme';
 import React from 'react';
 import { styled } from 'styled-components';
-import { CheckboxContainer, HiddenCheckBox } from '../checkbox/SignUpCheckbox';
+import { CheckboxContainer, CheckboxLabel, HiddenCheckBox } from '../checkbox/SignUpCheckbox';
 import Txt from '../text';
+import { INTEREST_KEYWORD } from '@/utils/constant';
 
-type KeywordProps = { name: string; isChecked: boolean; disabled?: boolean; onChange: () => void };
+type KeywordProps = {
+    name: string;
+    keywordGroup: keyof typeof INTEREST_KEYWORD;
+    ischecked: boolean;
+    disabled?: boolean;
+    onChange: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        keywordGroup: keyof typeof INTEREST_KEYWORD
+    ) => void;
+};
 
-export default function Keyword({ name, isChecked, disabled = false, onChange }: KeywordProps) {
+export default function Keyword({
+    name,
+    keywordGroup,
+    ischecked,
+    disabled = false,
+    onChange,
+}: KeywordProps) {
     return (
         <CheckboxContainer>
-            <HiddenCheckBox
-                type={'checkbox'}
-                name={name}
-                checked={isChecked}
-                disabled={disabled}
-                onChange={onChange}
-            />
-            <KeywordBox isChecked={isChecked}>
-                <Txt
-                    variant={isChecked ? 'caption3' : 'caption2'}
-                    color={isChecked ? colors.purple_light_40 : colors.purple_light_20}
-                >
-                    {name}
-                </Txt>
-            </KeywordBox>
+            <CheckboxLabel>
+                <HiddenCheckBox
+                    type={'checkbox'}
+                    name={name}
+                    checked={ischecked}
+                    disabled={disabled}
+                    onChange={(e) => onChange(e, keywordGroup)}
+                />
+                <KeywordBox ischecked={ischecked}>
+                    <Txt
+                        variant={ischecked ? 'caption3' : 'caption2'}
+                        color={ischecked ? colors.purple_light_40 : colors.purple_light_20}
+                    >
+                        {name}
+                    </Txt>
+                </KeywordBox>
+            </CheckboxLabel>
         </CheckboxContainer>
     );
 }
 
-export const KeywordBox = styled.div<{ isChecked: boolean }>`
+export const KeywordBox = styled.div<{ ischecked: boolean }>`
     padding: 4px 12px;
     border: 1px solid
-        ${(props) => (props.isChecked ? colors.purple_light_40 : colors.purple_light_20)};
+        ${(props) => (props.ischecked ? colors.purple_light_40 : colors.purple_light_20)};
     border-radius: 30px;
     cursor: pointer;
-    &:hover {
-        background: ${colors.purple_light_30};
-        span {
-            color: ${colors.white};
-        }
-    }
 `;
