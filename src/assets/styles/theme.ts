@@ -89,6 +89,11 @@ export const fontStyles: Record<string, FontStyle> = {
         fontWeight: 'normal',
         lineHeight: '20px',
     },
+    caption3: {
+        fontSize: '1.3rem',
+        fontWeight: 'bold',
+        lineHeight: '20px',
+    },
 };
 
 export type FontStylesTypes = typeof fontStyles;
