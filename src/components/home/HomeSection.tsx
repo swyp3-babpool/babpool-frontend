@@ -42,8 +42,8 @@ export const BannerImage = styled.img`
 export const GroupSection = styled.div`
     width: inherit;
     height: 70%;
-    min-height: 450px;
-    max-height: 600px;
+    min-height: 400px;
+    max-height: 500px;
     padding: 50px 38px;
     display: grid;
     place-items: center;
@@ -63,10 +63,10 @@ export const GroupContainer = styled.div`
 `;
 
 export const GroupBox = styled.div`
-    width: 100%;
+width: 100%;
+height: 100%;
     min-width: 140px;
-    max-width: 250px;
-    height: 100%;
+    min-height: 160px;
     display: grid;
     place-items: center;
     border: 2px solid ${colors.purple_light_20};
