@@ -8,14 +8,14 @@ export default function Button({text, width = '100%', type = 'accept', icon,  on
     return (
         <ButtonWrapper width={width} type={type} onClick={onClick}>
             {icon && icon}
-            <Txt variant='h5' color={type === 'accept' ? 'white' : colors.purple_light_10}>{text}</Txt>
+            <Txt variant='h5' color={type === 'accept' ? 'white' : colors.purple_light_40}>{text}</Txt>
         </ButtonWrapper>
     );
 }
 
 export const ButtonWrapper = styled.button<{ width: string, type: string }>`
     width: ${props => props.width};
-    min-width: 310px;
+    min-width: 145px;
     max-width: 375px;
     height: 48px;
     background-color: ${props => props.type === 'accept' ? colors.purple_light_40 : colors.purple_light_10};
