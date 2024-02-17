@@ -28,6 +28,8 @@ const Wrapper = styled.div`
     width: 100%;
     min-width: 375px;
     max-width: 512px;
+    background-color: white;
     height: 100vh;
     position: relative;
+    overflow-y: auto;
 `;
