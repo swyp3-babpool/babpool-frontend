@@ -13,7 +13,7 @@ export default function HomeSection() {
                     {MAIN_GROUP.map((group, index) => {
                         return (
                             <GroupBox key={index}>
-                                <Txt variant={'h3'} color={colors.blue_light_40}>
+                                <Txt variant={'h3'} color={colors.purple_light_40}>
                                     {group}
                                 </Txt>
                             </GroupBox>
@@ -69,7 +69,7 @@ export const GroupBox = styled.div`
     height: 100%;
     display: grid;
     place-items: center;
-    border: 2px solid ${colors.blue_light_20};
+    border: 2px solid ${colors.purple_light_20};
     border-radius: 10px;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     cursor: pointer;

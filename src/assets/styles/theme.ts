@@ -15,12 +15,12 @@ export const colors = {
     black: '#000000',
 
     //Primary
-    //Blue Light
-    blue_light_10: '#EEE7FD',
-    blue_light_20: '#D2C3F9',
-    blue_light_30: '#B29BF7',
-    blue_light_40: '#9170F7',
-    blue_light_50: '#744DF5',
+    //purple Light
+    purple_light_10: '#EEE7FD',
+    purple_light_20: '#D2C3F9',
+    purple_light_30: '#B29BF7',
+    purple_light_40: '#9170F7',
+    purple_light_50: '#744DF5',
 
     //Red Light
     red_light_30: '#DA1E28',
