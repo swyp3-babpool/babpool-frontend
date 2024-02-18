@@ -43,30 +43,30 @@ interface FontStyle {
 export const fontStyles: Record<string, FontStyle> = {
     h1: {
         fontSize: '2.4rem',
-        fontWeight: 'bold',
+        fontWeight: '700',
         lineHeight: '31px',
     },
 
     h2: {
         fontSize: '2.4rem',
-        fontWeight: 'normal',
+        fontWeight: '400',
         lineHeight: '31px',
     },
 
     h3: {
         fontSize: '1.8rem',
-        fontWeight: 'bold',
+        fontWeight: '700',
         lineHeight: '24px',
     },
 
     h4: {
         fontSize: '1.8rem',
-        fontWeight: 'semi-bold',
+        fontWeight: '600',
         lineHeight: '24px',
     },
     h5: {
         fontSize: '1.6rem',
-        fontWeight: 'semi-bold',
+        fontWeight: '700',
         lineHeight: '21px',
     },
     h6: {
@@ -76,22 +76,22 @@ export const fontStyles: Record<string, FontStyle> = {
     },
     body: {
         fontSize: '1.6rem',
-        fontWeight: 'normal',
+        fontWeight: '400',
         lineHeight: '21px',
     },
     caption1: {
         fontSize: '1.4rem',
-        fontWeight: 'normal',
+        fontWeight: '400',
         lineHeight: '22px',
     },
     caption2: {
         fontSize: '1.3rem',
-        fontWeight: 'normal',
+        fontWeight: '400',
         lineHeight: '20px',
     },
     caption3: {
         fontSize: '1.3rem',
-        fontWeight: 'bold',
+        fontWeight: '700',
         lineHeight: '20px',
     },
 };
