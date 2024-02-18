@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
     BackButton,
@@ -15,11 +16,17 @@ import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
 
 export default function NotificationPage() {
+    const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
 
     const handleSelectedToggle = () => {
         setSelected(selected === 'received' ? 'sent' : 'received');
     };
+
+    const handleNotificationCardClick = () => {
+        navigate(`/notification/${selected}`);
+    };
+
     return (
         <NotificationPageContainer>
             <Header>
@@ -54,7 +61,11 @@ export default function NotificationPage() {
                 <TabBar selected={selected === 'sent'} />
             </TabBarContainer>
             <GridContainer>
-                <NotificationCard name="이름" content="2023년" />
+                <NotificationCard
+                    name="이름"
+                    content="2023년"
+                    onClick={handleNotificationCardClick}
+                />
                 <NotificationCard name="이름" content="2023년" />
                 <NotificationCard name="이름" content="2023년" />
                 <NotificationCard name="이름" content="2023년" />
