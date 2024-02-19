@@ -5,7 +5,6 @@ import { useNavigation } from '@/hooks/useNavigation';
 
 export default function Header({ text = '' }: { text?: string }) {
     const { goBack } = useNavigation();
-    const { navigate } = useNavigation();
 
     return (
         <HeaderContainer>
