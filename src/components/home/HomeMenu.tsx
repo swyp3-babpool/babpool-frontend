@@ -1,15 +1,44 @@
 import styled from 'styled-components';
 import Txt from '../common/text';
+import { useNavigation } from '@/hooks/useNavigation';
 
 export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
-    const MENU_LIST = ['밥풀이란?', '밥풀 전체보기', '우편함', '마이페이지', '로그아웃'];
+    const MENU_LIST = 
+    [
+        {
+            text: '밥풀이란?',
+            url: 'explanation'
+        },
+        {
+            text: '밥풀 전체보기',
+            url: ''
+        },
+        {
+            text: '우편함',
+            url: ''
+        },
+        {
+            text: '마이페이지',
+            url: ''
+        },
+        {
+            text: '로그아웃',
+            url: ''
+        },
+    ];
+
+    const {navigate} = useNavigation();
+    const handleRoute = (url: string) => {
+        navigate(url);
+    }
+
     return (
         <HomeMenuContainer left={isOpenMenu ? '0%' : '100%'}>
             <MenuList>
                 {MENU_LIST.map((menu, idx) => {
                     return (
-                        <MenuTextBox>
-                            <Txt variant={'h2'}>{menu}</Txt>
+                        <MenuTextBox onClick={menu.text === '로그아웃' ? () => {} : () => handleRoute(menu.url)}>
+                            <Txt variant={'h2'}>{menu.text}</Txt>
                         </MenuTextBox>
                     );
                 })}
