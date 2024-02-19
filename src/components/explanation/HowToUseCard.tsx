@@ -1,7 +1,5 @@
-import React from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import banner from '@/assets/banner/banner.png';
 
 type HowToUseCardProps = { title: string; desc: string; imgSrc: string; alt: string; };
 
@@ -10,7 +8,7 @@ export default function HowToUseCard({title, desc, imgSrc, alt} : HowToUseCardPr
         <CardContainer>
             <TitleBox>
                 <Txt variant='h5'>{title}</Txt>
-                <CardImage src={banner} alt={alt} />
+                <CardImage src={imgSrc} alt={alt} />
             </TitleBox>
             <Txt variant='caption1'>{desc}</Txt>
         </CardContainer>

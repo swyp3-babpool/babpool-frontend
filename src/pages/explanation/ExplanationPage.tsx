@@ -1,10 +1,12 @@
 import { colors } from '@/assets/styles/theme';
 import Header from '@/components/common/header';
 import Txt from '@/components/common/text';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 import WorthCard from '@/components/explanation/WorthCard';
 import { HOW_TO_USE_LIST, WORTH_LIST } from '@/utils/constant';
 import HowToUseCard from '@/components/explanation/HowToUseCard';
+import profileImage_1 from '@/assets/images/프로필1.png';
+import profileImage_2 from '@/assets/images/프로필2.png';
 
 export default function ExplanationPage() {
     return (
@@ -15,7 +17,24 @@ export default function ExplanationPage() {
                     <Txt style={{ fontWeight: 700, fontSize: '40px' }}>밥풀과 함께하는</Txt>
                     <Txt style={{ fontWeight: 700, fontSize: '40px' }}>즐거운 대학생활</Txt>
                 </TitleBox>
-                <div></div>
+                <ScrollAnimationContainer>
+                    <ScrollAnimation>
+                        <ProfileImageBox1>
+                            <ProfileImage src={profileImage_1} alt="프로필1" />
+                        </ProfileImageBox1>
+                        <ProfileImageBox1>
+                            <ProfileImage src={profileImage_1} alt="프로필1" />
+                        </ProfileImageBox1>
+                    </ScrollAnimation>
+                    <ScrollAnimation>
+                        <ProfileImageBox2>
+                            <ProfileImage src={profileImage_2} alt="프로필2" />
+                        </ProfileImageBox2>
+                        <ProfileImageBox2>
+                            <ProfileImage src={profileImage_2} alt="프로필2" />
+                        </ProfileImageBox2>
+                    </ScrollAnimation>
+                </ScrollAnimationContainer>
                 <DescBox>
                     <Txt style={{ fontSize: '15px', fontWeight: 400, lineHeight: '24px' }}>
                         대학 내에서 학생들 간의 연결을 경험하고
@@ -73,7 +92,6 @@ export default function ExplanationPage() {
                             desc={worth.desc}
                             sDesc={worth.sDesc && worth.sDesc}
                             imgSrc={worth.imgSrc}
-                            alt={worth.title}
                         />
                     ))}
                 </WorthCardContainer>
@@ -108,6 +126,7 @@ export const ExplanationContainer = styled.div`
     background-color: white;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 `;
 
 export const TitleBox = styled.div`
@@ -119,11 +138,60 @@ export const TitleBox = styled.div`
     justify-content: center;
 `;
 
-export const FirstSection = styled.section`
+export const ScrollAnimationContainer = styled.div`
     width: 100%;
-    height: auto;
     display: flex;
     flex-direction: column;
+    gap: 12px;
+`;
+
+export const ScrollAnimation = styled.div`
+    width: 100%;
+    height: 100px;
+    display: flex;
+    --webkit-mask-image: linear-gradient(90deg, transparent, #fff 20%, #fff 80%, transparent);
+`;
+
+const scrollAnimation_1 = keyframes`
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+`;
+
+const scrollAnimation_2 = keyframes`
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+`;
+
+export const ProfileImageBox1 = styled.div`
+    display: flex;
+    animation: ${scrollAnimation_1} 20s linear infinite;
+    animation-delay: calc(-20s);
+`;
+
+export const ProfileImageBox2 = styled.div`
+    display: flex;
+    animation: ${scrollAnimation_2} 20s linear infinite;
+    animation-delay: calc(-20s);
+`;
+
+export const ProfileImage = styled.img`
+    height: 100px;
+`;
+
+export const FirstSection = styled.section`
+    width: 100%;
+    height: 675px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     gap: 50px;
     padding: 80px 0;
 `;
@@ -159,7 +227,6 @@ export const WorthCardContainer = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto auto;
     place-items: center;
-    overflow-y: auto;
 
     :nth-child(1) {
         grid-column: span 2;
