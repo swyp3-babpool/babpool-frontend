@@ -1,12 +1,12 @@
-import 연결 from '../assets/images/연결.png';
-import 안심 from '../assets/images/안심.png';
-import 재발견 from '../assets/images/재발견.png';
-import 존중 from '../assets/images/존중.png';
-import 주체성 from '../assets/images/주체성.png';
-import 즐거움 from '../assets/images/즐거움.png';
-import 밥 from '../assets/images/밥.png';
-import 손 from '../assets/images/손.png';
-import 신분증 from '../assets/images/신분증.png';
+import 연결 from '../assets/images/연결.webp';
+import 안심 from '../assets/images/안심.webp';
+import 재발견 from '../assets/images/재발견.webp';
+import 존중 from '../assets/images/존중.webp';
+import 주체성 from '../assets/images/주체성.webp';
+import 즐거움 from '../assets/images/즐거움.webp';
+import 밥 from '../assets/images/밥.webp';
+import 손 from '../assets/images/손.webp';
+import 신분증 from '../assets/images/신분증.webp';
 
 export const DIVISION = ['1학년', '2학년', '3학년', '4학년', '졸업생', '대학원생'];
 
