@@ -12,9 +12,17 @@ import {
 import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import { useParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
+import ProfileKeywords from '@/components/profile/ProfileKeywords';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
+    const [keywords, setKeywords] = useState<string[]>([
+        '편입생',
+        '자취',
+        '동아리',
+        '진로탐색',
+        '대학원',
+    ]);
     return (
         <NotificationDetailPageContainer>
             <Header>
@@ -31,6 +39,7 @@ export default function NotificationDetailPage() {
                     content="대학생활 고민 같이 나누며 이야기 해요!"
                     padding="25px 0px 16px 0px"
                 />
+                <ProfileKeywords keywords={keywords} />
             </NotificationDetailPageSection>
         </NotificationDetailPageContainer>
     );
