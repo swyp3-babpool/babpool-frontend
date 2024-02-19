@@ -8,6 +8,7 @@ import HomePage from '../pages/home/HomePage';
 import SignInPage from '@/pages/signin/SignInPage';
 import SignUpPage from '@/pages/signup/SignUpPage';
 import NotificationPage from '@/pages/Notification/NotificationPage';
+import ExplanationPage from '@/pages/explanation/ExplanationPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -16,6 +17,7 @@ export default function RouteProvider() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="signin" element={<SignInPage />} />
                 <Route path="signup" element={<SignUpPage />} />
+                <Route path="explanation" element={<ExplanationPage />}></Route>
                 <Route path="notification" element={<NotificationPage />}></Route>
             </>
         )

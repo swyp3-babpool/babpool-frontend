@@ -33,24 +33,29 @@ export default function SignUpPage() {
         },
     });
 
-
     return (
         <SignUpContainer>
             <Header text="회원가입" />
-            <DivisionGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
-            <KeywordGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
-            <ButtonContainer>
-                <Button text="완료" onClick={() => {}} />
-            </ButtonContainer>
+            <SignUpSection>
+                <DivisionGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
+                <KeywordGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
+                <ButtonContainer>
+                    <Button text="완료" onClick={() => {}} />
+                </ButtonContainer>
+            </SignUpSection>
         </SignUpContainer>
     );
 }
 
-export const SignUpContainer = styled.section`
+export const SignUpContainer = styled.div`
     width: 100%;
     height: inherit;
-    padding: 20px;
     background-color: white;
+`;
+
+export const SignUpSection = styled.section`
+    width: 100%;
+    padding: 20px;
 `;
 
 export const ButtonContainer = styled.div`
