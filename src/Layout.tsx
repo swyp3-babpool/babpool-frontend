@@ -18,28 +18,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <Wrapper isModalOpen={isModalOpen}>
             {children}
-            {/* <Overlay>
-                <Popup
-                    desc="회원가입을 완료했어요!"
-                    button={<Button text="확인" onClick={() => {}} />}
-                />
-            </Overlay> */}
-            {/* <Overlay>
-                <Popup
-                    text="밥약을 요청했어요!!"
-                    button={<Button text="확인" onClick={() => {}} />}
-                />
-            </Overlay> */}
-            {isModalOpen && (
-                <Overlay>
-                    <Popup
-                        text="회원가입을 완료했어요!"
-                        secondText="프로필카드를 작성하러 가볼까요?"
-                        button={<Button text="바로가기" onClick={() => {}} />}
-                        secondButton={<Button text="나중에" type="refuse" onClick={() => {}} />}
-                    />
-                </Overlay>
-            )}
         </Wrapper>
     );
 }
