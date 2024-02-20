@@ -16,6 +16,9 @@ export type KeywordType = (keyof typeof INTEREST_KEYWORD)
 
 export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroupProps) {
 
+    const keywordArrays = Object.values(signUpInfo.keywordGroups);
+    const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
+
     const handleCheckboxChange = (
         e: React.ChangeEvent<HTMLInputElement>,
         keywordGroup: keyof typeof INTEREST_KEYWORD
@@ -47,13 +50,8 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
     };
 
     const validateCheck = () => {
-        const keywordArrays = Object.values(signUpInfo.keywordGroups);
-
-        // 배열의 길이를 합산
-        const totalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
-
-        console.log(totalLength); // 총 길이 출력
-        return totalLength < 10;
+        console.log(keywordTotalLength); // 총 길이 출력
+        return keywordTotalLength < 10;
     };
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
@@ -68,7 +66,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
                 color={colors.white_30}
                 style={{ marginTop: '8px', marginBottom: '1rem' }}
             >
-                관심 키워드를 최대 10개까지 선택해주세요
+                관심 키워드를 최대 10개까지 선택해주세요 ({keywordTotalLength}/10개)
             </Txt>
             <KeywordList handleCheck={handleCheck} handleChange={handleCheckboxChange} />
         </KeywordGroupContainer>

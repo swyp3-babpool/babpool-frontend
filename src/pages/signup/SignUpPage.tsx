@@ -1,7 +1,10 @@
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
+import Overlay from '@/components/common/overlay';
+import Popup from '@/components/common/popup';
 import DivisionGroup from '@/components/signup/DivisionGroup';
 import KeywordGroup from '@/components/signup/KeywordGroup';
+import { useNavigation } from '@/hooks/useNavigation';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -23,6 +26,8 @@ export default function SignUpPage() {
      * 3. 키워드 데이터는 대학생활, 수험 구분된 키워드별로 따로 배열로 보내야하는건지? 아니면 하나의 배열로 보내야하는건지?
      */
 
+    const {handleNavigate} = useNavigation();
+
     const [signUpInfo, setSignUpInfo] = useState<SignUpInfo>({
         division: '',
         keywordGroups: {
@@ -33,17 +38,44 @@ export default function SignUpPage() {
         },
     });
 
+    const [completePopupOpen, setCompletePopupOpen] = useState(false);
+    const handleComplete = (path: string) => {
+        setCompletePopupOpen(false);
+        handleNavigate(path)
+    } 
+
+    const signUpValidateCheck = () => {
+        const {division, keywordGroups} = signUpInfo
+        const keywordArrays = Object.values(keywordGroups);
+        const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
+        console.log(keywordArrays)
+        return division && keywordTotalLength > 0 ? true : false
+    }
+
     return (
-        <SignUpContainer>
-            <Header text="회원가입" />
-            <SignUpSection>
-                <DivisionGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
-                <KeywordGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
-                <ButtonContainer>
-                    <Button text="완료" onClick={() => {}} />
-                </ButtonContainer>
-            </SignUpSection>
-        </SignUpContainer>
+        <>
+            <SignUpContainer>
+                <Header text="회원가입" />
+                <SignUpSection>
+                    <DivisionGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
+                    <KeywordGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
+                    <ButtonContainer>
+                        <Button text="완료" disabled={!signUpValidateCheck()} type={signUpValidateCheck() ? 'accept' : 'refuse'} onClick={() => setCompletePopupOpen(true)} />
+                    </ButtonContainer>
+                </SignUpSection>
+            </SignUpContainer>
+            {completePopupOpen && (
+                <Overlay>
+                    <Popup
+                        text="회원가입을 완료했어요!"
+                        secondText="프로필카드를 작성하러 가볼까요?"
+                        button={<Button text="바로가기" onClick={() => handleComplete('/')} />}
+                        secondButton={<Button text="나중에" type="refuse" onClick={() => handleComplete('/')} />}
+                        closePopup={() => setCompletePopupOpen(false)}
+                    />
+                </Overlay>
+            )}
+        </>
     );
 }
 
