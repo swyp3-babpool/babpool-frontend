@@ -7,6 +7,7 @@ type NotificaionCardProps = {
     name?: string;
     content?: string;
     isHistory?: boolean;
+    onClick?: () => void;
 };
 
 export default function NotificationCard({
@@ -14,9 +15,10 @@ export default function NotificationCard({
     name,
     content,
     isHistory,
+    onClick,
 }: NotificaionCardProps) {
     return (
-        <Container>
+        <Container onClick={onClick}>
             <Image src={image} />
             <Divider />
             <InfoContainer>
