@@ -8,9 +8,10 @@ type PopupProps = {
     secondText?: string; // 팝업 내용
     button: React.ReactNode; // 팝업 버튼
     secondButton?: React.ReactNode; // 팝업 버튼
+    closePopup: () => void;
 };
 
-export default function Popup({ text, secondText, button, secondButton }: PopupProps) {
+export default function Popup({ text, secondText, button, secondButton, closePopup }: PopupProps) {
 
     useEffect(() => {
         document.body.style.cssText = `
@@ -35,7 +36,7 @@ export default function Popup({ text, secondText, button, secondButton }: PopupP
                 {button}
                 {secondButton && secondButton}
             </ButtonContainer>
-            <CloseButton />
+            <CloseButton onClick={closePopup} />
         </PopupWrapper>
     );
 }
