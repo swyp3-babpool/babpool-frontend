@@ -23,21 +23,19 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
         },
         {
             text: '로그아웃',
-            url: ''
+            url: '/signin'
         },
     ];
 
-    const {navigate} = useNavigation();
-    const handleRoute = (url: string) => {
-        navigate(url);
-    }
+    const {handleNavigate} = useNavigation();
+
 
     return (
         <HomeMenuContainer left={isOpenMenu ? '0%' : '100%'}>
             <MenuList>
                 {MENU_LIST.map((menu, idx) => {
                     return (
-                        <MenuTextBox key={menu.text} onClick={menu.text === '로그아웃' ? () => {} : () => handleRoute(menu.url)}>
+                        <MenuTextBox key={menu.text} onClick={menu.text === '로그아웃' ? () => handleNavigate(menu.url) : () => handleNavigate(menu.url)}>
                             <Txt variant={'h2'}>{menu.text}</Txt>
                         </MenuTextBox>
                     );
