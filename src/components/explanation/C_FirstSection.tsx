@@ -30,13 +30,13 @@ export default function C_FirstSection() {
                     </ScrollAnimation>
                 </ScrollAnimationContainer>
                 <DescBox>
-                    <Txt style={{ fontSize: '15px', fontWeight: 400, lineHeight: '24px' }}>
+                    <Txt style={{ fontSize: '13px', fontWeight: 600, lineHeight: '24px' }}>
                         대학 내에서 학생들 간의 연결을 경험하고
                     </Txt>
-                    <Txt style={{ fontSize: '15px', fontWeight: 400, lineHeight: '24px' }}>
+                    <Txt style={{ fontSize: '13px', fontWeight: 600, lineHeight: '24px' }}>
                         더 행복하고 의미있는 대학생활을 꾸려가도록 도와주는
                     </Txt>
-                    <Txt style={{ fontSize: '15px', fontWeight: 400, lineHeight: '24px' }}>
+                    <Txt style={{ fontSize: '13px', fontWeight: 600, lineHeight: '24px' }}>
                         밥풀 서비스에 대해 알아보세요.
                     </Txt>
                 </DescBox>
@@ -46,7 +46,7 @@ export default function C_FirstSection() {
 
 export const TitleBox = styled.div`
     width: 100%;
-    padding: 0 61px;
+    padding: 0 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -113,6 +113,7 @@ export const FirstSection = styled.section`
 
 export const DescBox = styled.div`
     width: 100%;
+    padding: 0px 21px;
     display: flex;
     flex-direction: column;
     align-items: center;

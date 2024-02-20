@@ -2,6 +2,7 @@ import 연결 from '../assets/images/연결.webp';
 import 안심 from '../assets/images/안심.webp';
 import 재발견 from '../assets/images/재발견.webp';
 import 존중 from '../assets/images/존중.webp';
+import 환대 from '../assets/images/환대.webp';
 import 주체성 from '../assets/images/주체성.webp';
 import 즐거움 from '../assets/images/즐거움.webp';
 import 밥 from '../assets/images/밥.webp';
@@ -33,7 +34,7 @@ export const WORTH_LIST = [
         title: '환대',
         desc: '서로를 따뜻하게 대하는',
         sDesc: '문화를 만들어요',
-        imgSrc: 주체성,
+        imgSrc: 환대,
     },
     {
         title: '존중',
