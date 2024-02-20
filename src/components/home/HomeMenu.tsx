@@ -37,7 +37,7 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
             <MenuList>
                 {MENU_LIST.map((menu, idx) => {
                     return (
-                        <MenuTextBox onClick={menu.text === '로그아웃' ? () => {} : () => handleRoute(menu.url)}>
+                        <MenuTextBox key={menu.text} onClick={menu.text === '로그아웃' ? () => {} : () => handleRoute(menu.url)}>
                             <Txt variant={'h2'}>{menu.text}</Txt>
                         </MenuTextBox>
                     );
