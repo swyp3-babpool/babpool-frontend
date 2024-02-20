@@ -16,7 +16,7 @@ export const NotificationPageContainer = styled.div`
 export const Header = styled.div`
     width: 100%;
     height: 43px;
-    padding: 8px 10px 10px;
+    padding: 11px 10px 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
