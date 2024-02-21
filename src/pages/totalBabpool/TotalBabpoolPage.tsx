@@ -5,14 +5,36 @@ import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import FilterBox from '@/components/totalBabpool/FilterBox';
 import FilterModal from '@/components/totalBabpool/FilterModal';
+import PageNation from '@/components/totalBabpool/PageNation';
 import Searchbar from '@/components/totalBabpool/Searchbar';
-import { FILTER_CATEGORY, FilterCategoryType } from '@/utils/constant';
+import { FILTER_CATEGORY, FilterCategoryType, INTEREST_KEYWORD } from '@/utils/constant';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+export type SearchInfoType = {
+    searchText: string;
+    division: ('1학년' | '2학년' | '3학년' | '4학년' | '졸업생' | '대학원생')[];
+    filterKeyword: {
+        university: string[]; // 대학생활
+        exam: string[]; // 수험
+        employment: string[]; // 취업
+        graduateSchool: string[]; // 대학원
+    };
+};
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
     const [filterModalOpen, setFilterModalOpen] = useState(false);
+    const [searchInfo, setSearchInfo] = useState<SearchInfoType>({
+        searchText: '',
+        division: ['1학년'],
+        filterKeyword: INTEREST_KEYWORD,
+    });
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        setSearchInfo((prev) => ({ ...prev, searchText: value }));
+    };
 
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
@@ -30,7 +52,11 @@ export default function TotalBabpoolPage() {
             <TotalBabpoolPageContainer>
                 <Header text="밥풀 전체보기" />
                 <SearchBarContainer>
-                    <Searchbar value="" placeHolder="검색하기" onChange={() => {}} />
+                    <Searchbar
+                        value={searchInfo.searchText}
+                        placeHolder="검색하기"
+                        onChange={handleTextChange}
+                    />
                 </SearchBarContainer>
                 <FilterBoxContainer>
                     {FILTER_CATEGORY.map((category) => (
@@ -41,42 +67,26 @@ export default function TotalBabpoolPage() {
                         />
                     ))}
                 </FilterBoxContainer>
+
+                {/* 유저 프로필 */}
                 <UserProfileContainer>
-                    <UserProfileBox>
-                        <ProfileBox
-                            name="조민택"
-                            content="안녕하세요. 한줄소개 테스트"
-                            group="1학년"
-                        />
-                        <ProfileKeywords keywords={['대학', '취업', '멘토', '석사']} />
-                    </UserProfileBox>
-                    <UserProfileBox>
-                        <ProfileBox
-                            name="조민택"
-                            content="안녕하세요. 한줄소개 테스트"
-                            group="1학년"
-                        />
-                        <ProfileKeywords keywords={['대학', '취업', '멘토', '석사']} />
-                    </UserProfileBox>
-                    <UserProfileBox>
-                        <ProfileBox
-                            name="조민택"
-                            content="안녕하세요. 한줄소개 테스트"
-                            group="1학년"
-                        />
-                        <ProfileKeywords keywords={['대학', '취업', '멘토', '석사']} />
-                    </UserProfileBox>
-                    <UserProfileBox>
-                        <ProfileBox
-                            name="조민택"
-                            content="안녕하세요. 한줄소개 테스트"
-                            group="1학년"
-                        />
-                        <ProfileKeywords keywords={['대학', '취업', '멘토', '석사']} />
-                    </UserProfileBox>
+                    {new Array(2).fill(0).map((_, index) => (
+                        <UserProfileBox key={index}> 
+                            <ProfileBox
+                                name="조민택"
+                                content="안녕하세요. 한줄소개 테스트"
+                                group="1학년"
+                            />
+                            <ProfileKeywords keywords={['대학', '취업', '멘토', '석사']} />
+                        </UserProfileBox>
+                    ))}
                 </UserProfileContainer>
+                <PageNation />
+
                 <FilterModal
                     open={filterModalOpen}
+                    searchInfo={searchInfo}
+                    setSearchInfo={setSearchInfo}
                     filterCategory={filterCategory}
                     handleChangeCategory={handleChangeCategory}
                     handleSetFilterModal={handleSetFilterModal}
@@ -112,12 +122,13 @@ const FilterBoxContainer = styled.div`
 
 const UserProfileContainer = styled.section`
     width: 100%;
-    height: auto;
+    height: calc(100% - 81px);
     padding: 0 20px;
     margin-top: 12px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow-y: auto;
 `;
 
 const UserProfileBox = styled.div`
