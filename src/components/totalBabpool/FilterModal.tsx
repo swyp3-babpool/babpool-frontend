@@ -4,15 +4,19 @@ import Txt from '../common/text';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
 import { ReactComponent as ResetIcon } from '@/assets/icons/ic_reset.svg';
 import { colors } from '@/assets/styles/theme';
-import { DIVISION, FILTER_CATEGORY, FilterCategoryType } from '@/utils/constant';
+import { DIVISION, DivisionType, FILTER_CATEGORY, FilterCategoryType, INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
 import Checkbox from '../common/checkbox/Checkbox';
 import Button from '../common/button';
 import KeywordList from '../common/keyword/KeywordList';
 import { CheckboxList } from '../signup/DivisionGroup';
+import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
+import { KeywordType } from '../signup/KeywordGroup';
 
 type FilterModalProps = {
     open: boolean;
     filterCategory: FilterCategoryType;
+    searchInfo: SearchInfoType;
+    setSearchInfo: React.Dispatch<React.SetStateAction<SearchInfoType>>;
     handleChangeCategory: (category: FilterCategoryType) => void;
     handleSetFilterModal: (category: FilterCategoryType) => void;
 };
@@ -20,9 +24,59 @@ type FilterModalProps = {
 export default function FilterModal({
     open,
     filterCategory,
+    searchInfo,
+    setSearchInfo,
     handleChangeCategory,
     handleSetFilterModal,
 }: FilterModalProps) {
+    const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
+        return searchInfo.filterKeyword[keywordGroup].includes(keyword);
+    };
+
+    const handleDivisionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name } = e.target;
+        const isSelected = searchInfo.division.includes(name as DivisionType);
+        if (isSelected) {
+            setSearchInfo((prev) => ({
+                ...prev,
+                division: prev.division.filter((division) => division !== name),
+            }));
+        } else {
+            setSearchInfo((prev) => ({ ...prev, division: [...prev.division, name as DivisionType] }));
+        }
+    }
+
+    const handleKeywordChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        keywordGroup: keyof typeof INTEREST_KEYWORD
+    ) => {
+        const { name } = e.target;
+        const isSelected = searchInfo.filterKeyword[keywordGroup].includes(name);
+        if (isSelected) {
+            setSearchInfo((prev) => ({
+                ...prev,
+                filterKeyword: {
+                    ...prev.filterKeyword,
+                    [keywordGroup]: prev.filterKeyword[keywordGroup].filter(
+                        (keyword) => keyword !== name
+                    ),
+                },
+            }));
+        } else {
+            setSearchInfo((prev) => ({
+                ...prev,
+                filterKeyword: {
+                    ...prev.filterKeyword,
+                    [keywordGroup]: [...prev.filterKeyword[keywordGroup], name],
+                },
+            }));
+        }
+    };
+
+    const handleInitialKeyword = () => {
+        setSearchInfo((prev) => ({...prev, filterKeyword: INIT_INTEREST_KEYWORD}))
+    }
+
     return (
         <FilterModalContainer open={open}>
             <FilterModalTitleBox>
@@ -51,7 +105,7 @@ export default function FilterModal({
                 ))}
             </FilterCategoryBox>
             {filterCategory === '관심 키워드' && (
-                <ResetFilterButtonBox>
+                <ResetFilterButtonBox onClick={handleInitialKeyword}>
                     <ResetIcon />
                     <Txt variant="caption2" color={colors.purple_light_40}>
                         필터 초기화
@@ -67,13 +121,13 @@ export default function FilterModal({
                                 key={division}
                                 label={division}
                                 type="checkbox"
-                                isChecked={true}
-                                onChange={() => {}}
+                                isChecked={searchInfo.division.includes(division)}
+                                onChange={handleDivisionChange}
                             />
                         ))}
                     </CheckboxList>
                 ) : (
-                    <KeywordList handleCheck={() => {}} handleChange={() => {}} />
+                    <KeywordList handleCheck={handleCheck} handleChange={handleKeywordChange} />
                 )}
             </FilterListBox>
             <FilterButtonBox>
@@ -116,7 +170,10 @@ const ResetFilterButtonBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: end;
+    gap: 4px;
     margin-top: 20px;
+    cursor: pointer;
+    margin-right: 10px;
 `;
 
 const FilterCategoryTextBox = styled.div<{ active: boolean }>`
