@@ -11,7 +11,7 @@ type FilterBoxProps = {
 
 export default function FilterBox({text, onClick}: FilterBoxProps) {
     return (
-        <FilterBoxContainer>
+        <FilterBoxContainer onClick={onClick}>
             <Txt variant='caption2'>{text}</Txt>
             <FilterArrowIcon />
         </FilterBoxContainer>

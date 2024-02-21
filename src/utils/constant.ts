@@ -9,6 +9,8 @@ import 밥 from '../assets/images/밥.webp';
 import 손 from '../assets/images/손.webp';
 import 신분증 from '../assets/images/신분증.webp';
 
+export type FilterCategoryType = '구분' | '관심 키워드';
+
 export const DIVISION = ['1학년', '2학년', '3학년', '4학년', '졸업생', '대학원생'];
 
 export const INTEREST_KEYWORD = {
@@ -78,3 +80,5 @@ export const HOW_TO_USE_LIST = [
         imgSrc: 손
     }
 ]
+
+export const FILTER_CATEGORY = ['구분', '관심 키워드'] as FilterCategoryType[];
