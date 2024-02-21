@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Overlay({ children }: { children: React.ReactNode }) {
+export default function Overlay({ children }: { children?: React.ReactNode }) {
     return <OverayWrapper>{children}</OverayWrapper>;
 }
 
