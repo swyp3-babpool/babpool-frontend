@@ -11,7 +11,8 @@ import KeywordList from '../common/keyword/KeywordList';
 import { CheckboxList } from '../signup/DivisionGroup';
 import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
 import { KeywordType } from '../signup/KeywordGroup';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 
 type FilterModalProps = {
     open: boolean;
@@ -34,6 +35,7 @@ export default function FilterModal({
 }: FilterModalProps) {
 
     const [reRenderState, setRenderState] = useState(false)
+    const filterModalRef = useRef<HTMLDivElement>(null);
 
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
@@ -97,9 +99,12 @@ export default function FilterModal({
         setSearchInfo(filterRef.current);
         handleCloseModal()
     }
+    console.log(open)
+
+    useOutsideClickModalClose({ref: filterModalRef, isOpen: open, closeModal: handleCloseModal})
 
     return (
-        <FilterModalContainer open={open}>
+        <FilterModalContainer open={open} ref={filterModalRef}>
             <FilterModalTitleBox>
                 <EmptyDiv />
                 <Txt variant="h3">필터</Txt>

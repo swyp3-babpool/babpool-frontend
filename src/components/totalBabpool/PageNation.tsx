@@ -14,7 +14,7 @@ export default function PageNation() {
                         <ArrowLeft />
                     </PageButton>
                 ) : index === 4 ? (
-                    <span>...</span>
+                    <span key={index}>...</span>
                 ) : index === PageArr.length - 1 ? (
                     <PageButton key={index}>
                         <ArrowRight />
