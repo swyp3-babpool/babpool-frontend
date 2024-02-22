@@ -13,29 +13,6 @@ export const NotificationPageContainer = styled.div`
     overflow: hidden;
 `;
 
-export const Header = styled.div`
-    width: 100%;
-    height: 43px;
-    padding: 11px 10px 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-`;
-
-export const BackButton = styled.button`
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-export const EmptyDiv = styled.div`
-    width: 24px;
-    height: 24px;
-`;
-
 export const TabBarTextContainer = styled.div`
     width: 100%;
     padding: 25px 16px 0;

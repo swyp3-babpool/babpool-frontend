@@ -2,10 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
-    BackButton,
-    EmptyDiv,
     GridContainer,
-    Header,
     NotificationPageContainer,
     TabBar,
     TabBarContainer,
@@ -14,6 +11,7 @@ import {
 import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
+import Header from '@/components/common/header';
 
 export default function NotificationPage() {
     const navigate = useNavigate();
@@ -29,13 +27,7 @@ export default function NotificationPage() {
 
     return (
         <NotificationPageContainer>
-            <Header>
-                <BackButton>
-                    <LeftArrowIcon />
-                </BackButton>
-                <Txt variant="h4">밥약 알림</Txt>
-                <EmptyDiv />
-            </Header>
+            <Header text="밥약 알림" />
             <TabBarTextContainer>
                 <Txt
                     variant={selected === 'received' ? 'h5' : 'body'}

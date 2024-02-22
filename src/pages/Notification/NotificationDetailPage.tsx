@@ -3,9 +3,6 @@ import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
 import {
-    Header,
-    BackButton,
-    EmptyDiv,
     NotificationDetailPageContainer,
     NotificationDetailPageSection,
     Col,
@@ -18,6 +15,7 @@ import { useParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Button from '@/components/common/button';
+import Header from '@/components/common/header';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -36,13 +34,7 @@ export default function NotificationDetailPage() {
     ]);
     return (
         <NotificationDetailPageContainer>
-            <Header>
-                <BackButton>
-                    <LeftArrowIcon />
-                </BackButton>
-                <Txt variant="h4">{type === 'received' ? '받은 밥약' : '보낸 밥약'}</Txt>
-                <EmptyDiv />
-            </Header>
+            <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
             <NotificationDetailPageSection>
                 <Col gap="40px">
                     <Col gap="0">
