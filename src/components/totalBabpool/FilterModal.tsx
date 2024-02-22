@@ -11,70 +11,91 @@ import KeywordList from '../common/keyword/KeywordList';
 import { CheckboxList } from '../signup/DivisionGroup';
 import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
 import { KeywordType } from '../signup/KeywordGroup';
+import { useState } from 'react';
 
 type FilterModalProps = {
     open: boolean;
     filterCategory: FilterCategoryType;
-    searchInfo: SearchInfoType;
+    filterRef: React.MutableRefObject<SearchInfoType>;
     setSearchInfo: React.Dispatch<React.SetStateAction<SearchInfoType>>;
     handleChangeCategory: (category: FilterCategoryType) => void;
     handleSetFilterModal: (category: FilterCategoryType) => void;
+    handleCloseModal: () => void;
 };
 
 export default function FilterModal({
     open,
     filterCategory,
-    searchInfo,
+    filterRef,
     setSearchInfo,
     handleChangeCategory,
     handleSetFilterModal,
+    handleCloseModal
 }: FilterModalProps) {
+
+    const [reRenderState, setRenderState] = useState(false)
+
+
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
-        return searchInfo.filterKeyword[keywordGroup].includes(keyword);
+        return filterRef.current.filterKeyword[keywordGroup].includes(keyword);
     };
 
+    // 구분 필터 변경
     const handleDivisionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name } = e.target;
-        const isSelected = searchInfo.division.includes(name as DivisionType);
+        const isSelected = filterRef.current.division.includes(name as DivisionType);
         if (isSelected) {
-            setSearchInfo((prev) => ({
-                ...prev,
-                division: prev.division.filter((division) => division !== name),
-            }));
+                filterRef.current = {
+                    ...filterRef.current,
+                    division: filterRef.current.division.filter((division) => division !== name),
+                };
         } else {
-            setSearchInfo((prev) => ({ ...prev, division: [...prev.division, name as DivisionType] }));
+            filterRef.current = {...filterRef.current, division: [...filterRef.current.division, name as DivisionType]}
         }
+        setRenderState(!reRenderState)
     }
 
+    // 관심 키워드 필터 변경
     const handleKeywordChange = (
         e: React.ChangeEvent<HTMLInputElement>,
         keywordGroup: keyof typeof INTEREST_KEYWORD
     ) => {
         const { name } = e.target;
-        const isSelected = searchInfo.filterKeyword[keywordGroup].includes(name);
+        const isSelected = filterRef.current.filterKeyword[keywordGroup].includes(name);
         if (isSelected) {
-            setSearchInfo((prev) => ({
-                ...prev,
+            filterRef.current = {
+                ...filterRef.current,
                 filterKeyword: {
-                    ...prev.filterKeyword,
-                    [keywordGroup]: prev.filterKeyword[keywordGroup].filter(
+                    ...filterRef.current.filterKeyword,
+                    [keywordGroup]: filterRef.current.filterKeyword[keywordGroup].filter(
                         (keyword) => keyword !== name
                     ),
                 },
-            }));
+            }
         } else {
-            setSearchInfo((prev) => ({
-                ...prev,
+            filterRef.current = {
+                ...filterRef.current,
                 filterKeyword: {
-                    ...prev.filterKeyword,
-                    [keywordGroup]: [...prev.filterKeyword[keywordGroup], name],
+                    ...filterRef.current.filterKeyword,
+                    [keywordGroup]: [...filterRef.current.filterKeyword[keywordGroup], name],
                 },
-            }));
+            }
         }
+        setRenderState(!reRenderState)
     };
 
+    // 필터 초기화
     const handleInitialKeyword = () => {
-        setSearchInfo((prev) => ({...prev, filterKeyword: INIT_INTEREST_KEYWORD}))
+        setRenderState(!reRenderState)
+        filterRef.current = {
+            ...filterRef.current,
+            filterKeyword: INIT_INTEREST_KEYWORD,
+        }
+    }
+
+    const handleSubmit = () => {
+        setSearchInfo(filterRef.current);
+        handleCloseModal()
     }
 
     return (
@@ -121,7 +142,7 @@ export default function FilterModal({
                                 key={division}
                                 label={division}
                                 type="checkbox"
-                                isChecked={searchInfo.division.includes(division)}
+                                isChecked={filterRef.current.division.includes(division)}
                                 onChange={handleDivisionChange}
                             />
                         ))}
@@ -131,7 +152,7 @@ export default function FilterModal({
                 )}
             </FilterListBox>
             <FilterButtonBox>
-                <Button text="적용" onClick={() => {}} />
+                <Button text="적용" onClick={handleSubmit} />
             </FilterButtonBox>
         </FilterModalContainer>
     );

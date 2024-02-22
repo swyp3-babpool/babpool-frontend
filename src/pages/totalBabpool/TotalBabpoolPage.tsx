@@ -7,8 +7,8 @@ import FilterBox from '@/components/totalBabpool/FilterBox';
 import FilterModal from '@/components/totalBabpool/FilterModal';
 import PageNation from '@/components/totalBabpool/PageNation';
 import Searchbar from '@/components/totalBabpool/Searchbar';
-import { FILTER_CATEGORY, FilterCategoryType, INTEREST_KEYWORD } from '@/utils/constant';
-import React, { useState } from 'react';
+import { FILTER_CATEGORY, FilterCategoryType, INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 export type SearchInfoType = {
@@ -28,25 +28,41 @@ export default function TotalBabpoolPage() {
     const [searchInfo, setSearchInfo] = useState<SearchInfoType>({
         searchText: '',
         division: ['1학년'],
-        filterKeyword: INTEREST_KEYWORD,
+        filterKeyword: {...INIT_INTEREST_KEYWORD, university: INTEREST_KEYWORD['university']},
     });
 
+    const filterRef = useRef<SearchInfoType>(searchInfo);
+
+    console.log(searchInfo)
+
+    const [filterCategory, setFilterCategory] =
+    useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
+
+    // searchBar 검색어 변경
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         setSearchInfo((prev) => ({ ...prev, searchText: value }));
     };
 
-    const [filterCategory, setFilterCategory] =
-        useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
 
+    // 필터 카테고리 변경
     const handleChangeCategory = (category: FilterCategoryType) => {
         setFilterCategory(category);
     };
 
+    // 필터 모달 닫기
+    const handleCloseModal = () => {
+        setFilterModalOpen(false);
+    }
+
+    // 필터 모달 열기/닫기
     const handleSetFilterModal = (category: FilterCategoryType) => {
         setFilterModalOpen(!filterModalOpen);
         handleChangeCategory(category);
+        filterRef.current = searchInfo;
     };
+
+
     return (
         <>
             <TotalBabpoolPageContainer>
@@ -85,11 +101,12 @@ export default function TotalBabpoolPage() {
 
                 <FilterModal
                     open={filterModalOpen}
-                    searchInfo={searchInfo}
                     setSearchInfo={setSearchInfo}
                     filterCategory={filterCategory}
+                    filterRef={filterRef}
                     handleChangeCategory={handleChangeCategory}
                     handleSetFilterModal={handleSetFilterModal}
+                    handleCloseModal={handleCloseModal}
                 />
                 {filterModalOpen && <Overlay />}
             </TotalBabpoolPageContainer>
