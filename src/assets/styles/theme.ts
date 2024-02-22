@@ -94,6 +94,11 @@ export const fontStyles: Record<string, FontStyle> = {
         fontWeight: '700',
         lineHeight: '20px',
     },
+    button: {
+        fontSize: '1.6rem',
+        fontWeight: '600',
+        lineHeight: '21px',
+    },
 };
 
 export type FontStylesTypes = typeof fontStyles;

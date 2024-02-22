@@ -8,11 +8,16 @@ import {
     EmptyDiv,
     NotificationDetailPageContainer,
     NotificationDetailPageSection,
+    Col,
+    PossibleTimeBox,
+    QueryBox,
+    ButtonContainer,
 } from './NotificationDetailPage.styles';
 import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import { useParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
+import Button from '@/components/common/button';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -22,6 +27,12 @@ export default function NotificationDetailPage() {
         '동아리',
         '진로탐색',
         '대학원',
+    ]);
+
+    const [times, setTimes] = useState<string[]>([
+        '2/7(수) 오후 07:00 ~ 오후 08:00',
+        '2/8(목) 오후 07:00 ~ 오후 08:00',
+        '2/9(금) 오후 07:00 ~ 오후 08:00',
     ]);
     return (
         <NotificationDetailPageContainer>
@@ -33,13 +44,49 @@ export default function NotificationDetailPage() {
                 <EmptyDiv />
             </Header>
             <NotificationDetailPageSection>
-                <ProfileBox
-                    name="송채영"
-                    group="대학생"
-                    content="대학생활 고민 같이 나누며 이야기 해요!"
-                    padding="25px 0px 16px 0px"
-                />
-                <ProfileKeywords keywords={keywords} />
+                <Col gap="40px">
+                    <Col gap="0">
+                        <ProfileBox
+                            name="송채영"
+                            group="대학생"
+                            content="대학생활 고민 같이 나누며 이야기 해요!"
+                            padding="25px 0px 16px 0px"
+                        />
+                        <ProfileKeywords keywords={keywords} />
+                    </Col>
+                    <Col gap="16px">
+                        <Txt variant="h5" color={colors.black}>
+                            이때 가능해요
+                        </Txt>
+                        {times.map((time, idx) => (
+                            <PossibleTimeBox key={idx}>
+                                <Txt variant="caption1" color={colors.black}>
+                                    {time}
+                                </Txt>
+                            </PossibleTimeBox>
+                        ))}
+                    </Col>
+                    <Col gap="12px">
+                        <Txt variant="h5" color={colors.black}>
+                            이런 점이 궁금해요
+                        </Txt>
+                        <QueryBox>
+                            <Txt variant="caption1" color={colors.black}>
+                                "대학생활에 대해 궁금한게 많아요. 어떤 동아리가 있을까요?"
+                            </Txt>
+                        </QueryBox>
+                    </Col>
+                </Col>
+                <ButtonContainer type={type}>
+                    {type === 'received' ? (
+                        <Button text="요청 취소" onClick={() => {}} />
+                    ) : (
+                        <>
+                            <Button text="수락" onClick={() => {}} />{' '}
+                            <Button text="다음에요" type="refuse" onClick={() => {}} />
+                        </>
+                    )}
+                </ButtonContainer>
             </NotificationDetailPageSection>
         </NotificationDetailPageContainer>
     );

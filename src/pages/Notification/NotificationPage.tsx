@@ -38,7 +38,7 @@ export default function NotificationPage() {
             </Header>
             <TabBarTextContainer>
                 <Txt
-                    variant="h5"
+                    variant={selected === 'received' ? 'h5' : 'body'}
                     align="center"
                     color={selected === 'received' ? colors.purple_light_40 : colors.white_30}
                     style={{ width: '100%' }}
@@ -47,7 +47,7 @@ export default function NotificationPage() {
                     받은 밥약
                 </Txt>
                 <Txt
-                    variant="body"
+                    variant={selected === 'sent' ? 'h5' : 'body'}
                     align="center"
                     color={selected === 'sent' ? colors.purple_light_40 : colors.white_30}
                     style={{ width: '100%' }}

@@ -50,6 +50,8 @@ export const Image = styled.img`
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px 8px 0 0;
+    display: inline-block;
 `;
 
 export const Divider = styled.div`
