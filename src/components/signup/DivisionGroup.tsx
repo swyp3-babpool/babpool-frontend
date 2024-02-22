@@ -2,7 +2,7 @@ import { DIVISION } from '@/utils/constant';
 import React from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import Checkbox from '@/components/common/checkbox/SignUpCheckbox';
+import Checkbox from '@/components/common/checkbox/Checkbox';
 import { colors } from '@/assets/styles/theme';
 import { SignUpInfo } from '@/pages/signup/SignUpPage';
 

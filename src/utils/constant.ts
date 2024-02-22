@@ -9,13 +9,23 @@ import 밥 from '../assets/images/밥.webp';
 import 손 from '../assets/images/손.webp';
 import 신분증 from '../assets/images/신분증.webp';
 
-export const DIVISION = ['1학년', '2학년', '3학년', '4학년', '졸업생', '대학원생'];
+export type FilterCategoryType = '구분' | '관심 키워드';
+export type DivisionType = '1학년' | '2학년' | '3학년' | '4학년' | '졸업생' | '대학원생'
+
+export const DIVISION = ['1학년', '2학년', '3학년', '4학년', '졸업생', '대학원생'] as DivisionType[];
 
 export const INTEREST_KEYWORD = {
     'university': ['전공', '입시생', '편입생', '자취', '동아리', '대외활동', '스터디', '유학생', '네트워킹'],
     'exam': ['공직', '기사', '스터디', '전문직'],
     'employment': ['대기업', '스타트업', '진로탐색', '자기소개/이력서', '포트폴리오', '인턴', '해외취업', '면접', '창업'],
     'graduateSchool': ['석사', '박사', '대학원 준비']
+}
+
+export const INIT_INTEREST_KEYWORD = {
+    'university': [],
+    'exam': [],
+    'employment': [],
+    'graduateSchool': []
 }
 
 export const WORTH_LIST = [
@@ -78,3 +88,5 @@ export const HOW_TO_USE_LIST = [
         imgSrc: 손
     }
 ]
+
+export const FILTER_CATEGORY = ['구분', '관심 키워드'] as FilterCategoryType[];

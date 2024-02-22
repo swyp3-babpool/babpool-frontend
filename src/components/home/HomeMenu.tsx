@@ -11,7 +11,7 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
         },
         {
             text: '밥풀 전체보기',
-            url: ''
+            url: 'total'
         },
         {
             text: '우편함',
