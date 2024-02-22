@@ -18,7 +18,7 @@ export default function SignInPage() {
                 <Txt>간편하게 로그인하고</Txt>
                 <Txt>밥풀만의 서비스를 이용해보세요!</Txt>
             </TextBox>
-            <Button text='카카오 로그인' icon={<KakaoIcon /> } onClick={() => navigate('/')} />
+            <Button text='카카오 로그인' icon={<KakaoIcon /> } onClick={() => navigate('/signup')} />
         </SignInPageContainer>
     );
 }

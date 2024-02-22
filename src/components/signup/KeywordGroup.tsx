@@ -2,10 +2,9 @@ import { colors } from '@/assets/styles/theme';
 import React from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import Keyword from '../common/keyword';
 import { INTEREST_KEYWORD } from '@/utils/constant';
 import { SignUpInfo } from '@/pages/signup/SignUpPage';
-import { getKeywordGroupTitle } from '@/utils/util';
+import KeywordList from '../common/keyword/KeywordList';
 
 type KeywordGroupProps = {
     signUpInfo: SignUpInfo;
@@ -16,7 +15,9 @@ type KeywordGroupProps = {
 export type KeywordType = (keyof typeof INTEREST_KEYWORD)
 
 export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroupProps) {
-    const KEYWORD_LIST = Object.keys(INTEREST_KEYWORD) as KeywordType[];
+
+    const keywordArrays = Object.values(signUpInfo.keywordGroups);
+    const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
 
     const handleCheckboxChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -49,14 +50,13 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
     };
 
     const validateCheck = () => {
-        const keywordArrays = Object.values(signUpInfo.keywordGroups);
-
-        // 배열의 길이를 합산
-        const totalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
-
-        console.log(totalLength); // 총 길이 출력
-        return totalLength < 10;
+        console.log(keywordTotalLength); // 총 길이 출력
+        return keywordTotalLength < 10;
     };
+
+    const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
+        return signUpInfo.keywordGroups[keywordGroup].includes(keyword);
+    }
 
     return (
         <KeywordGroupContainer>
@@ -66,29 +66,9 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
                 color={colors.white_30}
                 style={{ marginTop: '8px', marginBottom: '1rem' }}
             >
-                관심 키워드를 최대 10개까지 선택해주세요
+                관심 키워드를 최대 10개까지 선택해주세요 ({keywordTotalLength}/10개)
             </Txt>
-            <KeywordListContainer>
-                {KEYWORD_LIST.map((keywordGroup) => (
-                    <KeywordGroupBox>
-                        <Txt variant="caption1">{getKeywordGroupTitle(keywordGroup)}</Txt>
-                        <KeywordList>
-                            {INTEREST_KEYWORD[keywordGroup].map((keyword) => {
-                                const ischecked =
-                                    signUpInfo.keywordGroups[keywordGroup].includes(keyword);
-                                return (
-                                    <Keyword
-                                        name={keyword}
-                                        keywordGroup={keywordGroup}
-                                        ischecked={ischecked}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                );
-                            })}
-                        </KeywordList>
-                    </KeywordGroupBox>
-                ))}
-            </KeywordListContainer>
+            <KeywordList handleCheck={handleCheck} handleChange={handleCheckboxChange} />
         </KeywordGroupContainer>
     );
 }
@@ -100,29 +80,4 @@ export const KeywordGroupContainer = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
-`;
-
-export const KeywordGroupBox = styled.div`
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-top: 24px;
-`;
-
-export const KeywordListContainer = styled.div`
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 42px;
-`;
-
-export const KeywordList = styled.div`
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
 `;

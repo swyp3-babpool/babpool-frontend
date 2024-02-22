@@ -2,17 +2,16 @@ import { DIVISION } from '@/utils/constant';
 import React from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import Checkbox from '@/components/common/checkbox/SignUpCheckbox';
+import Checkbox from '@/components/common/checkbox/Checkbox';
 import { colors } from '@/assets/styles/theme';
 import { SignUpInfo } from '@/pages/signup/SignUpPage';
 
 type DivisionGroupProps = {
     signUpInfo: SignUpInfo;
     setSignUpInfo: React.Dispatch<React.SetStateAction<SignUpInfo>>;
-}
+};
 
-export default function DivisionGroup({signUpInfo, setSignUpInfo}: DivisionGroupProps) {
-
+export default function DivisionGroup({ signUpInfo, setSignUpInfo }: DivisionGroupProps) {
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name } = e.target;
         console.log(e);
@@ -28,6 +27,7 @@ export default function DivisionGroup({signUpInfo, setSignUpInfo}: DivisionGroup
             <CheckboxList>
                 {DIVISION.map((division) => (
                     <Checkbox
+                        key={division}
                         label={division}
                         isChecked={signUpInfo.division === division}
                         onChange={handleCheckboxChange}

@@ -1,7 +1,7 @@
 import { colors } from '@/assets/styles/theme';
 import React from 'react';
 import { styled } from 'styled-components';
-import { CheckboxContainer, CheckboxLabel, HiddenCheckBox } from '../checkbox/SignUpCheckbox';
+import { CheckboxContainer, CheckboxLabel, HiddenCheckBox } from '../checkbox/Checkbox';
 import Txt from '../text';
 import { INTEREST_KEYWORD } from '@/utils/constant';
 
