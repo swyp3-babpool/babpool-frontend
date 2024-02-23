@@ -4,12 +4,10 @@ import { ReactComponent as KakaoIcon } from '@/assets/icons/ic_kakao.svg';
 import Txt from '@/components/common/text';
 import Button from '@/components/common/button';
 import { useNavigation } from '@/hooks/useNavigation';
+import { KAKAO_AUTH_URL } from '@/utils/config';
 
 export default function SignInPage() {
-    
     const { navigate } = useNavigation();
-    
-
 
     return (
         <SignInPageContainer>
@@ -18,7 +16,13 @@ export default function SignInPage() {
                 <Txt>간편하게 로그인하고</Txt>
                 <Txt>밥풀만의 서비스를 이용해보세요!</Txt>
             </TextBox>
-            <Button text='카카오 로그인' icon={<KakaoIcon /> } onClick={() => navigate('/signup')} />
+            <Button
+                text="카카오 로그인"
+                icon={<KakaoIcon />}
+                type='link'
+                url={KAKAO_AUTH_URL}
+
+            />
         </SignInPageContainer>
     );
 }
