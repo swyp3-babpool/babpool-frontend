@@ -4,12 +4,12 @@ import Txt from '../text';
 import {ReactComponent as UserIcon} from '@/assets/icons/ic_user.svg';
 import { colors } from '@/assets/styles/theme';
 
-export default function Review() {
+export default function Review({text}: {text: string}) {
     return (
         <ReviewBox>
                 <UserIcon />
             <ReviewTextBox>
-                <Txt variant='caption1'>최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!</Txt>
+                <Txt variant='caption1'>{text}</Txt>
             </ReviewTextBox>
         </ReviewBox>
     );

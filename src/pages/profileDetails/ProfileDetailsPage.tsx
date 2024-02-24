@@ -69,9 +69,9 @@ export default function ProfileDetailsPage() {
                         ))}
                     </ReviewCountContainer>
                     <ReviewTextContainer>
-                        <Review />
-                        <Review />
-                        <Review />
+                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
+                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
+                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
                     </ReviewTextContainer>
                 </ReviewContainer>
                 <ButtonBox>
