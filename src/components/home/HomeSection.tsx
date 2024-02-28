@@ -3,9 +3,27 @@ import Txt from '../common/text';
 import C_Banner from '@/assets/banner/banner.png';
 import { colors } from '@/assets/styles/theme';
 import { CarouselProvider } from '../carousel/Carousel';
+import { Link } from 'react-router-dom';
 
 export default function HomeSection() {
-    const MAIN_GROUP = ['대학생활', '취업', '대학원', '수험'];
+    const MAIN_GROUP = [
+        {
+            text: '대학생활',
+            url: 'total?groupName=university',
+        },
+        {
+            text: '취업',
+            url: 'total?groupName=employment',
+        },
+        {
+            text: '대학원',
+            url: 'total?groupName=graduateSchool',
+        },
+        {
+            text: '수험',
+            url: 'total?groupName=exam',
+        },
+    ];
     return (
         <HomeContainer>
             <CarouselContainer>
@@ -18,9 +36,9 @@ export default function HomeSection() {
                 <GroupContainer>
                     {MAIN_GROUP.map((group, index) => {
                         return (
-                            <GroupBox key={index}>
+                            <GroupBox key={index} to={group.url}>
                                 <Txt variant={'h3'} color={colors.purple_light_40}>
-                                    {group}
+                                    {group.text}
                                 </Txt>
                             </GroupBox>
                         );
@@ -75,7 +93,7 @@ export const GroupContainer = styled.div`
     justify-content: center;
 `;
 
-export const GroupBox = styled.div`
+export const GroupBox = styled(Link)`
     width: 100%;
     height: 100%;
     min-width: 140px;
@@ -90,10 +108,9 @@ export const GroupBox = styled.div`
     &:hover {
         background-color: ${colors.purple_light_20};
         transition: 0.2s;
-        
+
         & ${Txt} {
             color: white; // 흰색으로 변경
         }
     }
-    
 `;
