@@ -7,8 +7,8 @@ import { INTEREST_KEYWORD } from '@/utils/constant';
 
 type KeywordProps = {
     name: string;
-    keywordGroup: keyof typeof INTEREST_KEYWORD;
     ischecked: boolean;
+    keywordGroup?: keyof typeof INTEREST_KEYWORD | null;
     disabled?: boolean;
     onChange: (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -18,7 +18,7 @@ type KeywordProps = {
 
 export default function Keyword({
     name,
-    keywordGroup,
+    keywordGroup=null,
     ischecked,
     disabled = false,
     onChange,
@@ -31,7 +31,7 @@ export default function Keyword({
                     name={name}
                     checked={ischecked}
                     disabled={disabled}
-                    onChange={(e) => onChange(e, keywordGroup)}
+                    onChange={(e) => keywordGroup && onChange(e, keywordGroup)}
                 />
                 <KeywordBox ischecked={ischecked}>
                     <Txt
