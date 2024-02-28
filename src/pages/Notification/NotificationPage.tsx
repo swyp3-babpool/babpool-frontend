@@ -7,6 +7,7 @@ import {
     TabBar,
     TabBarContainer,
     TabBarTextContainer,
+    TextButtonContainer,
 } from './NotificationPage.styles';
 import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import Txt from '@/components/common/text';
@@ -17,8 +18,8 @@ export default function NotificationPage() {
     const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
 
-    const handleSelectedToggle = () => {
-        setSelected(selected === 'received' ? 'sent' : 'received');
+    const handleSelectedToggle = (select: string) => {
+        setSelected(select);
     };
 
     const handleNotificationCardClick = () => {
@@ -29,24 +30,28 @@ export default function NotificationPage() {
         <NotificationPageContainer>
             <Header text="밥약 알림" />
             <TabBarTextContainer>
-                <Txt
-                    variant={selected === 'received' ? 'h5' : 'body'}
-                    align="center"
-                    color={selected === 'received' ? colors.purple_light_40 : colors.white_30}
-                    style={{ width: '100%' }}
-                    onClick={handleSelectedToggle}
-                >
-                    받은 밥약
-                </Txt>
-                <Txt
-                    variant={selected === 'sent' ? 'h5' : 'body'}
-                    align="center"
-                    color={selected === 'sent' ? colors.purple_light_40 : colors.white_30}
-                    style={{ width: '100%' }}
-                    onClick={handleSelectedToggle}
-                >
-                    보낸 밥약
-                </Txt>
+                <TextButtonContainer>
+                    <Txt
+                        variant={selected === 'received' ? 'h5' : 'body'}
+                        align="center"
+                        color={selected === 'received' ? colors.purple_light_40 : colors.white_30}
+                        style={{ width: '100%' }}
+                        onClick={() => handleSelectedToggle('received')}
+                    >
+                        받은 밥약
+                    </Txt>
+                </TextButtonContainer>
+                <TextButtonContainer>
+                    <Txt
+                        variant={selected === 'sent' ? 'h5' : 'body'}
+                        align="center"
+                        color={selected === 'sent' ? colors.purple_light_40 : colors.white_30}
+                        style={{ width: '100%' }}
+                        onClick={() => handleSelectedToggle('sent')}
+                    >
+                        보낸 밥약
+                    </Txt>
+                </TextButtonContainer>
             </TabBarTextContainer>
             <TabBarContainer>
                 <TabBar selected={selected === 'received'} />
