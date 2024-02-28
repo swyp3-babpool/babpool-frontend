@@ -54,19 +54,20 @@ export default function NotificationPage() {
             </TabBarContainer>
             <GridContainer>
                 <NotificationCard
+                    type="waiting"
                     name="이름"
                     content="2023년"
                     onClick={handleNotificationCardClick}
                 />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
             </GridContainer>
         </NotificationPageContainer>
     );
