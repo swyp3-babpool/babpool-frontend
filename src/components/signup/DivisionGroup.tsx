@@ -53,4 +53,5 @@ export const CheckboxList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 30px 16px;
 `;

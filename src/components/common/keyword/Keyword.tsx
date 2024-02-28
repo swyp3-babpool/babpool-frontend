@@ -35,7 +35,7 @@ export default function Keyword({
                 />
                 <KeywordBox ischecked={ischecked}>
                     <Txt
-                        variant={ischecked ? 'caption3' : 'caption2'}
+                        variant={'caption2'}
                         color={ischecked ? colors.purple_light_40 : colors.purple_light_20}
                     >
                         {name}
