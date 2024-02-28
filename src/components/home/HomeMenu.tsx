@@ -3,6 +3,9 @@ import Txt from '../common/text';
 import { useNavigation } from '@/hooks/useNavigation';
 
 export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
+
+    const isLogin = false;
+
     const MENU_LIST = 
     [
         {
@@ -22,8 +25,8 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
             url: ''
         },
         {
-            text: '로그아웃',
-            url: '/signin'
+            text: `${isLogin ? '로그아웃' : '로그인/회원가입'}`,
+            url: `${isLogin ? '' : '/signin'}`,
         },
     ];
 

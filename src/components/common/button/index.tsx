@@ -5,10 +5,11 @@ import Txt from '../text';
 type ButtonProps = {
     text: string;
     width?: string;
-    type?: 'accept' | 'refuse';
+    type?: 'accept' | 'refuse' | 'link';
     disabled?: boolean;
     icon?: any;
-    onClick: () => void;
+    url?: string;
+    onClick?: () => void;
 };
 
 export default function Button({
@@ -16,8 +17,9 @@ export default function Button({
     width = '100%',
     type = 'accept',
     icon,
+    url,
     disabled = false,
-    onClick,
+    onClick=()=>{},
 }: ButtonProps) {
     return (
         <ButtonWrapper width={width} type={type} disabled={disabled} onClick={onClick}>
@@ -34,11 +36,17 @@ export const ButtonWrapper = styled.button<{ width: string; type: string }>`
     min-width: 145px;
     height: 48px;
     background-color: ${(props) =>
-        props.type === 'accept' ? colors.purple_light_40 : colors.purple_light_10};
+        props.type === 'accept' || props.type === 'link' ? colors.purple_light_40 : colors.purple_light_10};
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     border-radius: 8px;
     cursor: ${(props) => (props.type === 'accept' ? 'pointer' : 'default')};
+`;
+
+export const ButtonText = styled.p<{ type: string }>`
+    font-size: 1rem;
+    font-weight: 500;
+    color: ${(props) => (props.type === 'accept' || props.type === 'link' ? colors.white : colors.purple_light_40)};
 `;

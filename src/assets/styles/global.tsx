@@ -35,7 +35,6 @@ const GlobalStyle = styled.createGlobalStyle`
         background-color: #c1c1c1;
     }
 
-
     button {
         padding: 0;
         overflow: visible;
@@ -44,6 +43,16 @@ const GlobalStyle = styled.createGlobalStyle`
         border: none;
         border-radius: 0;
         box-shadow: none;
+    }
+    a {
+        color: #fff;
+        text-decoration: none;
+        outline: none;
+    }
+    a:hover,
+    a:active {
+        text-decoration: none;
+        color: #fff;
     }
 `;
 

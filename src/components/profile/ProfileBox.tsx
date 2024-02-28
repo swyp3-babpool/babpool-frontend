@@ -8,9 +8,10 @@ type ProfileBoxProps = {
     group?: string;
     content?: string;
     padding?: string;
+    nameType?: 'row' | 'column';
 };
 
-export default function ProfileBox({ url, name, group, content, padding }: ProfileBoxProps) {
+export default function ProfileBox({ url, name, group, content, padding, nameType='row' }: ProfileBoxProps) {
     return (
         <div style={{ padding: padding ? padding : '0', width: '100%' }}>
             <Container>
@@ -22,7 +23,7 @@ export default function ProfileBox({ url, name, group, content, padding }: Profi
                     <Image src={url} />
                 )}
                 <InfoContainer>
-                    <NameContainer>
+                    <NameContainer nameType={nameType}>
                         <Txt variant="h5" color={colors.black}>
                             {name}
                         </Txt>
@@ -87,13 +88,14 @@ export const InfoContainer = styled.div`
     gap: 4px;
 `;
 
-export const NameContainer = styled.div`
+export const NameContainer = styled.div<{nameType: 'row' | 'column'}>`
     width: 100%;
     height: 22px;
-    padding-top: 2px;
+    padding-top: ${(props) => (props.nameType === 'row' ? '2px' : '0')};
     display: flex;
-    align-items: center;
+    flex-direction: ${(props) => (props.nameType === 'row' ? 'row' : 'column')};
+    align-items:  ${(props) => (props.nameType === 'row' ? 'center' : 'start')};
     justify-content: flex-start;
     background-color: transparent;
-    gap: 12px;
+    gap: ${(props) => (props.nameType === 'row' ? '12px' : '5px')};
 `;
