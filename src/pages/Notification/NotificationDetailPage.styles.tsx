@@ -70,9 +70,9 @@ export const ButtonContainer = styled.div<{ type?: string }>`
     position: absolute;
     display: flex;
     align-items: center;
-    justify-content: ${(props) => (props.type === 'received' ? 'center' : 'space-between')};
+    justify-content: ${(props) => (props.type === 'sent' ? 'center' : 'space-between')};
     left: 50%;
     bottom: 0;
     transform: translateX(-50%);
-    gap: ${(props) => (props.type === 'received' ? '0px' : '12px')};
+    gap: ${(props) => (props.type === 'sent' ? '0px' : '12px')};
 `;

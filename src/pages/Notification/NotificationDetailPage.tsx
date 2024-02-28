@@ -10,12 +10,13 @@ import {
     QueryBox,
     ButtonContainer,
 } from './NotificationDetailPage.styles';
-import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import { useParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
+import Popup from '@/components/common/popup';
+import Overlay from '@/components/common/overlay';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -32,6 +33,32 @@ export default function NotificationDetailPage() {
         '2/8(목) 오후 07:00 ~ 오후 08:00',
         '2/9(금) 오후 07:00 ~ 오후 08:00',
     ]);
+
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isPopupSecondButton, setIsPopupSecondButton] = useState(false);
+    const [modalTitle, setModalTitle] = useState('밥약 요청을 수락했어요!');
+
+    const handlePopupOpen = (state: string) => {
+        setIsPopupOpen(true);
+        if (type === 'received') {
+            if (state === 'accept') {
+                setModalTitle('밥약 요청을 수락했어요!');
+            } else {
+                //거절페이지로 이동
+                console.log('거절');
+            }
+        } else {
+            setModalTitle('밥약 요청을 취소하시겠어요?');
+            setIsPopupSecondButton(true);
+        }
+    };
+
+    const handlePopupClose = () => {
+        setIsPopupOpen(false);
+    };
+
+    const handlePopupButtonClick = () => {};
+
     return (
         <NotificationDetailPageContainer>
             <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
@@ -70,16 +97,25 @@ export default function NotificationDetailPage() {
                     </Col>
                 </Col>
                 <ButtonContainer type={type}>
-                    {type === 'received' ? (
-                        <Button text="요청 취소" onClick={() => {}} />
+                    {type === 'sent' ? (
+                        <Button text="요청 취소" onClick={() => handlePopupOpen('')} />
                     ) : (
                         <>
-                            <Button text="수락" onClick={() => {}} />{' '}
+                            <Button text="수락" onClick={() => handlePopupOpen('accept')} />
                             <Button text="다음에요" type="refuse" onClick={() => {}} />
                         </>
                     )}
                 </ButtonContainer>
             </NotificationDetailPageSection>
+            {isPopupOpen && (
+                <Overlay>
+                    <Popup
+                        text={modalTitle}
+                        button={<Button text="확인" onClick={() => handlePopupButtonClick} />}
+                        closePopup={handlePopupClose}
+                    />
+                </Overlay>
+            )}
         </NotificationDetailPageContainer>
     );
 }
