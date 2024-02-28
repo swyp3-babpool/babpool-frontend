@@ -11,7 +11,7 @@ import KeywordList from '../common/keyword/KeywordList';
 import { CheckboxList } from '../signup/DivisionGroup';
 import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
 import { KeywordType } from '../signup/KeywordGroup';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 
 type FilterModalProps = {
@@ -35,6 +35,8 @@ export default function FilterModal({
 }: FilterModalProps) {
 
     const [reRenderState, setRenderState] = useState(false)
+    const [filterValidate, setFilterValidate] = useState(false)
+
     const filterModalRef = useRef<HTMLDivElement>(null);
 
 
@@ -98,10 +100,21 @@ export default function FilterModal({
     const handleSubmit = () => {
         setSearchInfo(filterRef.current);
         handleCloseModal()
+
     }
-    console.log(open)
 
     useOutsideClickModalClose({ref: filterModalRef, isOpen: open, closeModal: handleCloseModal})
+
+    useEffect(() => {
+        const keywordArrays = Object.values(filterRef.current.filterKeyword);
+        const keywordTotalLength = keywordArrays?.reduce((acc, curr) => acc + curr?.length, 0);
+
+        if(keywordTotalLength > 0 && filterRef.current.division.length > 0) {
+            setFilterValidate(true)
+        } else {
+            setFilterValidate(false)
+        }
+    }, [filterRef.current])
 
     return (
         <FilterModalContainer open={open} ref={filterModalRef}>
@@ -157,7 +170,7 @@ export default function FilterModal({
                 )}
             </FilterListBox>
             <FilterButtonBox>
-                <Button text="적용" onClick={handleSubmit} />
+                <Button text="적용" onClick={handleSubmit} type={filterValidate ? 'accept' : 'refuse'} disabled={!filterValidate} />
             </FilterButtonBox>
         </FilterModalContainer>
     );
@@ -215,13 +228,10 @@ const FilterCategoryTextBox = styled.div<{ active: boolean }>`
 
 const FilterListBox = styled.div`
     width: 100%;
-    padding: 0 24px;
-    margin-top: 10px;
 `;
 
 const FilterButtonBox = styled.div`
     width: 100%;
-    margin-top: 30px;
     display: grid;
     place-items: center;
     margin-bottom: 10px;

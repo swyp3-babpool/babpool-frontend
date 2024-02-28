@@ -9,7 +9,7 @@ import PageNation from '@/components/totalBabpool/PageNation';
 import Searchbar from '@/components/totalBabpool/Searchbar';
 import { useNavigation } from '@/hooks/useNavigation';
 import { FILTER_CATEGORY, FilterCategoryType, INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 export type SearchInfoType = {
@@ -25,11 +25,16 @@ export type SearchInfoType = {
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
+
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const groupName = searchParams.get('groupName') ? searchParams.get('groupName') : '';
+
     const [filterModalOpen, setFilterModalOpen] = useState(false);
     const [searchInfo, setSearchInfo] = useState<SearchInfoType>({
         searchText: '',
         division: ['1학년'],
-        filterKeyword: {...INIT_INTEREST_KEYWORD, university: INTEREST_KEYWORD['university']},
+        filterKeyword: groupName ? {...INIT_INTEREST_KEYWORD, [groupName]: INTEREST_KEYWORD[groupName as keyof typeof INTEREST_KEYWORD]} : INIT_INTEREST_KEYWORD,
     });
 
     const filterRef = useRef<SearchInfoType>(searchInfo);
