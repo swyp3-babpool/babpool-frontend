@@ -50,3 +50,8 @@ export const GridContainer = styled.div`
     grid-template-rows: repeat(6, 1fr);
     overflow-y: auto;
 `;
+
+export const EmptyDiv = styled.div`
+    width: 24px;
+    height: 24px;
+`;
