@@ -22,8 +22,8 @@ export default function NotificationPage() {
         setSelected(select);
     };
 
-    const handleNotificationCardClick = () => {
-        navigate(`/notification/${selected}`);
+    const handleNotificationCardClick = (state: string) => {
+        navigate(`/notification/${selected}?state=${state}`);
     };
 
     return (
@@ -62,9 +62,14 @@ export default function NotificationPage() {
                     type="waiting"
                     name="이름"
                     content="2023년"
-                    onClick={handleNotificationCardClick}
+                    onClick={() => handleNotificationCardClick('waiting')}
                 />
-                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard
+                    type="accept"
+                    name="이름"
+                    content="2023년"
+                    onClick={() => handleNotificationCardClick('accept')}
+                />
                 <NotificationCard type="accept" name="이름" content="2023년" />
                 <NotificationCard type="accept" name="이름" content="2023년" />
                 <NotificationCard type="accept" name="이름" content="2023년" />
