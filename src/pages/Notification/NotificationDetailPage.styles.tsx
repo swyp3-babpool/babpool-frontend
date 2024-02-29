@@ -23,7 +23,8 @@ export const NotificationDetailPageSection = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 100px;
 `;
 
 export const ProfileInfo = styled.div`
@@ -41,6 +42,34 @@ export const Col = styled.div<{ gap: string }>`
     align-items: flex-start;
     justify-content: flex-start;
     gap: ${(props) => props.gap};
+`;
+
+export const Row = styled.div<{ gap: string }>`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: ${(props) => props.gap};
+`;
+
+export const Devider = styled.div`
+    width: 100%;
+    height: 1px;
+    background-color: ${colors.white_10};
+`;
+
+export const PossibleTimeRadioButton = styled.button<{ selected: boolean }>`
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: ${(props) =>
+        props.selected ? `4px solid ${colors.purple_light_30}` : `1px solid ${colors.black}`};
 `;
 
 export const PossibleTimeBox = styled.div`
