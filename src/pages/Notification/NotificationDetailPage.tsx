@@ -54,8 +54,7 @@ export default function NotificationDetailPage() {
                     setModalTitle('밥약 요청을 수락했어요!');
                 }
             } else {
-                //거절페이지로 이동
-                console.log('거절');
+                navigate(`/accept`);
             }
         } else {
             setModalTitle('밥약 요청을 취소하시겠어요?');
@@ -77,8 +76,6 @@ export default function NotificationDetailPage() {
                 } else {
                     navigate(`/accept`);
                 }
-            } else {
-                //거절페이지로 이동
             }
         } else {
             setModalTitle('밥약 요청을 취소하시겠어요?');
