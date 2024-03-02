@@ -8,7 +8,7 @@ export default function Header({ text = '' }: { text?: string }) {
 
     return (
         <HeaderContainer>
-            <Txt variant="h3">{text}</Txt>
+            <Txt variant="h4">{text}</Txt>
             <BackIcon onClick={goBack} />
         </HeaderContainer>
     );
