@@ -53,8 +53,6 @@ export default function NotificationDetailPage() {
                 } else {
                     setModalTitle('밥약 요청을 수락했어요!');
                 }
-            } else {
-                navigate(`/accept`);
             }
         } else {
             setModalTitle('밥약 요청을 취소하시겠어요?');
@@ -176,7 +174,13 @@ export default function NotificationDetailPage() {
                 ) : state === 'waiting' ? (
                     <>
                         <Button text="수락" onClick={handlePopupOpen} />
-                        <Button text="다음에요" type="refuse" onClick={() => {}} />
+                        <Button
+                            text="다음에요"
+                            type="refuse"
+                            onClick={() => {
+                                navigate(`/reject`);
+                            }}
+                        />
                     </>
                 ) : (
                     <Button text="확인" onClick={() => navigate(-1)} />
