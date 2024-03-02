@@ -24,8 +24,8 @@ export default function Button({
     return (
         <ButtonWrapper width={width} type={type} disabled={disabled} onClick={onClick}>
             {icon && icon}
-            <Txt variant="h5" color={type === 'accept' ? 'white' : colors.purple_light_40}>
-                {type === 'link' ? <a href={url}>{text}</a> : text}
+            <Txt variant="button" color={type === 'accept' ? 'white' : colors.purple_light_40}>
+                {text}
             </Txt>
         </ButtonWrapper>
     );
@@ -34,7 +34,6 @@ export default function Button({
 export const ButtonWrapper = styled.button<{ width: string; type: string }>`
     width: ${(props) => props.width};
     min-width: 145px;
-    max-width: 375px;
     height: 48px;
     background-color: ${(props) =>
         props.type === 'accept' || props.type === 'link' ? colors.purple_light_40 : colors.purple_light_10};
