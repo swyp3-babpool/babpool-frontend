@@ -86,3 +86,8 @@ export const ButtonContainer = styled.div<{ type?: string }>`
     transform: translateX(-50%);
     gap: ${(props) => (props.type === 'sent' ? '0px' : '12px')};
 `;
+
+export const EmptyDiv = styled.div`
+    width: 25px;
+    height: 25px;
+`;
