@@ -6,12 +6,14 @@ import Review from '@/components/common/review/Review';
 import ReviewCount from '@/components/common/review/ReviewCount';
 import Txt from '@/components/common/text';
 import ProfileBox from '@/components/profile/ProfileBox';
+import { useNavigation } from '@/hooks/useNavigation';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 export default function ProfileDetailsPage() {
     const { userId } = useParams();
+    const { navigate } = useNavigation();
     return (
         <ProfileDetailsPageContainer>
             <Header text="프로필카드 보기" />
@@ -75,7 +77,7 @@ export default function ProfileDetailsPage() {
                     </ReviewTextContainer>
                 </ReviewContainer>
                 <ButtonBox>
-                    <Button text="밥약 요청" onClick={() => {}} />
+                    <Button text="밥약 요청" onClick={() => navigate('request')} />
                 </ButtonBox>
             </ContentSection>
         </ProfileDetailsPageContainer>

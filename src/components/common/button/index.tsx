@@ -19,14 +19,28 @@ export default function Button({
     icon,
     url,
     disabled = false,
-    onClick=()=>{},
+    onClick = () => {},
 }: ButtonProps) {
     return (
         <ButtonWrapper width={width} type={type} disabled={disabled} onClick={onClick}>
-            {icon && icon}
-            <Txt variant="button" color={type === 'accept' ? 'white' : colors.purple_light_40}>
-                {text}
-            </Txt>
+            {type === 'link' ? (
+                <LinkButtonText href={url}>
+                    {icon && icon}
+                    <Txt variant="button" color={colors.white}>
+                        {text}
+                    </Txt>
+                </LinkButtonText>
+            ) : (
+                <>
+                    {icon && icon}
+                    <Txt
+                        variant="button"
+                        color={type === 'accept' ? 'white' : colors.purple_light_40}
+                    >
+                        {text}
+                    </Txt>
+                </>
+            )}
         </ButtonWrapper>
     );
 }
@@ -36,7 +50,9 @@ export const ButtonWrapper = styled.button<{ width: string; type: string }>`
     min-width: 145px;
     height: 48px;
     background-color: ${(props) =>
-        props.type === 'accept' || props.type === 'link' ? colors.purple_light_40 : colors.purple_light_10};
+        props.type === 'accept' || props.type === 'link'
+            ? colors.purple_light_40
+            : colors.purple_light_10};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,5 +64,15 @@ export const ButtonWrapper = styled.button<{ width: string; type: string }>`
 export const ButtonText = styled.p<{ type: string }>`
     font-size: 1rem;
     font-weight: 500;
-    color: ${(props) => (props.type === 'accept' || props.type === 'link' ? colors.white : colors.purple_light_40)};
+    color: ${(props) =>
+        props.type === 'accept' || props.type === 'link' ? colors.white : colors.purple_light_40};
+`;
+
+const LinkButtonText = styled.a`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 `;
