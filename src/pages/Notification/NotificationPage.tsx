@@ -9,7 +9,6 @@ import {
     TabBarTextContainer,
     TextButtonContainer,
 } from './NotificationPage.styles';
-import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
 import Header from '@/components/common/header';
