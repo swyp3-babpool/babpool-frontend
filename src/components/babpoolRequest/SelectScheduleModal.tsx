@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import { EmptyDiv } from '@/pages/Notification/NotificationDetailPage.styles';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
 import { colors } from '@/assets/styles/theme';
 import SelectTimeBox from './SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
+import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
