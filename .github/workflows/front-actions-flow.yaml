@@ -2,7 +2,8 @@ name: React auto cicd version 0.0.1
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
     paths:
       - '.github/workflows/front-actions-flow.yaml'
       - 'package.json'
@@ -24,6 +25,16 @@ jobs:
         with: 
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
+      - name: Create .env file
+        run: |
+          touch ./.env
+          echo -e "${{secrets.ENV_INCODED}}" | base64 --decode > ./.env
+      - uses: actions/upload-artifact@v3
+        with:
+            name: .env
+            path: ./.env
+            retention-days: 1
 
       - name: Install dependencies
         run: npm install
