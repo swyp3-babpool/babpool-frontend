@@ -1,21 +1,14 @@
-import './App.css'
-import axios from 'axios'
+import Layout from './Layout';
+import RouteProvider from './routes';
+import GlobalStyle from './assets/styles/global';
 
 function App() {
-  
-  const handleTest  = () => {
-      axios.get('http://bab-pool.com/api/test/connection').then((res) => {
-        console.log(res);
-      }).catch(console.error);
-      
-  }
-
-
-  return (
-    <>
-        <button onClick={handleTest}>버튼</button>
-    </>
-  )
+    return (
+        <Layout>
+            <GlobalStyle />
+            <RouteProvider />
+        </Layout>
+    );
 }
 
-export default App
+export default App;
