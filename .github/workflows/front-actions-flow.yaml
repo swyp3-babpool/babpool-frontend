@@ -1,4 +1,4 @@
-name: React auto cicd version 0.0.1
+name: React auto cicd version 0.0.2
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - '.github/workflows/front-actions-flow.yaml'
-      - 'package.json'
 
 jobs: 
   react-build-and-deploy:
