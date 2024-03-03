@@ -12,21 +12,9 @@ export default function KakaoAuthenticationPage() {
     // 받은 인가코드로 access token을 받아야함
 
     useEffect(() => {
-        console.log(code);
         if(!code) return;
 
-        const requestBody = {
-            client_id: import.meta.env.VITE_KAKAO_REST_API_KEY,
-            client_secret: import.meta.env.VITE_KAKAO_CLIENT_SECRET,
-            redirect_uri: import.meta.env.VITE_REDIRECT_URI,
-            code,
-            grant_type: 'authorization_code',
-        };
-
-        post(REQUEST_URL, requestBody, {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
-        }).then((res) => {
-            const baseUrl = import.meta.env.VITE_BASE_URL;
+        const baseUrl = import.meta.env.VITE_BASE_URL;
             const requestBody = {
                 authPlatform: 'KAKAO',
                 code,
@@ -34,13 +22,11 @@ export default function KakaoAuthenticationPage() {
             post(
                 `${baseUrl}/api/user/sign/in`,
                 requestBody,
-                {}
             )
                 .then((res) => {
-                    console.log(res.kakao_account);
+                    console.log(res)
                     goHome();
                 })
-        });
     }, [code]);
 
     return null;
