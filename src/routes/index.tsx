@@ -14,7 +14,9 @@ import TotalBabpoolPage from '@/pages/totalBabpool/TotalBabpoolPage';
 import KakaoAuthenticationPage from '@/pages/kakaoAuthentication';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import ReceivedReviewPage from '@/pages/receivedReview/ReceivedReviewPage';
-
+import BabRequestPage from '@/pages/babRequest/BabRequestPage';
+import AcceptPage from '@/pages/Notification/AcceptPage';
+import RejectPage from '@/pages/Notification/RejectPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -28,8 +30,13 @@ export default function RouteProvider() {
                 <Route path='total' element={<TotalBabpoolPage />} />
                 <Route path='total/profile/:userId' element={<ProfileDetailsPage />} />
                 <Route path='total/profile/:userId/review' element={<ReceivedReviewPage />} />
+                <Route path="total" element={<TotalBabpoolPage />} />
+                <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
+                <Route path="total/profile/:userId/request" element={<BabRequestPage />} />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
+                <Route path="accept" element={<AcceptPage />} />
+                <Route path="reject" element={<RejectPage />} />
             </>
         )
     );

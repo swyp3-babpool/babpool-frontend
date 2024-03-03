@@ -2,59 +2,55 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
-    BackButton,
-    EmptyDiv,
     GridContainer,
-    Header,
     NotificationPageContainer,
     TabBar,
     TabBarContainer,
     TabBarTextContainer,
+    TextButtonContainer,
 } from './NotificationPage.styles';
-import { ReactComponent as LeftArrowIcon } from '@/assets/icons/ic_back.svg';
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
+import Header from '@/components/common/header';
 
 export default function NotificationPage() {
     const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
 
-    const handleSelectedToggle = () => {
-        setSelected(selected === 'received' ? 'sent' : 'received');
+    const handleSelectedToggle = (select: string) => {
+        setSelected(select);
     };
 
-    const handleNotificationCardClick = () => {
-        navigate(`/notification/${selected}`);
+    const handleNotificationCardClick = (state: string) => {
+        navigate(`/notification/${selected}?state=${state}`);
     };
 
     return (
         <NotificationPageContainer>
-            <Header>
-                <BackButton>
-                    <LeftArrowIcon />
-                </BackButton>
-                <Txt variant="h4">밥약 알림</Txt>
-                <EmptyDiv />
-            </Header>
+            <Header text="밥약 알림" />
             <TabBarTextContainer>
-                <Txt
-                    variant="h5"
-                    align="center"
-                    color={selected === 'received' ? colors.purple_light_40 : colors.white_30}
-                    style={{ width: '100%' }}
-                    onClick={handleSelectedToggle}
-                >
-                    받은 밥약
-                </Txt>
-                <Txt
-                    variant="body"
-                    align="center"
-                    color={selected === 'sent' ? colors.purple_light_40 : colors.white_30}
-                    style={{ width: '100%' }}
-                    onClick={handleSelectedToggle}
-                >
-                    보낸 밥약
-                </Txt>
+                <TextButtonContainer>
+                    <Txt
+                        variant={selected === 'received' ? 'h5' : 'body'}
+                        align="center"
+                        color={selected === 'received' ? colors.purple_light_40 : colors.white_30}
+                        style={{ width: '100%' }}
+                        onClick={() => handleSelectedToggle('received')}
+                    >
+                        받은 밥약
+                    </Txt>
+                </TextButtonContainer>
+                <TextButtonContainer>
+                    <Txt
+                        variant={selected === 'sent' ? 'h5' : 'body'}
+                        align="center"
+                        color={selected === 'sent' ? colors.purple_light_40 : colors.white_30}
+                        style={{ width: '100%' }}
+                        onClick={() => handleSelectedToggle('sent')}
+                    >
+                        보낸 밥약
+                    </Txt>
+                </TextButtonContainer>
             </TabBarTextContainer>
             <TabBarContainer>
                 <TabBar selected={selected === 'received'} />
@@ -62,19 +58,25 @@ export default function NotificationPage() {
             </TabBarContainer>
             <GridContainer>
                 <NotificationCard
+                    type="waiting"
                     name="이름"
                     content="2023년"
-                    onClick={handleNotificationCardClick}
+                    onClick={() => handleNotificationCardClick('waiting')}
                 />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
-                <NotificationCard name="이름" content="2023년" />
+                <NotificationCard
+                    type="accept"
+                    name="이름"
+                    content="2023년"
+                    onClick={() => handleNotificationCardClick('accept')}
+                />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
+                <NotificationCard type="accept" name="이름" content="2023년" />
             </GridContainer>
         </NotificationPageContainer>
     );

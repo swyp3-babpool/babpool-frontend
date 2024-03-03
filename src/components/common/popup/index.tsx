@@ -12,7 +12,6 @@ type PopupProps = {
 };
 
 export default function Popup({ text, secondText, button, secondButton, closePopup }: PopupProps) {
-
     useEffect(() => {
         document.body.style.cssText = `
           position: fixed; 
@@ -20,17 +19,17 @@ export default function Popup({ text, secondText, button, secondButton, closePop
           overflow-y: scroll;
           width: 100%;`;
         return () => {
-          const scrollY = document.body.style.top;
-          document.body.style.cssText = '';
-          window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+            const scrollY = document.body.style.top;
+            document.body.style.cssText = '';
+            window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
         };
-      }, []);
+    }, []);
 
     return (
         <PopupWrapper>
             <PopupTextContainer>
-                <Txt variant="h3">{text}</Txt>
-                {secondText && <Txt variant="h3">{secondText}</Txt>}
+                <Txt variant="h4">{text}</Txt>
+                {secondText && <Txt variant="h4">{secondText}</Txt>}
             </PopupTextContainer>
             <ButtonContainer>
                 {button}
@@ -40,7 +39,6 @@ export default function Popup({ text, secondText, button, secondButton, closePop
         </PopupWrapper>
     );
 }
-
 
 export const PopupWrapper = styled.div`
     width: 335px;

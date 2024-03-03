@@ -16,13 +16,14 @@ export default function SignInPage() {
                 <Txt>간편하게 로그인하고</Txt>
                 <Txt>밥풀만의 서비스를 이용해보세요!</Txt>
             </TextBox>
-            <Button
-                text="카카오 로그인"
-                icon={<KakaoIcon />}
-                type='link'
-                url={KAKAO_AUTH_URL}
-
-            />
+            <ButtonBox>
+                <Button
+                    text="카카오 로그인"
+                    icon={<KakaoIcon />}
+                    type="link"
+                    url={KAKAO_AUTH_URL}
+                />
+            </ButtonBox>
         </SignInPageContainer>
     );
 }
@@ -36,6 +37,11 @@ export const SignInPageContainer = styled.section`
     align-items: center;
     justify-content: center;
     gap: 40px;
+`;
+
+export const ButtonBox = styled.div`
+    width: 100%;
+    max-width: 375px;
 `;
 
 export const TextBox = styled.div`

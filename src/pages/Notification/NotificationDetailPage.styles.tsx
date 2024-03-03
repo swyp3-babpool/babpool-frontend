@@ -23,28 +23,71 @@ export const NotificationDetailPageSection = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 100px;
 `;
 
-export const Header = styled.div`
+export const ProfileInfo = styled.div`
     width: 100%;
-    height: 43px;
-    padding: 11px 10px 10px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 `;
 
-export const BackButton = styled.button`
-    width: 24px;
-    height: 24px;
+export const Devider = styled.div`
+    width: 100%;
+    height: 1px;
+    background-color: ${colors.white_10};
+`;
+
+export const PossibleTimeRadioButton = styled.button<{ selected: boolean }>`
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: ${(props) =>
+        props.selected ? `4px solid ${colors.purple_light_30}` : `1px solid ${colors.black}`};
+`;
+
+export const PossibleTimeBox = styled.div`
+    width: 100%;
+    padding: 15px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    border: 1px solid ${colors.purple_light_30};
+`;
+
+export const QueryBox = styled.div`
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: 8px;
+    background-color: ${colors.white_10};
+`;
+
+export const ButtonContainer = styled.div<{ type?: string }>`
+    width: 100%;
+    padding: 0px 30px 40px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: ${(props) => (props.type === 'sent' ? 'center' : 'space-between')};
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    gap: ${(props) => (props.type === 'sent' ? '0px' : '12px')};
 `;
 
 export const EmptyDiv = styled.div`
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
 `;
