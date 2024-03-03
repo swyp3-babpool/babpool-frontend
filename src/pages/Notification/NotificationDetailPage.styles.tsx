@@ -35,24 +35,6 @@ export const ProfileInfo = styled.div`
     justify-content: flex-start;
 `;
 
-export const Col = styled.div<{ gap: string }>`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: ${(props) => props.gap};
-`;
-
-export const Row = styled.div<{ gap: string }>`
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: ${(props) => props.gap};
-`;
-
 export const Devider = styled.div`
     width: 100%;
     height: 1px;
@@ -84,7 +66,6 @@ export const PossibleTimeBox = styled.div`
 
 export const QueryBox = styled.div`
     width: 100%;
-    height: 145px;
     padding: 16px;
     display: flex;
     align-items: flex-start;
@@ -95,7 +76,7 @@ export const QueryBox = styled.div`
 
 export const ButtonContainer = styled.div<{ type?: string }>`
     width: 100%;
-    padding: 0px 20px 40px;
+    padding: 0px 30px 40px;
     position: absolute;
     display: flex;
     align-items: center;
@@ -104,4 +85,9 @@ export const ButtonContainer = styled.div<{ type?: string }>`
     bottom: 0;
     transform: translateX(-50%);
     gap: ${(props) => (props.type === 'sent' ? '0px' : '12px')};
+`;
+
+export const EmptyDiv = styled.div`
+    width: 25px;
+    height: 25px;
 `;
