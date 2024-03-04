@@ -7,15 +7,16 @@ import {
 import HomePage from '@/pages/home/HomePage';
 import SignInPage from '@/pages/signin/SignInPage';
 import SignUpPage from '@/pages/signup/SignUpPage';
-import NotificationPage from '@/pages/Notification/NotificationPage';
-import NotificationDetailPage from '@/pages/Notification/NotificationDetailPage';
+import NotificationPage from '@/pages/notification/NotificationPage';
+import NotificationDetailPage from '@/pages/notification/NotificationDetailPage';
 import ExplanationPage from '@/pages/explanation/ExplanationPage';
 import TotalBabpoolPage from '@/pages/totalBabpool/TotalBabpoolPage';
 import KakaoAuthenticationPage from '@/pages/kakaoAuthentication';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import BabRequestPage from '@/pages/babRequest/BabRequestPage';
-import AcceptPage from '@/pages/Notification/AcceptPage';
-import RejectPage from '@/pages/Notification/RejectPage';
+import AcceptPage from '@/pages/notification/AcceptPage';
+import RejectPage from '@/pages/notification/RejectPage';
+import MyPage from '@/pages/mypage/Mypage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -33,6 +34,7 @@ export default function RouteProvider() {
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
                 <Route path="accept" element={<AcceptPage />} />
                 <Route path="reject" element={<RejectPage />} />
+                <Route path="mypage" element={<MyPage />} />
             </>
         )
     );
