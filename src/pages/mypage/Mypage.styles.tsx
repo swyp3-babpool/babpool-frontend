@@ -71,11 +71,10 @@ export const Devider = styled.div`
 `;
 
 export const DeleteAccountButton = styled.button`
-    position: absolute;
-    bottom: 27px;
-    right: 25px;
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 20px 25px;
     cursor: pointer;
 `;
