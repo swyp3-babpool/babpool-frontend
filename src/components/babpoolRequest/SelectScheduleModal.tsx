@@ -6,7 +6,7 @@ import { colors } from '@/assets/styles/theme';
 import SelectTimeBox from './SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
-import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
@@ -14,10 +14,9 @@ type SelectScheduleModalProps = {
 };
 
 export default function SelectScheduleModal({ isOpen, onClose }: SelectScheduleModalProps) {
-
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
 
-    useOutsideClickModalClose({ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose})
+    useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     return (
         <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
