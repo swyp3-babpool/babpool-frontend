@@ -3,7 +3,7 @@ import Txt from '../text';
 import { colors } from '@/assets/styles/theme';
 import { styled } from 'styled-components';
 
-export default function ReviewCount({text, count}: {text: string, count: number}) {
+export default function ReviewCount({ text, count }: { text: string; count: number }) {
     return (
         <ReviewCountBox>
             <Txt variant="h5" color={colors.purple_light_40}>
@@ -16,7 +16,7 @@ export default function ReviewCount({text, count}: {text: string, count: number}
 
 const ReviewCountBox = styled.div`
     width: 100%;
-    height: auto;
+    aspect-ratio: 1 / 1;
     padding: 20px;
     display: flex;
     flex-direction: column;
