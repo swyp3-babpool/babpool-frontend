@@ -8,10 +8,19 @@ type ProfileBoxProps = {
     group?: string;
     content?: string;
     padding?: string;
+    textColor?: string;
     nameType?: 'row' | 'column';
 };
 
-export default function ProfileBox({ url, name, group, content, padding, nameType='row' }: ProfileBoxProps) {
+export default function ProfileBox({
+    url,
+    name,
+    group,
+    content,
+    padding,
+    nameType = 'row',
+    textColor,
+}: ProfileBoxProps) {
     return (
         <div style={{ padding: padding ? padding : '0', width: '100%' }}>
             <Container>
@@ -24,14 +33,18 @@ export default function ProfileBox({ url, name, group, content, padding, nameTyp
                 )}
                 <InfoContainer>
                     <NameContainer nameType={nameType}>
-                        <Txt variant="h5" color={colors.black}>
+                        <Txt variant="h5" color={textColor ? textColor : colors.black}>
                             {name}
                         </Txt>
-                        <Txt variant="caption1" color={colors.white_40}>
+                        <Txt variant="caption1" color={textColor ? textColor : colors.white_40}>
                             {group}
                         </Txt>
                     </NameContainer>
-                    <Txt style={{ width: '100%' }} variant="caption2" color={colors.black}>
+                    <Txt
+                        style={{ width: '100%' }}
+                        variant="caption2"
+                        color={textColor ? textColor : colors.black}
+                    >
                         {content}
                     </Txt>
                 </InfoContainer>
@@ -88,13 +101,13 @@ export const InfoContainer = styled.div`
     gap: 4px;
 `;
 
-export const NameContainer = styled.div<{nameType: 'row' | 'column'}>`
+export const NameContainer = styled.div<{ nameType: 'row' | 'column' }>`
     width: 100%;
     height: 22px;
     padding-top: ${(props) => (props.nameType === 'row' ? '2px' : '0')};
     display: flex;
     flex-direction: ${(props) => (props.nameType === 'row' ? 'row' : 'column')};
-    align-items:  ${(props) => (props.nameType === 'row' ? 'center' : 'start')};
+    align-items: ${(props) => (props.nameType === 'row' ? 'center' : 'start')};
     justify-content: flex-start;
     background-color: transparent;
     gap: ${(props) => (props.nameType === 'row' ? '12px' : '5px')};
