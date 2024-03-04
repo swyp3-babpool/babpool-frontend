@@ -1,4 +1,3 @@
-import { colors } from '@/assets/styles/theme';
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
 import Keyword from '@/components/common/keyword/Keyword';
@@ -8,12 +7,11 @@ import Txt from '@/components/common/text';
 import ProfileBox from '@/components/profile/ProfileBox';
 import { useNavigation } from '@/hooks/useNavigation';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 export default function ProfileDetailsPage() {
-    const { userId } = useParams();
     const { navigate } = useNavigation();
+
     return (
         <ProfileDetailsPageContainer>
             <Header text="프로필카드 보기" />

@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ic_left.svg';
 import { ReactComponent as ArrowRight } from '@/assets/icons/ic_right.svg';
 import Txt from '../common/text';
-import { useState } from 'react';
 
 type PageNationProps = {
     currentPage: number;
@@ -25,7 +24,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                 new Array(totalPage).fill(0).map((_, index) => {
                     const isActivePage = currentPage === index + 1;
                     return (
-                        <PageButton key={index} isActive={isActivePage} onClick={() => handlePageChange(index+1)}>
+                        <PageButton key={index} isActive={isActivePage} onClick={() => handlePageChange(index)}>
                             <Txt
                                 variant={isActivePage ? 'caption3' : 'caption2'}
                                 color={isActivePage ? colors.purple_light_40 : colors.black}
@@ -38,7 +37,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                     <>
                         {currentPage === 1 ? (
                             [1, 2, '...', totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -46,7 +45,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : currentPage === totalPage ? (
                             [1, '...', totalPage - 1, totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -54,7 +53,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : currentPage === 2 ? (
                             [1, 2, 3, '...', totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -62,7 +61,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : currentPage === totalPage - 1 ? (
                             [1, '...', totalPage - 2, totalPage - 1, totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -70,7 +69,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : currentPage === 3 ? (
                             [1, 2, 3, 4, '...', totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -78,7 +77,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : currentPage === totalPage - 2 ? (
                             [1, '...', totalPage - 3, totalPage - 2, totalPage - 1, totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
@@ -86,7 +85,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                             ))
                         ) : (
                             [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPage].map((page, index) =>(
-                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(Number(page)-1 as number)}>
                                     <Txt
                                         variant={page === currentPage ? 'caption3' : 'caption2'}
                                         color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
