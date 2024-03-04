@@ -1,33 +1,104 @@
 import { colors } from '@/assets/styles/theme';
-import React from 'react';
 import { styled } from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ic_left.svg';
 import { ReactComponent as ArrowRight } from '@/assets/icons/ic_right.svg';
+import Txt from '../common/text';
+import { useState } from 'react';
 
-export default function PageNation() {
-    const PageArr = new Array(7).fill(0);
+type PageNationProps = {
+    currentPage: number;
+    totalPage: number;
+    handlePageChange: (page: number) => void;
+};
+
+export default function PageNation({currentPage, totalPage, handlePageChange}: PageNationProps) {
+
+
     return (
         <PageNationContainer>
-            {PageArr.map((_, index) =>
-                index === 0 ? (
-                    <PageButton key={index}>
-                        <ArrowLeft />
-                    </PageButton>
-                ) : index === 4 ? (
-                    <span key={index}>...</span>
-                ) : index === PageArr.length - 1 ? (
-                    <PageButton key={index}>
-                        <ArrowRight />
-                    </PageButton>
-                ) : index === PageArr.length - 2 ? (
-                    <PageButton key={index} isActive={false}>
-                        <span>{10}</span>
-                    </PageButton>
-                ) : (
-                    <PageButton key={index} isActive={false}>
-                        <span>{index}</span>
-                    </PageButton>
-                )
+            {currentPage !== 1 && (
+                <IconBox>
+                    <ArrowLeft />
+                </IconBox>
+            )}
+            {totalPage < 8 ?
+                new Array(totalPage).fill(0).map((_, index) => {
+                    const isActivePage = currentPage === index + 1;
+                    return (
+                        <PageButton key={index} isActive={isActivePage} onClick={() => handlePageChange(index+1)}>
+                            <Txt
+                                variant={isActivePage ? 'caption3' : 'caption2'}
+                                color={isActivePage ? colors.purple_light_40 : colors.black}
+                            >
+                                {index + 1}
+                            </Txt>
+                        </PageButton>
+                    );
+                }) : (
+                    <>
+                        {currentPage === 1 ? (
+                            [1, 2, '...', totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : currentPage === totalPage ? (
+                            [1, '...', totalPage - 1, totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : currentPage === 2 ? (
+                            [1, 2, 3, '...', totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : currentPage === totalPage - 1 ? (
+                            [1, '...', totalPage - 2, totalPage - 1, totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : currentPage === 3 ? (
+                            [1, 2, 3, 4, '...', totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : currentPage === totalPage - 2 ? (
+                            [1, '...', totalPage - 3, totalPage - 2, totalPage - 1, totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        ) : (
+                            [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPage].map((page, index) =>(
+                                <PageButton key={index} isActive={currentPage === page} onClick={() => handlePageChange(page as number)}>
+                                    <Txt
+                                        variant={page === currentPage ? 'caption3' : 'caption2'}
+                                        color={page === currentPage ? colors.purple_light_40 : colors.black}>{page}</Txt>
+                                </PageButton>
+                            ))
+                        )}
+                    </>
+                )}
+            {currentPage !== totalPage && (
+                <IconBox>
+                    <ArrowRight />
+                </IconBox>
             )}
         </PageNationContainer>
     );
@@ -47,7 +118,10 @@ const PageNationContainer = styled.div`
 const PageButton = styled.button<{ isActive?: boolean }>`
     width: 30px;
     height: 30px;
-    border: 1px solid ${colors.white_20};
+    border: ${(props) => (props.isActive ? `1px solid ${colors.white_20}` : 'none')};
     border-radius: 4px;
-    background-color: ${(props) => (props.isActive ? colors.purple_light_40 : colors.white)};
+`;
+
+const IconBox = styled.div`
+    cursor: pointer;
 `;
