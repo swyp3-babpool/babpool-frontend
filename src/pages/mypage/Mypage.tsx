@@ -31,6 +31,11 @@ export default function MyPage() {
         '진로탐색',
         '대학원',
     ]);
+
+    const handleModifyProfileButtonClick = () => {
+        navigate('/mypage/profile-modify');
+    };
+
     return (
         <MyPageContainer>
             <ProfileContainer>
@@ -43,7 +48,7 @@ export default function MyPage() {
                     padding="25px 30px 16px"
                 />
                 <ProfileKeywords keywords={keywords} color={colors.white} padding="0px 30px" />
-                <ProfileModifyButton>
+                <ProfileModifyButton onClick={handleModifyProfileButtonClick}>
                     <IconContainer>
                         <ProfileModifyIcon />
                     </IconContainer>
@@ -96,7 +101,7 @@ export default function MyPage() {
                         </RightIconContainer>
                     </Row>
                 </Row>
-                <Row gap={12}>
+                <Row gap={12} padding="0 10px">
                     {['최고예요', '좋아요', '별로예요'].map((text) => (
                         <ReviewCount key={text} text={text} count={1} />
                     ))}
