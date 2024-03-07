@@ -13,6 +13,7 @@ import ExplanationPage from '@/pages/explanation/ExplanationPage';
 import TotalBabpoolPage from '@/pages/totalBabpool/TotalBabpoolPage';
 import KakaoAuthenticationPage from '@/pages/kakaoAuthentication';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
+import ReceivedReviewPage from '@/pages/receivedReview/ReceivedReviewPage';
 import BabRequestPage from '@/pages/babRequest/BabRequestPage';
 import AcceptPage from '@/pages/notification/AcceptPage';
 import RejectPage from '@/pages/notification/RejectPage';
@@ -28,6 +29,9 @@ export default function RouteProvider() {
                 <Route path="signin" element={<SignInPage />} />
                 <Route path="signup" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
+                <Route path='total' element={<TotalBabpoolPage />} />
+                <Route path='total/profile/:userId' element={<ProfileDetailsPage />} />
+                <Route path='total/profile/:userId/review' element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
                 <Route path="total/profile/:userId/request" element={<BabRequestPage />} />

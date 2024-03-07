@@ -16,7 +16,7 @@ export default function HomePage() {
         <HomePageContainer>
             <HomeHeader isOpenMenu={isOpenMenu} handleMenu={handleMenu} />
             <HomeSection />
-            <HomeMenu isOpenMenu={isOpenMenu} />
+            <HomeMenu isOpenMenu={isOpenMenu} handleMenu={handleMenu}  />
         </HomePageContainer>
     );
 }
