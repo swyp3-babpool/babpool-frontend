@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Txt from '../common/text';
 import C_Banner from '@/assets/banner/banner.png';
+import C_Banner_2 from '@/assets/banner/banner2.png';
 import { colors } from '@/assets/styles/theme';
 import { CarouselProvider } from '../carousel/Carousel';
 import { Link } from 'react-router-dom';
@@ -29,7 +30,7 @@ export default function HomeSection() {
             <CarouselContainer>
                 <CarouselProvider>
                     <BannerImage src={C_Banner} alt="testBanner" />
-                    <BannerImage src={C_Banner} alt="testBanner" />
+                    <BannerImage src={C_Banner_2} alt="testBanner" />
                 </CarouselProvider>
             </CarouselContainer>
             <GroupSection>
