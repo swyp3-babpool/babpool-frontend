@@ -5,12 +5,10 @@ import Txt from '@/components/common/text';
 import {
     NotificationDetailPageContainer,
     NotificationDetailPageSection,
-    Col,
     PossibleTimeBox,
     QueryBox,
     ButtonContainer,
     Devider,
-    Row,
     PossibleTimeRadioButton,
 } from './NotificationDetailPage.styles';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -20,6 +18,7 @@ import Button from '@/components/common/button';
 import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
+import { Col, Row } from '@/components/common/flex/Flex';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -54,9 +53,6 @@ export default function NotificationDetailPage() {
                 } else {
                     setModalTitle('밥약 요청을 수락했어요!');
                 }
-            } else {
-                //거절페이지로 이동
-                console.log('거절');
             }
         } else {
             setModalTitle('밥약 요청을 취소하시겠어요?');
@@ -76,10 +72,8 @@ export default function NotificationDetailPage() {
                     setIsPopupOpen(false);
                     return;
                 } else {
-                    //수락페이지로 이동
+                    navigate(`/accept`);
                 }
-            } else {
-                //거절페이지로 이동
             }
         } else {
             setModalTitle('밥약 요청을 취소하시겠어요?');
@@ -91,7 +85,7 @@ export default function NotificationDetailPage() {
         <NotificationDetailPageContainer>
             <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
             <NotificationDetailPageSection>
-                <Col gap="20px">
+                <Col gap="20">
                     <Col gap="0">
                         <ProfileBox
                             name="송채영"
@@ -102,7 +96,7 @@ export default function NotificationDetailPage() {
                         <ProfileKeywords keywords={keywords} />
                     </Col>
                     <Devider />
-                    <Row gap="20px">
+                    <Row gap="20">
                         <Txt variant="h5" color={colors.black}>
                             {state === 'waiting' ? '만료까지 남은 시간' : '연락처'}
                         </Txt>
@@ -116,7 +110,7 @@ export default function NotificationDetailPage() {
                     {state === 'waiting' && type === 'sent' && (
                         <>
                             <Devider />
-                            <Row gap="20px">
+                            <Row gap="20">
                                 <Txt variant="h5" color={colors.black}>
                                     연락처
                                 </Txt>
@@ -127,8 +121,8 @@ export default function NotificationDetailPage() {
                         </>
                     )}
                     <Devider />
-                    <Col gap="12px">
-                        <Col gap="8px">
+                    <Col gap="12">
+                        <Col gap="8">
                             <Txt variant="h5" color={colors.black}>
                                 이때 가능해요
                             </Txt>
@@ -138,13 +132,13 @@ export default function NotificationDetailPage() {
                                 </Txt>
                             )}
                         </Col>
-                        <Col gap="16px">
+                        <Col gap="16">
                             {times.map((time, idx) => (
-                                <Row gap="14px" key={idx}>
+                                <Row gap="14" key={idx} alignItems="center">
                                     {!(state === 'waiting' && type === 'sent') && (
                                         <PossibleTimeRadioButton
                                             selected={selectedTimeIdx === idx}
-                                            disabled={type === 'sent'}
+                                            disabled={!(type === 'received' && state === 'waiting')}
                                             onClick={() => setSelectedTimeIdx(idx)}
                                         />
                                     )}
@@ -158,7 +152,7 @@ export default function NotificationDetailPage() {
                         </Col>
                     </Col>
                     <Devider />
-                    <Col gap="12px">
+                    <Col gap="12">
                         <Txt variant="h5" color={colors.black}>
                             이런 점이 궁금해요
                         </Txt>
@@ -180,7 +174,13 @@ export default function NotificationDetailPage() {
                 ) : state === 'waiting' ? (
                     <>
                         <Button text="수락" onClick={handlePopupOpen} />
-                        <Button text="다음에요" type="refuse" onClick={() => {}} />
+                        <Button
+                            text="다음에요"
+                            type="refuse"
+                            onClick={() => {
+                                navigate(`/reject`);
+                            }}
+                        />
                     </>
                 ) : (
                     <Button text="확인" onClick={() => navigate(-1)} />

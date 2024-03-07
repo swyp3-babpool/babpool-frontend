@@ -1,10 +1,17 @@
-import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import styled from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
 import { ReactComponent as ResetIcon } from '@/assets/icons/ic_reset.svg';
 import { colors } from '@/assets/styles/theme';
-import { DIVISION, DivisionType, FILTER_CATEGORY, FilterCategoryType, INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
+import {
+    DIVISION,
+    DivisionType,
+    FILTER_CATEGORY,
+    FilterCategoryType,
+    INIT_INTEREST_KEYWORD,
+    INTEREST_KEYWORD,
+} from '@/utils/constant';
 import Checkbox from '../common/checkbox/Checkbox';
 import Button from '../common/button';
 import KeywordList from '../common/keyword/KeywordList';
@@ -31,14 +38,12 @@ export default function FilterModal({
     setSearchInfo,
     handleChangeCategory,
     handleSetFilterModal,
-    handleCloseModal
+    handleCloseModal,
 }: FilterModalProps) {
-
-    const [reRenderState, setRenderState] = useState(false)
-    const [filterValidate, setFilterValidate] = useState(false)
+    const [reRenderState, setRenderState] = useState(false);
+    const [filterValidate, setFilterValidate] = useState(false);
 
     const filterModalRef = useRef<HTMLDivElement>(null);
-
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
         return filterRef.current.filterKeyword[keywordGroup].includes(keyword);
@@ -49,15 +54,18 @@ export default function FilterModal({
         const { name } = e.target;
         const isSelected = filterRef.current.division.includes(name as DivisionType);
         if (isSelected) {
-                filterRef.current = {
-                    ...filterRef.current,
-                    division: filterRef.current.division.filter((division) => division !== name),
-                };
+            filterRef.current = {
+                ...filterRef.current,
+                division: filterRef.current.division.filter((division) => division !== name),
+            };
         } else {
-            filterRef.current = {...filterRef.current, division: [...filterRef.current.division, name as DivisionType]}
+            filterRef.current = {
+                ...filterRef.current,
+                division: [...filterRef.current.division, name as DivisionType],
+            };
         }
-        setRenderState(!reRenderState)
-    }
+        setRenderState(!reRenderState);
+    };
 
     // 관심 키워드 필터 변경
     const handleKeywordChange = (
@@ -75,7 +83,7 @@ export default function FilterModal({
                         (keyword) => keyword !== name
                     ),
                 },
-            }
+            };
         } else {
             filterRef.current = {
                 ...filterRef.current,
@@ -83,45 +91,46 @@ export default function FilterModal({
                     ...filterRef.current.filterKeyword,
                     [keywordGroup]: [...filterRef.current.filterKeyword[keywordGroup], name],
                 },
-            }
+            };
         }
-        setRenderState(!reRenderState)
+        setRenderState(!reRenderState);
     };
 
     // 필터 초기화
     const handleInitialKeyword = () => {
-        setRenderState(!reRenderState)
+        setRenderState(!reRenderState);
         filterRef.current = {
             ...filterRef.current,
             filterKeyword: INIT_INTEREST_KEYWORD,
-        }
-    }
+        };
+    };
 
     const handleSubmit = () => {
         setSearchInfo(filterRef.current);
-        handleCloseModal()
+        handleCloseModal();
+    };
 
-    }
-
-    useOutsideClickModalClose({ref: filterModalRef, isOpen: open, closeModal: handleCloseModal})
+    useOutsideClickModalClose({ ref: filterModalRef, isOpen: open, closeModal: handleCloseModal });
 
     useEffect(() => {
         const keywordArrays = Object.values(filterRef.current.filterKeyword);
         const keywordTotalLength = keywordArrays?.reduce((acc, curr) => acc + curr?.length, 0);
 
-        if(keywordTotalLength > 0 && filterRef.current.division.length > 0) {
-            setFilterValidate(true)
+        if (keywordTotalLength > 0 && filterRef.current.division.length > 0) {
+            setFilterValidate(true);
         } else {
-            setFilterValidate(false)
+            setFilterValidate(false);
         }
-    }, [filterRef.current])
+    }, [filterRef.current]);
 
     return (
         <FilterModalContainer open={open} ref={filterModalRef}>
             <FilterModalTitleBox>
                 <EmptyDiv />
                 <Txt variant="h3">필터</Txt>
-                <CloseIcon onClick={() => handleSetFilterModal(filterCategory)} />
+                <IconBox>
+                    <CloseIcon onClick={() => handleSetFilterModal(filterCategory)} />
+                </IconBox>
             </FilterModalTitleBox>
             <FilterCategoryBox>
                 {FILTER_CATEGORY.map((category) => (
@@ -170,7 +179,12 @@ export default function FilterModal({
                 )}
             </FilterListBox>
             <FilterButtonBox>
-                <Button text="적용" onClick={handleSubmit} type={filterValidate ? 'accept' : 'refuse'} disabled={!filterValidate} />
+                <Button
+                    text="적용"
+                    onClick={handleSubmit}
+                    type={filterValidate ? 'accept' : 'refuse'}
+                    disabled={!filterValidate}
+                />
             </FilterButtonBox>
         </FilterModalContainer>
     );
@@ -189,6 +203,12 @@ const FilterModalContainer = styled.section<{ open: boolean }>`
     border-radius: 20px 20px 0 0;
     z-index: 10;
     transition: all 0.5s ease;
+`;
+
+export const IconBox = styled.div`
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
 `;
 
 const FilterModalTitleBox = styled.div`

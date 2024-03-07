@@ -1,0 +1,69 @@
+name: React auto cicd version 0.0.2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/front-actions-flow.yaml'
+
+jobs: 
+  react-build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    strategy: 
+      matrix: 
+        node-version: [20.10.0] 
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+        
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with: 
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Create .env file
+        run: |
+          touch ./.env
+          echo -e "${{secrets.ENV_ENCODED}}" | base64 --decode > ./.env
+      - uses: actions/upload-artifact@v3
+        with:
+            name: .env
+            path: ./.env
+            retention-days: 1
+
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+
+      - name: Deploy to S3
+        run: aws s3 sync ./dist s3://${{ secrets.AWS_BUCKET_NAME }} --delete
+
+
+      - name: Invalidate CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
+
+
+      - name: Send Github Actions Result to Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          job_name: react-build-and-deploy
+          status: ${{ job.status }}
+          author_name: Github Action Test
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()

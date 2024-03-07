@@ -7,15 +7,14 @@ import { SignUpInfo } from '@/pages/signup/SignUpPage';
 import KeywordList from '../common/keyword/KeywordList';
 
 type KeywordGroupProps = {
+    margin?: string;
     signUpInfo: SignUpInfo;
     setSignUpInfo: React.Dispatch<React.SetStateAction<SignUpInfo>>;
 };
 
+export type KeywordType = keyof typeof INTEREST_KEYWORD;
 
-export type KeywordType = (keyof typeof INTEREST_KEYWORD)
-
-export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroupProps) {
-
+export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: KeywordGroupProps) {
     const keywordArrays = Object.values(signUpInfo.keywordGroups);
     const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
 
@@ -56,10 +55,10 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
         return signUpInfo.keywordGroups[keywordGroup].includes(keyword);
-    }
+    };
 
     return (
-        <KeywordGroupContainer>
+        <KeywordGroupContainer margin={margin}>
             <Txt variant="h5">관심 키워드*</Txt>
             <Txt
                 variant="caption2"
@@ -68,15 +67,18 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
             >
                 관심 키워드를 최대 10개까지 선택해주세요 ({keywordTotalLength}/10개)
             </Txt>
-            <KeywordList handleCheck={handleCheck} handleChange={handleCheckboxChange} />
+            <KeywordList
+                margin={margin}
+                handleCheck={handleCheck}
+                handleChange={handleCheckboxChange}
+            />
         </KeywordGroupContainer>
     );
 }
 
-export const KeywordGroupContainer = styled.div`
+export const KeywordGroupContainer = styled.div<{ margin?: string }>`
     width: inherit;
-    height: auto;
-    margin-top: 40px;
+    margin-top: ${(props) => (props.margin ? props.margin : '40px')};
     display: flex;
     flex-direction: column;
     position: relative;

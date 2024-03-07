@@ -14,7 +14,9 @@ export default function HomeHeader({ isOpenMenu, handleMenu }: HomeHeaderProps) 
         <HeaderContainer>
             <BabpoolLogo />
             {isOpenMenu ? (
-                <CloseIcon onClick={handleMenu} />
+                <IconBox>
+                    <CloseIcon onClick={handleMenu} />
+                </IconBox>
             ) : (
                 <HeaderCategoryBox>
                     <MailIcon />
@@ -40,6 +42,12 @@ export const HeaderCategoryBox = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+`;
+
+export const IconBox = styled.div`
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
 `;
 
 export const MenuIcon = styled(C_MenuIcon)`

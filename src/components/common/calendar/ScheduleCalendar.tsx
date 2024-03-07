@@ -1,31 +1,36 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import { styled } from 'styled-components';
 import { colors } from '@/assets/styles/theme';
 import moment from 'moment';
+import { Value } from 'node_modules/react-calendar/dist/cjs/shared/types';
 
 type ScheduleCalendarProps = {
     onClose: () => void;
 };
 
 export default function ScheduleCalendar({onClose}: ScheduleCalendarProps) {
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState<Value>(new Date());
+    const [selectedDate, setSelectedDate] = useState<Value>(null);
+
+    const TEST_DATE = [moment(new Date()).format('YYYY-MM-DD'), '2024-03-03'];
 
     // 선택한 날짜에 대한 스타일을 정의하는 함수
-    const tileContent = ({ date, view }) => {
-        console.log(date.getDate());
-        if (view === 'month' && date.getDate() === 3) {
+    const tileContent = ({ date, view }: {date: any, view: any}) => {
+       const selected = TEST_DATE.find((test) => test === moment(date).format('YYYY-MM-DD'));
+        console.log( moment(date).format('YYYY-MM-DD'))
+        if (view === 'month' && selected) {
             return <div className="circle">{`${date.getDate()}`}</div>;
-        } else if (view === 'month' && date.getDate() === 2) {
+        } else if (view === 'month' && selectedDate === date) {
             return <div className="user-selected">{`${date.getDate()}`}</div>;
         } else {
             return null;
         }
     };
 
-    const handleDateChange = (date) => {
-        setDate(date);
+    const handleDateChange = (date: Value) => {
+        setSelectedDate(date);
     };
 
     return (

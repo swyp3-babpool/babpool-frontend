@@ -71,9 +71,9 @@ export default function ProfileDetailsPage() {
                         ))}
                     </ReviewCountContainer>
                     <ReviewTextContainer>
-                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
-                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
-                        <Review text='최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!' />
+                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
                     </ReviewTextContainer>
                 </ReviewContainer>
                 <ButtonBox>
@@ -144,7 +144,7 @@ const ReviewCountContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 10px;
+    padding: 0 5px;
 `;
 
 const ReviewTextContainer = styled.div`

@@ -11,5 +11,9 @@ export const useNavigation = () => {
         navigate(-1);
     }
 
-    return {navigate, handleNavigate, goBack};
+    const goHome = () => {
+        navigate('/');
+    }
+
+    return {navigate, handleNavigate, goHome, goBack};
 }
