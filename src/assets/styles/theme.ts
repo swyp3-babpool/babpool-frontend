@@ -66,7 +66,7 @@ export const fontStyles: Record<string, FontStyle> = {
     },
     h5: {
         fontSize: '1.6rem',
-        fontWeight: '700',
+        fontWeight: '600',
         lineHeight: '21px',
     },
     h6: {
@@ -91,7 +91,7 @@ export const fontStyles: Record<string, FontStyle> = {
     },
     caption3: {
         fontSize: '1.3rem',
-        fontWeight: '700',
+        fontWeight: '600',
         lineHeight: '20px',
     },
     button: {
