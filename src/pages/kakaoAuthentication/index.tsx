@@ -18,8 +18,8 @@ export default function KakaoAuthenticationPage() {
             code,
         };
         signInRequest(requestBody).then((res) => {
-            const accessToken = res.data.accessToken;
             console.log(res);
+            const accessToken = res.data.accessToken;
             if (res.status === 'UNAUTHORIZED' && res.code === 401) {
                 navigate(`/sign/in?uuid=${res.data.userUuid}`);
                 return;
