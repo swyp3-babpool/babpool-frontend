@@ -4,7 +4,14 @@ import Txt from '../common/text';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
 import { ReactComponent as ResetIcon } from '@/assets/icons/ic_reset.svg';
 import { colors } from '@/assets/styles/theme';
-import { DIVISION, DivisionType, FILTER_CATEGORY, FilterCategoryType, INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
+import {
+    DIVISION,
+    DivisionType,
+    FILTER_CATEGORY,
+    FilterCategoryType,
+    INIT_INTEREST_KEYWORD,
+    INTEREST_KEYWORD,
+} from '@/utils/constant';
 import Checkbox from '../common/checkbox/Checkbox';
 import Button from '../common/button';
 import KeywordList from '../common/keyword/KeywordList';
@@ -31,14 +38,12 @@ export default function FilterModal({
     setSearchInfo,
     handleChangeCategory,
     handleSetFilterModal,
-    handleCloseModal
+    handleCloseModal,
 }: FilterModalProps) {
-
-    const [reRenderState, setRenderState] = useState(false)
-    const [filterValidate, setFilterValidate] = useState(false)
+    const [reRenderState, setRenderState] = useState(false);
+    const [filterValidate, setFilterValidate] = useState(false);
 
     const filterModalRef = useRef<HTMLDivElement>(null);
-
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
         return filterRef.current.filterKeyword[keywordGroup].includes(keyword);
@@ -49,15 +54,18 @@ export default function FilterModal({
         const { name } = e.target;
         const isSelected = filterRef.current.division.includes(name as DivisionType);
         if (isSelected) {
-                filterRef.current = {
-                    ...filterRef.current,
-                    division: filterRef.current.division.filter((division) => division !== name),
-                };
+            filterRef.current = {
+                ...filterRef.current,
+                division: filterRef.current.division.filter((division) => division !== name),
+            };
         } else {
-            filterRef.current = {...filterRef.current, division: [...filterRef.current.division, name as DivisionType]}
+            filterRef.current = {
+                ...filterRef.current,
+                division: [...filterRef.current.division, name as DivisionType],
+            };
         }
-        setRenderState(!reRenderState)
-    }
+        setRenderState(!reRenderState);
+    };
 
     // 관심 키워드 필터 변경
     const handleKeywordChange = (
@@ -75,7 +83,7 @@ export default function FilterModal({
                         (keyword) => keyword !== name
                     ),
                 },
-            }
+            };
         } else {
             filterRef.current = {
                 ...filterRef.current,
@@ -83,38 +91,37 @@ export default function FilterModal({
                     ...filterRef.current.filterKeyword,
                     [keywordGroup]: [...filterRef.current.filterKeyword[keywordGroup], name],
                 },
-            }
+            };
         }
-        setRenderState(!reRenderState)
+        setRenderState(!reRenderState);
     };
 
     // 필터 초기화
     const handleInitialKeyword = () => {
-        setRenderState(!reRenderState)
+        setRenderState(!reRenderState);
         filterRef.current = {
             ...filterRef.current,
             filterKeyword: INIT_INTEREST_KEYWORD,
-        }
-    }
+        };
+    };
 
     const handleSubmit = () => {
         setSearchInfo(filterRef.current);
-        handleCloseModal()
+        handleCloseModal();
+    };
 
-    }
-
-    useOutsideClickModalClose({ref: filterModalRef, isOpen: open, closeModal: handleCloseModal})
+    useOutsideClickModalClose({ ref: filterModalRef, isOpen: open, closeModal: handleCloseModal });
 
     useEffect(() => {
         const keywordArrays = Object.values(filterRef.current.filterKeyword);
         const keywordTotalLength = keywordArrays?.reduce((acc, curr) => acc + curr?.length, 0);
 
-        if(keywordTotalLength > 0 && filterRef.current.division.length > 0) {
-            setFilterValidate(true)
+        if (keywordTotalLength > 0 && filterRef.current.division.length > 0) {
+            setFilterValidate(true);
         } else {
-            setFilterValidate(false)
+            setFilterValidate(false);
         }
-    }, [filterRef.current])
+    }, [filterRef.current]);
 
     return (
         <FilterModalContainer open={open} ref={filterModalRef}>
@@ -154,23 +161,30 @@ export default function FilterModal({
 
             <FilterListBox>
                 {filterCategory === '구분' ? (
-                    <CheckboxList>
-                        {DIVISION.map((division) => (
-                            <Checkbox
-                                key={division}
-                                label={division}
-                                type="checkbox"
-                                isChecked={filterRef.current.division.includes(division)}
-                                onChange={handleDivisionChange}
-                            />
-                        ))}
-                    </CheckboxList>
+                    <DivisionGroupContainer>
+                        <CheckboxList>
+                            {DIVISION.map((division) => (
+                                <Checkbox
+                                    key={division}
+                                    label={division}
+                                    type="checkbox"
+                                    isChecked={filterRef.current.division.includes(division)}
+                                    onChange={handleDivisionChange}
+                                />
+                            ))}
+                        </CheckboxList>
+                    </DivisionGroupContainer>
                 ) : (
                     <KeywordList handleCheck={handleCheck} handleChange={handleKeywordChange} />
                 )}
             </FilterListBox>
             <FilterButtonBox>
-                <Button text="적용" onClick={handleSubmit} type={filterValidate ? 'accept' : 'refuse'} disabled={!filterValidate} />
+                <Button
+                    text="적용"
+                    onClick={handleSubmit}
+                    type={filterValidate ? 'accept' : 'refuse'}
+                    disabled={!filterValidate}
+                />
             </FilterButtonBox>
         </FilterModalContainer>
     );
@@ -202,6 +216,11 @@ const FilterCategoryBox = styled.div`
     width: 100%;
     display: flex;
     margin-top: 24px;
+`;
+
+const DivisionGroupContainer = styled.div`
+    width: 100%;
+    padding: 30px 22px;
 `;
 
 const ResetFilterButtonBox = styled.div`
