@@ -1,3 +1,4 @@
+import { signUpRequest } from '@/api/auth/auth';
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
 import Overlay from '@/components/common/overlay';
@@ -6,6 +7,7 @@ import DivisionGroup from '@/components/signup/DivisionGroup';
 import KeywordGroup from '@/components/signup/KeywordGroup';
 import { useNavigation } from '@/hooks/useNavigation';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 export interface SignUpInfo {
@@ -19,14 +21,8 @@ export interface SignUpInfo {
 }
 
 export default function SignUpPage() {
-    /**
-     * 회원가입 요청 보낼 때
-     * 1. oauth 로그인하면 먼저 회원의 이메일 정보가 저장된 후 구분, 키워드 데이터를 저장하는건지
-     * 2. 회원가입 요청을 보낼 때 회원정보랑 구분, 키워드 데이터를 같이 보내서 회원가입 처리를 하는건지?
-     * 3. 키워드 데이터는 대학생활, 수험 구분된 키워드별로 따로 배열로 보내야하는건지? 아니면 하나의 배열로 보내야하는건지?
-     */
-
-    const {handleNavigate} = useNavigation();
+    const { uuid } = useParams();
+    const { handleNavigate } = useNavigation();
 
     const [signUpInfo, setSignUpInfo] = useState<SignUpInfo>({
         division: '',
@@ -39,18 +35,35 @@ export default function SignUpPage() {
     });
 
     const [completePopupOpen, setCompletePopupOpen] = useState(false);
-    const handleComplete = (path: string) => {
+    const [isSignUpError, setIsSignUpError] = useState(false);
+
+    const handleSignUp = (path: string) => {
+        // uuid가 없을 때 에러 발생
+        if (!uuid) {
+            setIsSignUpError(true);
+        }
+        const signUpRequestBody = {
+            userUuid: '',
+            userGrade: signUpInfo.division,
+            keywords: Object.values(signUpInfo.keywordGroups).flat(),
+        };
+        const signUpRes = signUpRequest(signUpRequestBody);
         setCompletePopupOpen(false);
-        handleNavigate(path)
-    } 
+        handleNavigate(path);
+    };
 
     const signUpValidateCheck = () => {
-        const {division, keywordGroups} = signUpInfo
+        const { division, keywordGroups } = signUpInfo;
         const keywordArrays = Object.values(keywordGroups);
         const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
-        console.log(keywordArrays)
-        return division && keywordTotalLength > 0 ? true : false
-    }
+        return division && keywordTotalLength > 0 ? true : false;
+    };
+
+    // uuid가 없을 경우 다시 로그인 페이지로 이동
+    const handleErrorClose = () => {
+        handleNavigate('/signin');
+        setIsSignUpError(false);
+    };
 
     return (
         <>
@@ -60,7 +73,12 @@ export default function SignUpPage() {
                     <DivisionGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
                     <KeywordGroup signUpInfo={signUpInfo} setSignUpInfo={setSignUpInfo} />
                     <ButtonContainer>
-                        <Button text="완료" disabled={!signUpValidateCheck()} type={signUpValidateCheck() ? 'accept' : 'refuse'} onClick={() => setCompletePopupOpen(true)} />
+                        <Button
+                            text="완료"
+                            disabled={!signUpValidateCheck()}
+                            type={signUpValidateCheck() ? 'accept' : 'refuse'}
+                            onClick={() => setCompletePopupOpen(true)}
+                        />
                     </ButtonContainer>
                 </SignUpSection>
             </SignUpContainer>
@@ -69,8 +87,20 @@ export default function SignUpPage() {
                     <Popup
                         text="회원가입을 완료했어요!"
                         secondText="프로필카드를 작성하러 가볼까요?"
-                        button={<Button text="바로가기" onClick={() => handleComplete('/')} />}
-                        secondButton={<Button text="나중에" type="refuse" onClick={() => handleComplete('/')} />}
+                        button={<Button text="바로가기" onClick={() => handleSignUp('/mypage/modify-profile')} />}
+                        secondButton={
+                            <Button text="나중에" type="refuse" onClick={() => handleSignUp('/')} />
+                        }
+                        closePopup={() => setCompletePopupOpen(false)}
+                    />
+                </Overlay>
+            )}
+            {isSignUpError && (
+                <Overlay>
+                    <Popup
+                        text="잘못된 접근입니다"
+                        secondText="다시 로그인해주세요."
+                        button={<Button text="확인" onClick={handleErrorClose} />}
                         closePopup={() => setCompletePopupOpen(false)}
                     />
                 </Overlay>

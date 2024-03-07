@@ -3,6 +3,7 @@ import { ReactComponent as C_MailIcon } from '@/assets/icons/ic_mail.svg';
 import { ReactComponent as C_MenuIcon } from '@/assets/icons/ic_menubar.svg';
 import { ReactComponent as C_BabpoolLogo } from '@/assets/logo/babpoolLogo.svg';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
+import { useNavigation } from '@/hooks/useNavigation';
 
 type HomeHeaderProps = {
     isOpenMenu: boolean;
@@ -10,14 +11,18 @@ type HomeHeaderProps = {
 };
 
 export default function HomeHeader({ isOpenMenu, handleMenu }: HomeHeaderProps) {
+
+    const {handleNavigate} = useNavigation()
     return (
         <HeaderContainer>
             <BabpoolLogo />
             {isOpenMenu ? (
-                <CloseIcon onClick={handleMenu} />
+                <IconBox>
+                    <CloseIcon onClick={handleMenu} />
+                </IconBox>
             ) : (
                 <HeaderCategoryBox>
-                    <MailIcon />
+                    <MailIcon onClick={() => handleNavigate('notification')} />
                     <MenuIcon onClick={handleMenu} />
                 </HeaderCategoryBox>
             )}
@@ -40,6 +45,12 @@ export const HeaderCategoryBox = styled.div`
     display: flex;
     align-items: center;
     gap: 20px;
+`;
+
+export const IconBox = styled.div`
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
 `;
 
 export const MenuIcon = styled(C_MenuIcon)`

@@ -41,16 +41,18 @@ export const InputContainer = styled.div`
 
 export const RejectInput = styled.textarea`
     width: 100%;
-    height: 100%;
+    height: 145px;
     box-sizing: border-box;
-    appearance: none;
-    background-color: transparent;
-    border: none;
-    resize: none;
+    background-color: ${colors.white};
+    border: 1px solid ${colors.black};
     overflow: auto;
     font-size: 14px;
     font-weight: 400;
+    line-height: 22px;
     color: ${colors.black};
+    border-radius: 8px;
+    padding: 16px;
+    resize: none;
 
     &:focus {
         outline: none;

@@ -7,15 +7,16 @@ import Txt from '../text';
 import { getKeywordGroupTitle } from '@/utils/util';
 
 type KeywordListProps = {
+    margin?: string;
     handleCheck: (keywordGroup: KeywordType, keyword: string) => boolean;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>, keywordGroup: KeywordType) => void;
 };
 
-export default function KeywordList({ handleCheck, handleChange }: KeywordListProps) {
+export default function KeywordList({ handleCheck, handleChange, margin }: KeywordListProps) {
     const KEYWORD_LIST = Object.keys(INTEREST_KEYWORD) as KeywordType[];
 
     return (
-        <KeywordListContainer>
+        <KeywordListContainer margin={margin}>
             {KEYWORD_LIST.map((keywordGroup) => (
                 <KeywordGroupBox key={keywordGroup}>
                     <Txt variant="caption1">{getKeywordGroupTitle(keywordGroup)}</Txt>
@@ -49,12 +50,12 @@ export const KeywordGroupBox = styled.div`
     margin-top: 24px;
 `;
 
-export const KeywordListContainer = styled.div`
+export const KeywordListContainer = styled.div<{ margin?: string }>`
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
-    margin-bottom: 42px;
+    margin-bottom: ${(props) => (props.margin ? props.margin : '42px')};
 `;
 
 export const S_KeywordList = styled.div`
