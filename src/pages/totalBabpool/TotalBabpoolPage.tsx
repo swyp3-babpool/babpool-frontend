@@ -19,7 +19,6 @@ import {
 import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 export type SearchInfoType = {
@@ -87,7 +86,7 @@ export default function TotalBabpoolPage() {
     console.log(data);
 
     const handleProfileSelect = (profile: ProfileType) => {
-        navigate(`/profile/${profile.userId}`);
+        navigate(`profile/${profile.userId}`);
     };
 
     // searchBar 검색어 변경

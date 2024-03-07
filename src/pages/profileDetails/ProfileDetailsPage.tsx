@@ -9,9 +9,24 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { styled } from 'styled-components';
 import { ReactComponent as RightArrorIcon } from '@/assets/icons/ic_right_arrow.svg';
 import { colors } from '@/assets/styles/theme';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import { getUserProfile } from '@/api/profile/profileApi';
+import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
 
 export default function ProfileDetailsPage() {
     const { navigate } = useNavigation();
+
+    const {userId} = useParams();
+
+    console.log(userId);
+
+    const { data, isError, isLoading } = useQuery<ProfileDetailsType>({
+        queryKey: [`profile`, userId],
+        queryFn: () => getUserProfile(userId as string),
+    });
+
+    console.log(data)
 
     return (
         <ProfileDetailsPageContainer>
@@ -158,7 +173,7 @@ const ReviewDetailsBox = styled.div`
     gap: 4px;
     margin-right: 10px;
     cursor: pointer;
-`
+`;
 
 export const ReviewCountContainer = styled.div`
     width: 100%;
