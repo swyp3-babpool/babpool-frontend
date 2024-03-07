@@ -70,7 +70,6 @@ export default function TotalBabpoolPage() {
             size: 10,
             sort: 'profile_intro',
         };
-        console.log(params);
         const res = await getProfiles(params);
         console.log(res);
         return res;
@@ -81,9 +80,6 @@ export default function TotalBabpoolPage() {
         queryFn: fetchProfileList,
     });
     const { navigate } = useNavigation();
-    console.log(data)
-
-    console.log(data);
 
     const handleProfileSelect = (profile: ProfileType) => {
         navigate(`profile/${profile.userId}`);

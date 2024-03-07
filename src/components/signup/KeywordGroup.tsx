@@ -46,7 +46,6 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo }: KeywordGroup
                 }));
             }
         }
-        console.log(signUpInfo);
     };
 
     const validateCheck = () => {

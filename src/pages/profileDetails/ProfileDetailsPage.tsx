@@ -19,8 +19,6 @@ export default function ProfileDetailsPage() {
 
     const {userId} = useParams();
 
-    console.log(userId);
-
     const { data, isError, isLoading } = useQuery<ProfileDetailsType>({
         queryKey: [`profile`, userId],
         queryFn: () => getUserProfile(userId as string),
