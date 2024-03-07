@@ -14,7 +14,6 @@ type DivisionGroupProps = {
 export default function DivisionGroup({ signUpInfo, setSignUpInfo }: DivisionGroupProps) {
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name } = e.target;
-        console.log(e);
         setSignUpInfo((prev) => ({ ...prev, division: name }));
     };
 
@@ -54,5 +53,4 @@ export const CheckboxList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 30px 22px;
 `;

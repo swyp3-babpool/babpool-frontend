@@ -45,7 +45,6 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
                 }));
             }
         }
-        console.log(signUpInfo);
     };
 
     const validateCheck = () => {

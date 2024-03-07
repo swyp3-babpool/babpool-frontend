@@ -163,17 +163,19 @@ export default function FilterModal({
 
             <FilterListBox>
                 {filterCategory === '구분' ? (
-                    <CheckboxList>
-                        {DIVISION.map((division) => (
-                            <Checkbox
-                                key={division}
-                                label={division}
-                                type="checkbox"
-                                isChecked={filterRef.current.division.includes(division)}
-                                onChange={handleDivisionChange}
-                            />
-                        ))}
-                    </CheckboxList>
+                    <DivisionGroupContainer>
+                        <CheckboxList>
+                            {DIVISION.map((division) => (
+                                <Checkbox
+                                    key={division}
+                                    label={division}
+                                    type="checkbox"
+                                    isChecked={filterRef.current.division.includes(division)}
+                                    onChange={handleDivisionChange}
+                                />
+                            ))}
+                        </CheckboxList>
+                    </DivisionGroupContainer>
                 ) : (
                     <KeywordList handleCheck={handleCheck} handleChange={handleKeywordChange} />
                 )}
@@ -222,6 +224,11 @@ const FilterCategoryBox = styled.div`
     width: 100%;
     display: flex;
     margin-top: 24px;
+`;
+
+const DivisionGroupContainer = styled.div`
+    width: 100%;
+    padding: 30px 22px;
 `;
 
 const ResetFilterButtonBox = styled.div`

@@ -1,32 +1,30 @@
-import { post } from '@/api/api';
+import { signInRequest } from '@/api/auth/auth';
 import { useNavigation } from '@/hooks/useNavigation';
-import React, { useEffect, useState } from 'react';
+import { SignInRequestDataType } from '@/interface/api/authType';
+import React, { useEffect } from 'react';
 
 export default function KakaoAuthenticationPage() {
     const params = new URL(document.URL).searchParams;
     const code = params.get('code');
-    const { goHome } = useNavigation();
+    const { goHome, navigate } = useNavigation();
 
-    const REQUEST_URL = import.meta.env.VITE_KAKAO_OAUTH_URL;
     // 카카오에서 인가코드를 리다이렉트 url로 받음
     // 받은 인가코드로 access token을 받아야함
 
     useEffect(() => {
-        if(!code) return;
-
-        const baseUrl = import.meta.env.VITE_BASE_URL;
-            const requestBody = {
-                authPlatform: 'KAKAO',
-                code,
+        if (!code) return;
+        const requestBody: SignInRequestDataType = {
+            authPlatform: 'KAKAO',
+            code,
+        };
+        signInRequest(requestBody).then((res) => {
+            console.log(res);
+            if (res.status === 'UNAUTHORIZED' && res.code === 401) {
+                navigate(`/sign/in?uuid=${res.data.userUuid}`);
+                return;
             }
-            post(
-                `${baseUrl}/api/user/sign/in`,
-                requestBody,
-            )
-                .then((res) => {
-                    console.log(res)
-                    goHome();
-                })
+            goHome();
+        });
     }, [code]);
 
     return null;

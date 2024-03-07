@@ -1,4 +1,3 @@
-import { colors } from '@/assets/styles/theme';
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
 import Keyword from '@/components/common/keyword/Keyword';
@@ -7,13 +6,26 @@ import ReviewCount from '@/components/common/review/ReviewCount';
 import Txt from '@/components/common/text';
 import ProfileBox from '@/components/profile/ProfileBox';
 import { useNavigation } from '@/hooks/useNavigation';
-import React from 'react';
-import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { ReactComponent as RightArrorIcon } from '@/assets/icons/ic_right_arrow.svg';
+import { colors } from '@/assets/styles/theme';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import { getUserProfile } from '@/api/profile/profileApi';
+import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
 
 export default function ProfileDetailsPage() {
-    const { userId } = useParams();
     const { navigate } = useNavigation();
+
+    const {userId} = useParams();
+
+    const { data, isError, isLoading } = useQuery<ProfileDetailsType>({
+        queryKey: [`profile`, userId],
+        queryFn: () => getUserProfile(userId as string),
+    });
+
+    console.log(data)
+
     return (
         <ProfileDetailsPageContainer>
             <Header text="프로필카드 보기" />
@@ -64,7 +76,15 @@ export default function ProfileDetailsPage() {
                     </KeywordList>
                 </KeywordContainer>
                 <ReviewContainer>
-                    <Txt variant="h5">{'조민택'}님이 받은 후기</Txt>
+                    <ReviewTitleBox>
+                        <Txt variant="h5">{'조민택'}님이 받은 후기</Txt>
+                        <ReviewDetailsBox onClick={() => navigate('review')}>
+                            <Txt variant="caption1" color={colors.white_50}>
+                                더보기
+                            </Txt>
+                            <RightArrorIcon />
+                        </ReviewDetailsBox>
+                    </ReviewTitleBox>
                     <ReviewCountContainer>
                         {['최고예요', '좋아요', '별로예요'].map((text) => (
                             <ReviewCount key={text} text={text} count={1} />
@@ -138,7 +158,22 @@ const ReviewContainer = styled.div`
     margin-top: 40px;
 `;
 
-const ReviewCountContainer = styled.div`
+const ReviewTitleBox = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const ReviewDetailsBox = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+`;
+
+export const ReviewCountContainer = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
@@ -147,14 +182,17 @@ const ReviewCountContainer = styled.div`
     padding: 0 5px;
 `;
 
-const ReviewTextContainer = styled.div`
+export const ReviewTextContainer = styled.div`
     width: 100%;
+    max-height: 580px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
     padding: 0 18px;
     margin-top: 14px;
+    overflow-y: auto;
 `;
 
 const ButtonBox = styled.div`
