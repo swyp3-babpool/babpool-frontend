@@ -23,6 +23,9 @@ export default function KakaoAuthenticationPage() {
                 navigate(`/sign/in?uuid=${res.data.userUuid}`);
                 return;
             }
+            if (res.code === 200) {
+                localStorage.setItem('accessToken', res.data.accessToken);
+            }
             goHome();
         });
     }, [code]);
