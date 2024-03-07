@@ -72,23 +72,18 @@ export const BannerImage = styled.img`
 `;
 
 export const GroupSection = styled.div`
-    width: inherit;
-    height: 70%;
-    min-height: 400px;
-    max-height: 500px;
-    padding: 50px 38px;
+    width: 100%;
+    height: 100%;
+    padding: 50px 20px;
     display: grid;
     place-items: center;
 `;
 
 export const GroupContainer = styled.div`
-    width: inherit;
-    height: 100%;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    grid-column: 1fr 1fr;
-    grid-row: 1fr 1fr;
     gap: 20px;
     place-items: center;
     justify-content: center;
@@ -96,9 +91,7 @@ export const GroupContainer = styled.div`
 
 export const GroupBox = styled(Link)`
     width: 100%;
-    height: 100%;
-    min-width: 140px;
-    min-height: 160px;
+    aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
     border: 2px solid ${colors.purple_light_20};

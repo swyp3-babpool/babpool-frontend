@@ -179,7 +179,7 @@ export const ReviewCountContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 10px;
+    padding: 0 5px;
 `;
 
 export const ReviewTextContainer = styled.div`

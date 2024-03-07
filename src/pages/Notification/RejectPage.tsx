@@ -37,17 +37,15 @@ export default function RejectPage() {
                     />
                     <ProfileKeywords keywords={keywords} />
                 </Col>
-                <InputContainer>
-                    <RejectInput
-                        placeholder="5자-30자 이내로 거절 사유를 작성해주세요"
-                        value={inputValue}
-                        onChange={(e) => {
-                            if (e.target.value.length <= 30) {
-                                setInputValue(e.target.value);
-                            }
-                        }}
-                    />
-                </InputContainer>
+                <RejectInput
+                    placeholder="5자-30자 이내로 거절 사유를 작성해주세요"
+                    value={inputValue}
+                    onChange={(e) => {
+                        if (e.target.value.length <= 30) {
+                            setInputValue(e.target.value);
+                        }
+                    }}
+                />
             </Col>
             <ButtonContainer>
                 <Button
