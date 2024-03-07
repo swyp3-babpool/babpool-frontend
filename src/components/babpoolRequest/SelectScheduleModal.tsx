@@ -88,5 +88,7 @@ const SeleceTimeContainer = styled.div`
 `;
 
 const IconBox = styled.div`
+    width: 24px;
+    height: 24px;
     cursor: pointer;
 `;
