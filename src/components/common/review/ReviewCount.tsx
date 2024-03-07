@@ -16,8 +16,7 @@ export default function ReviewCount({ text, count }: { text: string; count: numb
 
 const ReviewCountBox = styled.div`
     width: 100%;
-    aspect-ratio: 1 / 1;
-    padding: 20px;
+    aspect-ratio: 97 / 91;
     display: flex;
     flex-direction: column;
     align-items: center;
