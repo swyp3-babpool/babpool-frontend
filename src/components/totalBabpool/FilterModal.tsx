@@ -128,7 +128,9 @@ export default function FilterModal({
             <FilterModalTitleBox>
                 <EmptyDiv />
                 <Txt variant="h3">필터</Txt>
-                <CloseIcon onClick={() => handleSetFilterModal(filterCategory)} />
+                <IconBox>
+                    <CloseIcon onClick={() => handleSetFilterModal(filterCategory)} />
+                </IconBox>
             </FilterModalTitleBox>
             <FilterCategoryBox>
                 {FILTER_CATEGORY.map((category) => (
@@ -201,6 +203,12 @@ const FilterModalContainer = styled.section<{ open: boolean }>`
     border-radius: 20px 20px 0 0;
     z-index: 10;
     transition: all 0.5s ease;
+`;
+
+export const IconBox = styled.div`
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
 `;
 
 const FilterModalTitleBox = styled.div`
