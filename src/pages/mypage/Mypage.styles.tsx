@@ -65,8 +65,13 @@ export const ThickDevider = styled.div`
 `;
 
 export const Devider = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
     width: 100%;
     height: 1px;
+    padding: 0 30px;
     background-color: ${colors.white_10};
 `;
 
