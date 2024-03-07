@@ -3,14 +3,11 @@ import { styled } from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
 import { ReactComponent as CheckIcon } from '@/assets/icons/ic_check.svg';
-import { ReactComponent as ActiveCheckIcon } from '@/assets/icons/ic_active_check.svg';
 import { colors } from '@/assets/styles/theme';
-import SelectTimeBox from '@/components/babpoolRequest/SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
-import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
-import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import PossibleTimeCalendar from '../common/calendar/PossibleTimeCalendar';
 import { Col, Row } from '../common/flex/Flex';
+import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
 
 type SelectPossibleTimeModalProps = {
     isOpen: boolean;

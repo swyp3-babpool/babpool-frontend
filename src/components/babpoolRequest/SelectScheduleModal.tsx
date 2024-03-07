@@ -6,7 +6,7 @@ import { colors } from '@/assets/styles/theme';
 import SelectTimeBox from './SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
-import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
