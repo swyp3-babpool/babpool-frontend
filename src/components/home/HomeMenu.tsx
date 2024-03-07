@@ -1,28 +1,60 @@
 import styled from 'styled-components';
 import Txt from '../common/text';
 import { useNavigation } from '@/hooks/useNavigation';
+import { useEffect, useState } from 'react';
+import { logoutRequest } from '@/api/auth/auth';
+import Overlay from '../common/overlay';
+import Popup from '../common/popup';
+import Button from '../common/button';
 
-export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
+export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boolean, handleMenu: () => void}) {
+    const [isLogin, setIsLogin] = useState(false);
+    const [isLogoutPopup, setIsLogoutPopup] = useState(false);
 
-    const isLogin = false;
+    const { handleNavigate } = useNavigation();
 
-    const MENU_LIST = 
-    [
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            setIsLogin(true);
+        }
+    }, [isOpenMenu]);
+
+    const handleLogout = () => {
+        logoutRequest()
+        .then((res) => {
+            console.log(res);
+            if(res.code === 200) {
+                localStorage.removeItem('accessToken');
+                setIsLogin(false);
+                setIsLogoutPopup(false);
+                handleMenu()
+                handleNavigate('/signin')
+            }
+        
+        })
+    };
+
+    const handleLogoutPopup = () => {
+        setIsLogoutPopup(true);
+    };
+
+    const MENU_LIST = [
         {
             text: '밥풀이란?',
-            url: 'explanation'
+            url: 'explanation',
         },
         {
             text: '밥풀 전체보기',
-            url: 'total'
+            url: 'total',
         },
         {
             text: '우편함',
-            url: ''
+            url: 'notification',
         },
         {
             text: '마이페이지',
-            url: ''
+            url: 'mypage',
         },
         {
             text: `${isLogin ? '로그아웃' : '로그인/회원가입'}`,
@@ -30,20 +62,41 @@ export default function HomeMenu({ isOpenMenu }: { isOpenMenu: boolean }) {
         },
     ];
 
-    const {handleNavigate} = useNavigation();
-
 
     return (
         <HomeMenuContainer left={isOpenMenu ? '0%' : '100%'}>
             <MenuList>
                 {MENU_LIST.map((menu, idx) => {
                     return (
-                        <MenuTextBox key={menu.text} onClick={menu.text === '로그아웃' ? () => handleNavigate(menu.url) : () => handleNavigate(menu.url)}>
+                        <MenuTextBox
+                            key={menu.text}
+                            onClick={
+                                menu.text === '로그아웃'
+                                    ? handleLogoutPopup
+                                    : () => handleNavigate(menu.url)
+                            }
+                        >
                             <Txt variant={'h2'}>{menu.text}</Txt>
                         </MenuTextBox>
                     );
                 })}
             </MenuList>
+            {isLogoutPopup && (
+                <Overlay>
+                    <Popup
+                        text="로그아웃 하시겠습니까?"
+                        button={<Button text="확인" onClick={handleLogout} />}
+                        secondButton={
+                            <Button
+                                text="나중에"
+                                type="refuse"
+                                onClick={() => setIsLogoutPopup(false)}
+                            />
+                        }
+                        closePopup={() => setIsLogoutPopup(false)}
+                    />
+                </Overlay>
+            )}
         </HomeMenuContainer>
     );
 }

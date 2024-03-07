@@ -28,7 +28,6 @@ const client: CustomInstance = axios.create({
 client.interceptors.request.use(config => {
     const token = localStorage.getItem('accessToken')
     config.headers['Content-Type'] = 'application/json'
-    console.log(token)
     // 토큰이 있을 경우 헤더에 추가
     if (token) {
         config.headers['Authorization'] =  `Bearer ${token}`
