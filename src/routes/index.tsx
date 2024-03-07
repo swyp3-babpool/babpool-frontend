@@ -17,6 +17,7 @@ import BabRequestPage from '@/pages/babRequest/BabRequestPage';
 import AcceptPage from '@/pages/notification/AcceptPage';
 import RejectPage from '@/pages/notification/RejectPage';
 import MyPage from '@/pages/mypage/Mypage';
+import ModifyProfileCardPage from '@/pages/mypage/ModifyProfileCardPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -35,6 +36,7 @@ export default function RouteProvider() {
                 <Route path="accept" element={<AcceptPage />} />
                 <Route path="reject" element={<RejectPage />} />
                 <Route path="mypage" element={<MyPage />} />
+                <Route path="mypage/profile-modify" element={<ModifyProfileCardPage />} />
             </>
         )
     );
