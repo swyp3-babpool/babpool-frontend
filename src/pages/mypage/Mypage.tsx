@@ -63,10 +63,11 @@ export default function MyPage() {
                         밥약 히스토리
                     </Txt>
                     <Row
-                        style={{ width: 'auto' }}
+                        style={{ width: 'auto', cursor: 'pointer' }}
                         alignItems="center"
                         gap={4}
                         justifyContent="flex-end"
+                        onClick={() => navigate('/mypage/history')}
                     >
                         <Txt variant="caption1" color={colors.black}>
                             더보기
@@ -81,7 +82,10 @@ export default function MyPage() {
                     <NotificationCard type="accept" name="이름" content="2023년" />
                 </Row>
             </Col>
-            <Devider />
+            <Row padding="0 30px">
+                <Devider />
+            </Row>
+
             <Col gap={16} padding="30px 20px">
                 <Row padding="0 5px" alignItems="center" justifyContent={'space-between'}>
                     <Txt variant="h5" color={colors.black}>
@@ -107,7 +111,9 @@ export default function MyPage() {
                     ))}
                 </Row>
             </Col>
+
             <ThickDevider />
+
             <DeleteAccountButton>
                 <Txt variant="caption2" color={colors.white_30}>
                     회원탈퇴
