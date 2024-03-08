@@ -19,9 +19,15 @@ export default function KakaoAuthenticationPage() {
         };
         signInRequest(requestBody).then((res) => {
             console.log(res);
+            const accessToken = res.data.accessToken;
             if (res.status === 'UNAUTHORIZED' && res.code === 401) {
                 navigate(`/sign/in?uuid=${res.data.userUuid}`);
                 return;
+            }
+            console.log(res.code)
+            if (res.code === 200) {
+                console.log('로그인 성공.')
+                localStorage.setItem('accessToken', String(accessToken));
             }
             goHome();
         });

@@ -1,4 +1,3 @@
-import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import styled from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
@@ -20,6 +19,7 @@ import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
 import { KeywordType } from '../signup/KeywordGroup';
 import { useEffect, useRef, useState } from 'react';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
+import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
 
 type FilterModalProps = {
     open: boolean;

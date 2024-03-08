@@ -11,7 +11,7 @@ export const signUpRequest = async (requestBody: SignUpRequestDataType): Promise
 export const signInRequest = async (requestBody: SignInRequestDataType): Promise<CommonResponseType<AuthResponseType>> => {
     const res = await post(`/api/user/sign/in`, requestBody)
     console.log(res)
-    return res.data
+    return res
 }
 
 export const logoutRequest = async (): Promise<CommonResponseType<null>> => {
