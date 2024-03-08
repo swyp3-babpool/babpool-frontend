@@ -33,5 +33,6 @@ export const HomePageContainer = styled.section`
     width: inherit;
     height: inherit;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 `;
