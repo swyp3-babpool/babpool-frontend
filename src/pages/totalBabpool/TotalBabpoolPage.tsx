@@ -141,10 +141,8 @@ export default function TotalBabpoolPage() {
                 {/* 유저 프로필 */}
                 <UserProfileContainer>
                     {data.content.map((profile) => {
-                        const keywords = profile.keywordIdWithNameString
-                            .split(',')
-                            .map((item: string) => item.split(':'))
-                            .map((item: string[]) => item[1]);
+                        const keywords = profile.keywordNameList
+
                         return (
                             <UserProfileBox
                                 key={profile.userId}
