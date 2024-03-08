@@ -3,20 +3,22 @@ import { styled } from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
 import { ReactComponent as CheckIcon } from '@/assets/icons/ic_check.svg';
+import { ReactComponent as ActiveCheckIcon } from '@/assets/icons/ic_active_check.svg';
 import { colors } from '@/assets/styles/theme';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import PossibleTimeCalendar from '../common/calendar/PossibleTimeCalendar';
 import { Col, Row } from '../common/flex/Flex';
 import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { Value } from 'node_modules/react-calendar/dist/esm/shared/types';
+import moment from 'moment';
+import { TimeRange } from '@/interface/api/modifyProfileType';
 
 type SelectPossibleTimeModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    selectedDates?: TimeRange[];
+    setSelectedDates: (dates: TimeRange[]) => void;
 };
-
-export interface TimeRange {
-    [key: string]: string;
-}
 
 const timeRanges = {
     11: '오전 11:00 ~ 오후 12:00',
@@ -29,13 +31,65 @@ const timeRanges = {
     18: '오후 6:00 ~ 오후 7:00',
 };
 
-export default function SelectPossibleTimeModal({ isOpen, onClose }: SelectPossibleTimeModalProps) {
+export default function SelectPossibleTimeModal({
+    isOpen,
+    onClose,
+    selectedDates,
+    setSelectedDates,
+}: SelectPossibleTimeModalProps) {
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
-    const [selectedDate, setSelectedDate] = useState<string>();
-    const [selectedDates, setSelectedDates] = useState<TimeRange[]>([]);
+    const [selectedDate, setSelectedDate] = useState<string>(
+        moment(new Date()).format('YYYY-MM-DD')
+    );
+
+    const handleCheckIcon = (time: number) => {
+        const isExist =
+            selectedDates &&
+            selectedDates.find(
+                (date) => date[selectedDate] && date[selectedDate].find((t) => t === time)
+            );
+        return isExist;
+    };
+
+    const handleSelectTime = (time: number) => {
+        console.log('time', time);
+        const isExist =
+            selectedDates &&
+            selectedDates.find(
+                (date) => date[selectedDate] && date[selectedDate].find((t) => t === time)
+            );
+        if (isExist) {
+            setSelectedDates(
+                selectedDates.map((date) =>
+                    Object.keys(date)[0] === selectedDate
+                        ? { [selectedDate]: date[selectedDate].filter((t) => t !== time) }
+                        : date
+                )
+            );
+        } else {
+            const existingDate =
+                selectedDates &&
+                selectedDates.find((date) => Object.keys(date)[0] === selectedDate);
+            if (existingDate) {
+                setSelectedDates(
+                    selectedDates.map((date) =>
+                        Object.keys(date)[0] === selectedDate
+                            ? { [selectedDate]: [...date[selectedDate], time] }
+                            : date
+                    )
+                );
+            } else {
+                setSelectedDates([
+                    ...(selectedDates || []),
+                    {
+                        [selectedDate]: [time],
+                    },
+                ]);
+            }
+        }
+    };
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
-
     return (
         <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
             <TitleBox>
@@ -55,7 +109,7 @@ export default function SelectPossibleTimeModal({ isOpen, onClose }: SelectPossi
                 />
             </CalendarContainer>
             <SelectScheduleContainer>
-                <Txt variant="caption1">선호하는 시간대 총 3개를 선택해주세요</Txt>
+                <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
                 <Col style={{ width: 172 }} gap={12} alignItems="center" justifyContent="center">
                     {Object.entries(timeRanges).map(([startTime, timeRange]) => (
                         <Row
@@ -64,8 +118,12 @@ export default function SelectPossibleTimeModal({ isOpen, onClose }: SelectPossi
                             justifyContent="flex-start"
                             key={startTime}
                         >
-                            <IconButton>
-                                <CheckIcon />
+                            <IconButton onClick={() => handleSelectTime(Number(startTime))}>
+                                {handleCheckIcon(Number(startTime)) ? (
+                                    <ActiveCheckIcon />
+                                ) : (
+                                    <CheckIcon />
+                                )}
                             </IconButton>
 
                             <Txt

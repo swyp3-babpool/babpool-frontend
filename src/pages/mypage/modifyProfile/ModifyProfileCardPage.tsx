@@ -5,14 +5,17 @@ import Txt from '@/components/common/text';
 import ProfileDefaultIcon from '@/assets/icons/ic_profile_default.png';
 import { ReactComponent as ImgModifyIcon } from '@/assets/icons/ic_modify_img.svg';
 import { ReactComponent as PlusIcon } from '@/assets/icons/ic_plus.svg';
+import { ReactComponent as DeleteIcon } from '@/assets/icons/ic_delete_content.svg';
 import { Col, Row } from '@/components/common/flex/Flex';
 import Button from '@/components/common/button';
 import Header from '@/components/common/header';
 import ReviewCount from '@/components/common/review/ReviewCount';
 import {
     AddPossibleTimeButton,
+    AlbumButtonContainer,
     ButtonContainer,
     ContactInput,
+    DeleteButton,
     Image,
     ImageContainer,
     ImageDefaultContainer,
@@ -29,6 +32,7 @@ import SelectInput from '@/components/common/select/SelectInput';
 import KeywordGroup from '@/components/signup/KeywordGroup';
 import SelectPossibleTimeModal from '@/components/modifyProfile/SelectPossibleTimeModal';
 import Overlay from '@/components/common/overlay';
+import { TimeRange } from '@/interface/api/modifyProfileType';
 
 export interface ModifyProfileInfo {
     division: string;
@@ -73,12 +77,14 @@ export default function ModifyProfileCardPage() {
         },
     });
 
+    const [possibleDate, setPossibleDate] = useState<TimeRange[]>([]);
     const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
     // 'https://fastly.picsum.photos/id/338/200/300.jpg?hmac=rE5P3WDLKY1VMpd9y_FLo_OKhTzG4_3zCbGjKvgOL5w'
     const [selectedUserType, setSelectedUserType] = useState<string>('1학년');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [clickedAlbumButton, setClickedAlbumButton] = useState(false);
+    const [contactInput, setContactInput] = useState('');
     const [selectedContactType, setSelectedContactType] = useState<string>('연락처');
-    const [isPossibleTimeSelected, setIsPossibleTimeSelected] = useState(false);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -92,14 +98,14 @@ export default function ModifyProfileCardPage() {
                     {!profileImgUrl ? (
                         <ImageDefaultContainer>
                             <ImageIcon src={ProfileDefaultIcon} />
-                            <ModifyProfileImgButton>
+                            <ModifyProfileImgButton onClick={() => setClickedAlbumButton(true)}>
                                 <ImgModifyIcon />
                             </ModifyProfileImgButton>
                         </ImageDefaultContainer>
                     ) : (
                         <ImageContainer>
                             <Image src={profileImgUrl} />
-                            <ModifyProfileImgButton>
+                            <ModifyProfileImgButton onClick={() => setClickedAlbumButton(true)}>
                                 <ImgModifyIcon />
                             </ModifyProfileImgButton>
                         </ImageContainer>
@@ -158,6 +164,9 @@ export default function ModifyProfileCardPage() {
                         />
                         <InputWrapper>
                             <ContactInput
+                                type="text"
+                                value={contactInput}
+                                onChange={(e) => setContactInput(e.target.value)}
                                 placeholder={
                                     selectedContactType === '연락처'
                                         ? '010-0000-0000'
@@ -165,6 +174,11 @@ export default function ModifyProfileCardPage() {
                                 }
                             />
                             <UnderLine />
+                            {contactInput && (
+                                <DeleteButton onClick={() => setContactInput('')}>
+                                    <DeleteIcon />
+                                </DeleteButton>
+                            )}
                         </InputWrapper>
                     </Row>
                 </Col>
@@ -184,8 +198,17 @@ export default function ModifyProfileCardPage() {
                             선택하신 시간대로 밥약 요청이 접수돼요
                         </Txt>
                     </Col>
-                    <AddPossibleTimeButton onClick={() => setIsModalOpen(true)}>
-                        <PlusIcon />
+                    <AddPossibleTimeButton
+                        isExist={possibleDate.length > 0}
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        {possibleDate.length > 0 ? (
+                            <Txt variant="body" color={colors.purple_light_40}>
+                                확인/수정하기
+                            </Txt>
+                        ) : (
+                            <PlusIcon />
+                        )}
                     </AddPossibleTimeButton>
                 </Col>
                 <ButtonContainer>
@@ -197,8 +220,25 @@ export default function ModifyProfileCardPage() {
                     />
                 </ButtonContainer>
             </Col>
-            <SelectPossibleTimeModal isOpen={isModalOpen} onClose={handleCloseModal} />
-            {isModalOpen && <Overlay />}
+            <SelectPossibleTimeModal
+                selectedDates={possibleDate}
+                setSelectedDates={setPossibleDate}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+            />
+            {(isModalOpen || clickedAlbumButton) && (
+                <Overlay onClick={() => setClickedAlbumButton(false)} />
+            )}
+            {clickedAlbumButton && (
+                <AlbumButtonContainer onClick={(e) => e.stopPropagation()}>
+                    <Button
+                        text="앨범에서 선택"
+                        disabled={false}
+                        type={'accept'}
+                        onClick={() => setClickedAlbumButton(false)}
+                    />
+                </AlbumButtonContainer>
+            )}
         </ModifyProfilePageContainer>
     );
 }
