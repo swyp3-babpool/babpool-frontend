@@ -14,11 +14,12 @@ import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import ReceivedReviewPage from '@/pages/receivedReview/ReceivedReviewPage';
 import BabRequestPage from '@/pages/babRequest/BabRequestPage';
 import MyPage from '@/pages/mypage/Mypage';
-import ModifyProfileCardPage from '@/pages/mypage/ModifyProfileCardPage';
-import RejectPage from '@/pages/Notification/RejectPage';
-import NotificationPage from '@/pages/Notification/NotificationPage';
-import NotificationDetailPage from '@/pages/Notification/NotificationDetailPage';
-import AcceptPage from '@/pages/Notification/AcceptPage';
+import ModifyProfileCardPage from '@/pages/mypage/modifyProfile/ModifyProfileCardPage';
+import RejectPage from '@/pages/notification/reject/RejectPage';
+import NotificationPage from '@/pages/notification/NotificationPage';
+import NotificationDetailPage from '@/pages/notification/detail/NotificationDetailPage';
+import AcceptPage from '@/pages/notification/accept/AcceptPage';
+import HistoryPage from '@/pages/mypage/history/HistoryPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -29,9 +30,9 @@ export default function RouteProvider() {
                 <Route path="signin" element={<SignInPage />} />
                 <Route path="signup" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
-                <Route path='total' element={<TotalBabpoolPage />} />
-                <Route path='total/profile/:userId' element={<ProfileDetailsPage />} />
-                <Route path='total/profile/:userId/review' element={<ReceivedReviewPage />} />
+                <Route path="total" element={<TotalBabpoolPage />} />
+                <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
+                <Route path="total/profile/:userId/review" element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
                 <Route path="total/profile/:userId/request" element={<BabRequestPage />} />
@@ -41,6 +42,7 @@ export default function RouteProvider() {
                 <Route path="reject" element={<RejectPage />} />
                 <Route path="mypage" element={<MyPage />} />
                 <Route path="mypage/profile-modify" element={<ModifyProfileCardPage />} />
+                <Route path="mypage/history" element={<HistoryPage />} />
             </>
         )
     );
