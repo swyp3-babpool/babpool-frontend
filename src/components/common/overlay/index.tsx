@@ -1,8 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Overlay({ children }: { children?: React.ReactNode }) {
-    return <OverayWrapper>{children}</OverayWrapper>;
+export default function Overlay({
+    children,
+    onClick,
+}: {
+    children?: React.ReactNode;
+    onClick?: () => void;
+}) {
+    return <OverayWrapper onClick={onClick}>{children}</OverayWrapper>;
 }
 
 export const OverayWrapper = styled.div`
