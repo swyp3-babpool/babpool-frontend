@@ -1,6 +1,7 @@
 import { CommonResponseType } from "@/interface/api/commonType";
 import axios, { AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios"
 import { error } from "console";
+import { regenerateAccessTokenRequest } from "./auth/auth";
 
 interface CustomInstance extends AxiosInstance {
     interceptors: {
@@ -35,17 +36,27 @@ client.interceptors.request.use(config => {
     return config
 },
     error => {
+        console.error(error)
         return Promise.reject(error)
     }
 )
 
 client.interceptors.response.use(
     res => {
-    
+        if(res.data.code === 401 && res.data.message === '기간이 만료된 토큰') {
+            regenerateAccessTokenRequest()
+            .then((res) => {
+                if(res.code === 200) {
+                    console.log('토큰 재발급 성공')
+                    localStorage.setItem('accessToken', res.data)
+                }
+            })
+        }
     return res
 },
     error => {
         // 에러 형식에 따른 분기처리
+        console.error(error)
         return Promise.reject(error)
     }
 )

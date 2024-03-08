@@ -6,16 +6,18 @@ import { ReactComponent as SearchIcon } from '@/assets/icons/ic_search.svg';
 type SearchbarProps = {
     value: string;
     placeHolder?: string;
+    inputRef?: React.RefObject<HTMLInputElement>;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export default function Searchbar({ value, placeHolder = '', onChange }: SearchbarProps) {
+export default function Searchbar({ value, placeHolder = '', inputRef, onChange, onKeyDown }: SearchbarProps) {
     return (
         <SearchbarBox>
             <IconBox>
                 <SearchIcon />
             </IconBox>
-            <SearchbarInput value={value} placeholder={placeHolder} onChange={onChange} />
+            <SearchbarInput value={value} placeholder={placeHolder} ref={inputRef} onChange={onChange} onKeyDown={onKeyDown} />
         </SearchbarBox>
     );
 }
