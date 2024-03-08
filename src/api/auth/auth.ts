@@ -16,5 +16,10 @@ export const signInRequest = async (requestBody: SignInRequestDataType): Promise
 
 export const logoutRequest = async (): Promise<CommonResponseType<null>> => {
     const res = await post(`/api/user/sign/out`, {})
-    return res.data
+    return res
+}
+
+export const regenerateAccessTokenRequest = async (): Promise<CommonResponseType<string>> => {
+    const res = await post(`api/token/access/refresh`, {})
+    return res
 }
