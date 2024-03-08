@@ -22,10 +22,10 @@ export const INTEREST_KEYWORD = {
 }
 
 export const INIT_INTEREST_KEYWORD = {
-    'university': [],
-    'exam': [],
-    'employment': [],
-    'graduateSchool': []
+    'university': [] as string[],
+    'exam': [] as string[],
+    'employment': [] as string[],
+    'graduateSchool': [] as string[]
 }
 
 export const WORTH_LIST = [
