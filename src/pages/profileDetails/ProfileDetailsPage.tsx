@@ -11,60 +11,50 @@ import { ReactComponent as RightArrorIcon } from '@/assets/icons/ic_right_arrow.
 import { colors } from '@/assets/styles/theme';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { getUserProfile } from '@/api/profile/profileApi';
 import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
+import { getDivisionName } from '@/utils/util';
+import { getUserProfile } from '@/api/profile/profileApi';
 
 export default function ProfileDetailsPage() {
     const { navigate } = useNavigation();
 
-    const {userId} = useParams();
+    const { userId } = useParams();
 
-    const { data, isError, isLoading } = useQuery<ProfileDetailsType>({
-        queryKey: [`profile`, userId],
+    const {
+        data: profile,
+        isError,
+        isLoading,
+    } = useQuery<ProfileDetailsType>({
+        queryKey: [`api/profile/detail/${userId}`],
         queryFn: () => getUserProfile(userId as string),
     });
 
-    console.log(data)
+    const reviewCount = profile && [
+        profile.reviewCount.best,
+        profile.reviewCount.good,
+        profile.reviewCount.bad,
+    ];
 
-    return (
+    return !isLoading && profile && reviewCount ? (
         <ProfileDetailsPageContainer>
             <Header text="프로필카드 보기" />
             <ContentSection>
                 <ProfileBoxContainer>
-                    <ProfileBox name="조민택" group="4학년" nameType="column" />
+                    <ProfileBox
+                        name={profile.name}
+                        url={profile.profileImg}
+                        group={getDivisionName(profile.grade)}
+                        nameType="column"
+                    />
                 </ProfileBoxContainer>
                 <ContentBox>
-                    <Txt variant="h5">대학생활 고민이 있으시면 편하게 이야기해요!</Txt>
-                    <Txt variant="caption1">
-                        예시 저는 원래 문과 계열의 학부 출신이였습니다. 도중에 데이터 사이언스 관련
-                        분야에 관심이 생겨 데이터 관련 전공으로 학부 복수전공을 하게 되었고, 뒤늦게
-                        시작했기 때문에 부족한 실력을 채우기 위해 치열하게 공부해왔습니다. 그래서
-                        아무것도 없는 '밑바닥'부터 실력을 쌓아 왔기 때문에 저와 같은 상황인 분들의
-                        입장이 너무나도 공감이 됩니다. 또한 Data Scientist 또는 ML Engineer로 취업
-                        목표를 설정한 이후에 수많은 시행착오를 겪었지만, 포기하지 않고 끊임없이
-                        도전하고 노력해오며 현재는 한국을 대표하는 IT 대기업인 카카오 계열사 중 한
-                        곳에서 Data Scientist 직무로 재직 중이며 하루하루 성장해 나가고 있습니다. 이
-                        쪽 직무를 준비하다 보면 대학원을 가야 할지 말지, 어떤 방향성을 갖고 공부를
-                        하고 취업을 해야 할지, 회사에서 요구하는 역량은 무엇인지.. 막막한 것들이 한
-                        둘이 아니라고 생각합니다. 그래서 지금도 이러한 막연함을 느끼는 취업 준비생
-                        또는 이쪽 직무로 이직을 하시려는 분들에게 제 경험이 큰 도움이 되도록
-                        기여하고 싶습니다.
-                    </Txt>
+                    <Txt variant="h5">{profile.intro}</Txt>
+                    <Txt variant="caption1">{profile.contents}</Txt>
                 </ContentBox>
                 <KeywordContainer>
                     <Txt variant="h5">관심 키워드</Txt>
                     <KeywordList>
-                        {[
-                            '편입생',
-                            '전공',
-                            '입시생',
-                            '자취',
-                            '동아리',
-                            '대외활동',
-                            '스터디',
-                            '유학생',
-                            '네트워킹',
-                        ].map((keyword) => (
+                        {profile.keywords.map((keyword: string) => (
                             <Keyword
                                 key={keyword}
                                 name={keyword}
@@ -86,14 +76,19 @@ export default function ProfileDetailsPage() {
                         </ReviewDetailsBox>
                     </ReviewTitleBox>
                     <ReviewCountContainer>
-                        {['최고예요', '좋아요', '별로예요'].map((text) => (
-                            <ReviewCount key={text} text={text} count={1} />
+                        {['최고예요', '좋아요', '별로예요'].map((text, i) => (
+                            <ReviewCount key={text} text={text} count={reviewCount[i]} />
                         ))}
                     </ReviewCountContainer>
                     <ReviewTextContainer>
-                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
-                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
-                        <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                        {profile.reviews.length > 0 ? (
+                            profile.reviews.map((review, i) => <Review key={review.reviewId} text={review.reviewComment} />)
+                        ) : (
+                            <>
+                                <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                                <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                            </>
+                        )}
                     </ReviewTextContainer>
                 </ReviewContainer>
                 <ButtonBox>
@@ -101,6 +96,8 @@ export default function ProfileDetailsPage() {
                 </ButtonBox>
             </ContentSection>
         </ProfileDetailsPageContainer>
+    ) : (
+        <p>로딩중</p>
     );
 }
 

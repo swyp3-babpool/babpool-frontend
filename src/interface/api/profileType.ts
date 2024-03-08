@@ -9,6 +9,7 @@ export type ProfileType = {
     profileActiveFlag: boolean;
     keywordNameList: string[];
     userGrade: string;
+    userNickname: string;
 }
 
 type SoltType = {

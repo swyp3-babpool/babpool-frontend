@@ -15,17 +15,17 @@ import Checkbox from '../common/checkbox/Checkbox';
 import Button from '../common/button';
 import KeywordList from '../common/keyword/KeywordList';
 import { CheckboxList } from '../signup/DivisionGroup';
-import { SearchInfoType } from '@/pages/totalBabpool/TotalBabpoolPage';
 import { KeywordType } from '../signup/KeywordGroup';
 import { useEffect, useRef, useState } from 'react';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { SearchInfoType } from '@/atom/searchInfoStore';
 
 type FilterModalProps = {
     open: boolean;
     filterCategory: FilterCategoryType;
     filterRef: React.MutableRefObject<SearchInfoType>;
-    setSearchInfo: React.Dispatch<React.SetStateAction<SearchInfoType>>;
+    setSearchInfo: any;
     handleChangeCategory: (category: FilterCategoryType) => void;
     handleSetFilterModal: (category: FilterCategoryType) => void;
     handleCloseModal: () => void;

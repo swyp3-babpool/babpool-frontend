@@ -26,9 +26,9 @@ export const getDivisionId = (division: string) => {
     }
 }
 
-export const getDivisionName = (division: string) => {
-    switch (division) {
-        case 'FIRST_GRADEFIRST_GRADE': return '1학년'
+export const getDivisionName = (divisionId: string) => {
+    switch (divisionId) {
+        case 'FIRST_GRADE': return '1학년'
         case 'SECOND_GRADE': return '2학년'
         case 'THIRD_GRADE': return '3학년'
         case 'FOURTH_GRADE': return '4학년'
