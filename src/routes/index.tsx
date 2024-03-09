@@ -28,14 +28,14 @@ export default function RouteProvider() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth/kakao/callback" element={<KakaoAuthenticationPage />} />
                 <Route path="signin" element={<SignInPage />} />
-                <Route path="signup" element={<SignUpPage />} />
+                <Route path="signup/:uuid" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
                 <Route path="total/profile/:userId/review" element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
-                <Route path="total/profile/:userId/request" element={<BabRequestPage />} />
+                <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
                 <Route path="accept" element={<AcceptPage />} />
