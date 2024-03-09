@@ -1,5 +1,6 @@
 import { getProfiles } from '@/api/profile/profileApi';
 import { colors } from '@/assets/styles/theme';
+import { SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
 import Header from '@/components/common/header';
 import Overlay from '@/components/common/overlay';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -19,18 +20,10 @@ import {
 import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-
-export type SearchInfoType = {
-    searchText: string;
-    division: ('1학년' | '2학년' | '3학년' | '4학년' | '졸업생' | '대학원생')[];
-    filterKeyword: {
-        university: string[]; // 대학생활
-        exam: string[]; // 수험
-        employment: string[]; // 취업
-        graduateSchool: string[]; // 대학원
-    };
-};
+import LoadingGif from '@/assets/gif/loading.gif';
+import Loading from '@/components/common/loading/Loading';
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
@@ -38,19 +31,12 @@ export default function TotalBabpoolPage() {
     const groupName = searchParams.get('groupName') ? searchParams.get('groupName') : '';
 
     const [filterModalOpen, setFilterModalOpen] = useState(false);
-    const [searchInfo, setSearchInfo] = useState<SearchInfoType>({
-        searchText: '',
-        division: ['1학년'],
-        filterKeyword: groupName
-            ? {
-                  ...INIT_INTEREST_KEYWORD,
-                  [groupName]: INTEREST_KEYWORD[groupName as keyof typeof INTEREST_KEYWORD],
-              }
-            : INIT_INTEREST_KEYWORD,
-    });
+    const [searchValue, setSearchValue] = useState('');
+    const [searchInfo, setSearchInfo] = useRecoilState(searchInfoState);
 
-    const [page, setPage] = useState(0);
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const filterRef = useRef<SearchInfoType>(searchInfo);
+    console.log(filterRef.current);
 
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
@@ -66,7 +52,7 @@ export default function TotalBabpoolPage() {
             searchTerm: searchText,
             userGrades: requestDivision,
             keywords: requestKeyword ? requestKeyword : '',
-            page,
+            page: searchInfo.page,
             size: 10,
             sort: 'profile_intro',
         };
@@ -76,12 +62,13 @@ export default function TotalBabpoolPage() {
     };
 
     const { data, isError, isLoading } = useQuery<ProfilesType>({
-        queryKey: ['profiles', searchInfo, page],
+        queryKey: ['profiles', searchInfo],
         queryFn: fetchProfileList,
     });
     const { navigate } = useNavigation();
 
     const handleProfileSelect = (profile: ProfileType) => {
+        setSearchInfo((prev) => ({ ...prev, prevFilterKeyword: prev.filterKeyword }));
         navigate(`profile/${profile.userId}`);
     };
 
@@ -89,7 +76,17 @@ export default function TotalBabpoolPage() {
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const { value } = e.target;
-        setSearchInfo((prev) => ({ ...prev, searchText: value }));
+        setSearchValue(value);
+        if (searchValue.length > 20) {
+            setSearchValue((prev) => prev.slice(0, 21));
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            // Enter 키가 눌렸을 때 fetchProfileList 함수 호출
+            setSearchInfo((prev) => ({ ...prev, searchText: searchValue }));
+        }
     };
 
     // 필터 카테고리 변경
@@ -105,27 +102,55 @@ export default function TotalBabpoolPage() {
     // 필터 모달 열기/닫기
     const handleSetFilterModal = (category: FilterCategoryType) => {
         setFilterModalOpen(!filterModalOpen);
-        handleChangeCategory(category);
         filterRef.current = searchInfo;
+        handleChangeCategory(category);
     };
 
     const handlePageChange = (page: number) => {
-        setPage(page);
+        setSearchInfo((prev) => ({ ...prev, page }));
     };
 
     useEffect(() => {
-        fetchProfileList();
-    }, [searchInfo, page]);
+        if (searchInputRef.current) {
+            searchInputRef.current?.focus();
+        }
+    }, [isLoading]);
 
-    return !isLoading && data ? (
+    useEffect(() => {
+        // 이전 필터 키워드가 존재하면 유지, 없으면 초기화
+        const validateFilterKeyword = [] as string[];
+        console.log(Object.values(searchInfo.prevFilterKeyword));
+        Object.values(searchInfo.prevFilterKeyword).map((groupKeywords) => {
+            groupKeywords.map((item) => {
+                validateFilterKeyword.push(item);
+            });
+        });
+        console.log(validateFilterKeyword);
+        setSearchInfo((prev) => ({
+            ...prev,
+            filterKeyword:
+                validateFilterKeyword.length !== 0
+                    ? searchInfo.prevFilterKeyword
+                    : groupName
+                    ? {
+                          ...INIT_INTEREST_KEYWORD,
+                          [groupName]: INTEREST_KEYWORD[groupName as keyof typeof INTEREST_KEYWORD],
+                      }
+                    : INIT_INTEREST_KEYWORD,
+        }));
+    }, [groupName]);
+
+    return (
         <>
             <TotalBabpoolPageContainer>
                 <Header text="밥풀 전체보기" />
                 <SearchBarContainer>
                     <Searchbar
-                        value={searchInfo.searchText}
+                        value={searchValue}
                         placeHolder="검색하기"
+                        inputRef={searchInputRef}
                         onChange={handleTextChange}
+                        onKeyDown={handleKeyDown}
                     />
                 </SearchBarContainer>
                 <FilterBoxContainer>
@@ -138,49 +163,51 @@ export default function TotalBabpoolPage() {
                     ))}
                 </FilterBoxContainer>
 
-                {/* 유저 프로필 */}
-                <UserProfileContainer>
-                    {data.content.map((profile) => {
-                        const keywords = profile.keywordIdWithNameString
-                            .split(',')
-                            .map((item: string) => item.split(':'))
-                            .map((item: string[]) => item[1]);
-                        return (
-                            <UserProfileBox
-                                key={profile.userId}
-                                onClick={() => handleProfileSelect(profile)}
-                            >
-                                <ProfileBox
-                                    name={String(profile.userId)}
-                                    content={profile.profileIntro}
-                                    group={getDivisionName(profile.userGrade)}
-                                    url={profile.profileImageUrl}
-                                />
-                                <ProfileKeywords keywords={keywords} />
-                            </UserProfileBox>
-                        );
-                    })}
-                </UserProfileContainer>
-                <PageNation
-                    currentPage={page + 1}
-                    totalPage={data.totalPages}
-                    handlePageChange={handlePageChange}
-                />
+                {!isLoading && data ? (
+                    <>
+                        {/* 유저 프로필 */}
+                        <UserProfileContainer>
+                            {data.content.map((profile) => {
+                                const keywords = profile.keywordNameList;
 
-                <FilterModal
-                    open={filterModalOpen}
-                    setSearchInfo={setSearchInfo}
-                    filterCategory={filterCategory}
-                    filterRef={filterRef}
-                    handleChangeCategory={handleChangeCategory}
-                    handleSetFilterModal={handleSetFilterModal}
-                    handleCloseModal={handleCloseModal}
-                />
-                {filterModalOpen && <Overlay />}
+                                return (
+                                    <UserProfileBox
+                                        key={profile.userId}
+                                        onClick={() => handleProfileSelect(profile)}
+                                    >
+                                        <ProfileBox
+                                            name={String(profile.userNickname)}
+                                            content={profile.profileIntro}
+                                            group={getDivisionName(profile.userGrade)}
+                                            url={profile.profileImageUrl}
+                                        />
+                                        <ProfileKeywords keywords={keywords} />
+                                    </UserProfileBox>
+                                );
+                            })}
+                        </UserProfileContainer>
+                        <PageNation
+                            currentPage={searchInfo.page + 1}
+                            totalPage={data.totalPages}
+                            handlePageChange={handlePageChange}
+                        />
+
+                        <FilterModal
+                            open={filterModalOpen}
+                            setSearchInfo={setSearchInfo}
+                            filterCategory={filterCategory}
+                            filterRef={filterRef}
+                            handleChangeCategory={handleChangeCategory}
+                            handleSetFilterModal={handleSetFilterModal}
+                            handleCloseModal={handleCloseModal}
+                        />
+                        {filterModalOpen && <Overlay />}
+                    </>
+                ) : (
+                    <Loading />
+                )}
             </TotalBabpoolPageContainer>
         </>
-    ) : (
-        <p>로딩중</p>
     );
 }
 

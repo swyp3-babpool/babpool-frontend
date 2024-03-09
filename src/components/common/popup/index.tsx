@@ -35,7 +35,9 @@ export default function Popup({ text, secondText, button, secondButton, closePop
                 {button}
                 {secondButton && secondButton}
             </ButtonContainer>
-            <CloseButton onClick={closePopup} />
+            <IconBox onClick={closePopup}>
+                <CloseButton />
+            </IconBox>
         </PopupWrapper>
     );
 }
@@ -73,9 +75,13 @@ export const ButtonContainer = styled.div`
     bottom: 20px;
 `;
 
-export const CloseButton = styled(CloseIcon)`
+export const CloseButton = styled(CloseIcon)``;
+
+export const IconBox = styled.div`
+    width: 24px;
+    height: 24px;
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     cursor: pointer;
 `;

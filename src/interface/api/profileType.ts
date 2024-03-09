@@ -7,8 +7,9 @@ export type ProfileType = {
     profileContactPhone: string;
     profileContactChat: string;
     profileActiveFlag: boolean;
-    keywordIdWithNameString: string;
+    keywordNameList: string[];
     userGrade: string;
+    userNickname: string;
 }
 
 type SoltType = {
