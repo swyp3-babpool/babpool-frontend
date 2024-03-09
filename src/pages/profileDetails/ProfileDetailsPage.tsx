@@ -14,10 +14,10 @@ import { useParams } from 'react-router-dom';
 import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
 import { getDivisionName } from '@/utils/util';
 import { getUserProfile } from '@/api/profile/profileApi';
+import Loading from '@/components/common/loading/Loading';
 
 export default function ProfileDetailsPage() {
     const { navigate } = useNavigation();
-
     const { userId } = useParams();
 
     const {
@@ -35,10 +35,12 @@ export default function ProfileDetailsPage() {
         profile.reviewCount.bad,
     ];
 
-    return !isLoading && profile && reviewCount ? (
+    return (
         <ProfileDetailsPageContainer>
             <Header text="프로필카드 보기" />
-            <ContentSection>
+            {
+                !isLoading && profile && reviewCount ? (
+                    <ContentSection>
                 <ProfileBoxContainer>
                     <ProfileBox
                         name={profile.name}
@@ -82,23 +84,31 @@ export default function ProfileDetailsPage() {
                     </ReviewCountContainer>
                     <ReviewTextContainer>
                         {profile.reviews.length > 0 ? (
-                            profile.reviews.map((review, i) => <Review key={review.reviewId} text={review.reviewComment} />)
+                            profile.reviews.map((review, i) => {
+                                if(i > 2) return
+                                return (
+                                    <Review key={review.reviewId} text={review.reviewComment} />
+                                )})
                         ) : (
                             <>
-                                <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
-                                <Review text="최고의 컨설팅을 해주셔서 감사합니다ㅠㅜ!!" />
+                                <Txt variant='caption1' color={colors.white_30}>아직 후기가 없어요</Txt>
+
                             </>
                         )}
                     </ReviewTextContainer>
                 </ReviewContainer>
                 <ButtonBox>
-                    <Button text="밥약 요청" onClick={() => navigate('request')} />
+                    <Button text="밥약 요청" onClick={() => navigate(`/total/profile/${userId}-${profile.name}/request`)} />
                 </ButtonBox>
             </ContentSection>
+                )
+                : (
+                    <Loading />
+                )
+            }
+            
         </ProfileDetailsPageContainer>
-    ) : (
-        <p>로딩중</p>
-    );
+    ) 
 }
 
 const ProfileDetailsPageContainer = styled.section`

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
@@ -7,39 +7,65 @@ import SelectTimeBox from './SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
 import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { useQuery } from '@tanstack/react-query';
+import { getAvailableSchedule } from '@/api/babRequest/babRequestApi';
+import { UserScheduleType } from '@/interface/api/babRequestType';
+import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
+    userId: number;
+    handleSelectSchedule: (selectedSchedule: UserScheduleType) => void;
     onClose: () => void;
 };
 
-export default function SelectScheduleModal({ isOpen, onClose }: SelectScheduleModalProps) {
+export default function SelectScheduleModal({ isOpen, userId, handleSelectSchedule, onClose }: SelectScheduleModalProps) {
+    const [possibleScheduleList, setPossibleScheduleList] = useState<UserScheduleType[]>([]);
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
+
+    const {
+        data: userSchedule,
+        isLoading,
+        isError,
+    } = useQuery<UserScheduleType[]>({
+        queryKey: [`/api/appointment/${userId}/datetime`, userId],
+        queryFn: () => getAvailableSchedule(Number(userId)),
+    });
+
+    const handleSetPossibleSchedule = (scheduleList: UserScheduleType[]) => {
+        setPossibleScheduleList(scheduleList);
+    };
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     return (
-        <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
-            <TitleBox>
-                <EmptyDiv />
-                <Txt variant="body">일정 선택</Txt>
-                <IconBox onClick={onClose}>
-                    <CloseIcon />
-                </IconBox>
-            </TitleBox>
-            <CalendarContainer>
-                <ScheduleCalendar onClose={onClose} />
-            </CalendarContainer>
-            <SelectScheduleContainer>
-                <Txt variant="caption1">선호하는 시간대 1개를 선택해주세요</Txt>
-                <SeleceTimeContainer>
-                    <SelectTimeBox timeText="오후 05:00 ~ 오후 06:00" />
-                    <SelectTimeBox timeText="오후 06:00 ~ 오후 07:00" />
-                    <SelectTimeBox timeText="오후 08:00 ~ 오후 09:00" />
-                    <SelectTimeBox timeText="오후 09:00 ~ 오후 10:00" />
-                </SeleceTimeContainer>
-            </SelectScheduleContainer>
-        </SelectScheduleModalModalContainer>
+        !isLoading &&
+        userSchedule && (
+            <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
+                <TitleBox>
+                    <EmptyDiv />
+                    <Txt variant="body">일정 선택</Txt>
+                    <IconBox onClick={onClose}>
+                        <CloseIcon />
+                    </IconBox>
+                </TitleBox>
+                <CalendarContainer>
+                    <ScheduleCalendar
+                        userSchedule={userSchedule}
+                        handleSetPossibleSchedule={handleSetPossibleSchedule}
+                        onClose={onClose}
+                    />
+                </CalendarContainer>
+                <SelectScheduleContainer>
+                    <Txt variant="caption1">선호하는 시간대 1개를 선택해주세요</Txt>
+                    <SelectTimeContainer>
+                        {possibleScheduleList.map((schedule) => (
+                            <SelectTimeBox key={schedule.possibleTimeId} schedule={schedule} handleSelectSchedule={handleSelectSchedule} />
+                        ))}
+                    </SelectTimeContainer>
+                </SelectScheduleContainer>
+            </SelectScheduleModalModalContainer>
+        )
     );
 }
 
@@ -71,6 +97,8 @@ const CalendarContainer = styled.div`
 
 const SelectScheduleContainer = styled.div`
     width: 100%;
+    max-height: 345px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -79,7 +107,7 @@ const SelectScheduleContainer = styled.div`
     background-color: ${colors.white_10};
 `;
 
-const SeleceTimeContainer = styled.div`
+const SelectTimeContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
