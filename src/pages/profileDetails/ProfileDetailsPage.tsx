@@ -84,7 +84,11 @@ export default function ProfileDetailsPage() {
                     </ReviewCountContainer>
                     <ReviewTextContainer>
                         {profile.reviews.length > 0 ? (
-                            profile.reviews.map((review, i) => <Review key={review.reviewId} text={review.reviewComment} />)
+                            profile.reviews.map((review, i) => {
+                                if(i > 2) return
+                                return (
+                                    <Review key={review.reviewId} text={review.reviewComment} />
+                                )})
                         ) : (
                             <>
                                 <Txt variant='caption1' color={colors.white_30}>아직 후기가 없어요</Txt>
