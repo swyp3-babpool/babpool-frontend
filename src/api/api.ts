@@ -1,7 +1,6 @@
 import { CommonResponseType } from "@/interface/api/commonType";
 import axios, { AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios"
-import { error } from "console";
-import { regenerateAccessTokenRequest } from "./auth/auth";
+import { logoutRequest, regenerateAccessTokenRequest } from "./auth/auth";
 
 interface CustomInstance extends AxiosInstance {
     interceptors: {
@@ -49,6 +48,13 @@ client.interceptors.response.use(
                 if(res.code === 200) {
                     console.log('토큰 재발급 성공')
                     localStorage.setItem('accessToken', res.data)
+                }
+                if(res.code === 401 || res.code === 404) {
+                    logoutRequest()
+                    .then((res) => {
+                        console.log('리프레시 토큰이 만료되서 로그아웃 처리되었습니다.')
+                    
+                    })
                 }
             })
         }
