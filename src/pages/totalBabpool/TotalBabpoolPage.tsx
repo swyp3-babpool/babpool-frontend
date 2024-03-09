@@ -22,6 +22,8 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import LoadingGif from '@/assets/gif/loading.gif';
+import Loading from '@/components/common/loading/Loading';
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
@@ -117,11 +119,11 @@ export default function TotalBabpoolPage() {
     useEffect(() => {
         // 이전 필터 키워드가 존재하면 유지, 없으면 초기화
         const validateFilterKeyword = [] as string[];
-        console.log( Object.values(searchInfo.prevFilterKeyword))
+        console.log(Object.values(searchInfo.prevFilterKeyword));
         Object.values(searchInfo.prevFilterKeyword).map((groupKeywords) => {
             groupKeywords.map((item) => {
                 validateFilterKeyword.push(item);
-            })
+            });
         });
         console.log(validateFilterKeyword);
         setSearchInfo((prev) => ({
@@ -138,7 +140,7 @@ export default function TotalBabpoolPage() {
         }));
     }, [groupName]);
 
-    return !isLoading && data ? (
+    return (
         <>
             <TotalBabpoolPageContainer>
                 <Header text="밥풀 전체보기" />
@@ -161,47 +163,51 @@ export default function TotalBabpoolPage() {
                     ))}
                 </FilterBoxContainer>
 
-                {/* 유저 프로필 */}
-                <UserProfileContainer>
-                    {data.content.map((profile) => {
-                        const keywords = profile.keywordNameList;
+                {!isLoading && data ? (
+                    <>
+                        {/* 유저 프로필 */}
+                        <UserProfileContainer>
+                            {data.content.map((profile) => {
+                                const keywords = profile.keywordNameList;
 
-                        return (
-                            <UserProfileBox
-                                key={profile.userId}
-                                onClick={() => handleProfileSelect(profile)}
-                            >
-                                <ProfileBox
-                                    name={String(profile.userNickname)}
-                                    content={profile.profileIntro}
-                                    group={getDivisionName(profile.userGrade)}
-                                    url={profile.profileImageUrl}
-                                />
-                                <ProfileKeywords keywords={keywords} />
-                            </UserProfileBox>
-                        );
-                    })}
-                </UserProfileContainer>
-                <PageNation
-                    currentPage={searchInfo.page + 1}
-                    totalPage={data.totalPages}
-                    handlePageChange={handlePageChange}
-                />
+                                return (
+                                    <UserProfileBox
+                                        key={profile.userId}
+                                        onClick={() => handleProfileSelect(profile)}
+                                    >
+                                        <ProfileBox
+                                            name={String(profile.userNickname)}
+                                            content={profile.profileIntro}
+                                            group={getDivisionName(profile.userGrade)}
+                                            url={profile.profileImageUrl}
+                                        />
+                                        <ProfileKeywords keywords={keywords} />
+                                    </UserProfileBox>
+                                );
+                            })}
+                        </UserProfileContainer>
+                        <PageNation
+                            currentPage={searchInfo.page + 1}
+                            totalPage={data.totalPages}
+                            handlePageChange={handlePageChange}
+                        />
 
-                <FilterModal
-                    open={filterModalOpen}
-                    setSearchInfo={setSearchInfo}
-                    filterCategory={filterCategory}
-                    filterRef={filterRef}
-                    handleChangeCategory={handleChangeCategory}
-                    handleSetFilterModal={handleSetFilterModal}
-                    handleCloseModal={handleCloseModal}
-                />
-                {filterModalOpen && <Overlay />}
+                        <FilterModal
+                            open={filterModalOpen}
+                            setSearchInfo={setSearchInfo}
+                            filterCategory={filterCategory}
+                            filterRef={filterRef}
+                            handleChangeCategory={handleChangeCategory}
+                            handleSetFilterModal={handleSetFilterModal}
+                            handleCloseModal={handleCloseModal}
+                        />
+                        {filterModalOpen && <Overlay />}
+                    </>
+                ) : (
+                    <Loading />
+                )}
             </TotalBabpoolPageContainer>
         </>
-    ) : (
-        <p>로딩중</p>
     );
 }
 

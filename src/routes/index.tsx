@@ -34,7 +34,7 @@ export default function RouteProvider() {
                 <Route path='total/profile/:userId/review' element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
-                <Route path="total/profile/:userId/request" element={<BabRequestPage />} />
+                <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
                 <Route path="accept" element={<AcceptPage />} />
