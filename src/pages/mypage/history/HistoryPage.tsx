@@ -24,7 +24,11 @@ export default function HistoryPage() {
     };
 
     const handleNotificationCardClick = () => {
-        navigate(`/mypage/history/${selected}`);
+        if (selected === 'complete') {
+            navigate('/mypage/review');
+        } else {
+            navigate(`/mypage/history/${selected}`);
+        }
     };
 
     return (

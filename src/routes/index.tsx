@@ -20,6 +20,9 @@ import NotificationPage from '@/pages/notification/NotificationPage';
 import NotificationDetailPage from '@/pages/notification/detail/NotificationDetailPage';
 import AcceptPage from '@/pages/notification/accept/AcceptPage';
 import HistoryPage from '@/pages/mypage/history/HistoryPage';
+import SendReviewPage from '@/pages/mypage/review/SendReviewPage';
+import MyReceivedReviewsPage from '@/pages/mypage/review/MyReceivedReviews';
+import DeleteAccountPage from '@/pages/deleteAccount/DeleteAccountPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -38,7 +41,10 @@ export default function RouteProvider() {
                 <Route path="total/profile/:userId/review" element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
-                <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
+                <Route
+                    path="total/profile/:targetProfileIdAndName/request"
+                    element={<BabRequestPage />}
+                />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
                 <Route path="accept" element={<AcceptPage />} />
@@ -46,6 +52,9 @@ export default function RouteProvider() {
                 <Route path="mypage" element={<MyPage />} />
                 <Route path="mypage/profile-modify" element={<ModifyProfileCardPage />} />
                 <Route path="mypage/history" element={<HistoryPage />} />
+                <Route path="mypage/review" element={<SendReviewPage />} />
+                <Route path="mypage/my-received-reviews" element={<MyReceivedReviewsPage />} />
+                <Route path="deleteAccount" element={<DeleteAccountPage />} />
             </>
         )
     );

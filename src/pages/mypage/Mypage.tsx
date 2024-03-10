@@ -36,6 +36,10 @@ export default function MyPage() {
         navigate('/mypage/profile-modify');
     };
 
+    const handleDeleteAccountButtonClick = () => {
+        navigate('/deleteAccount');
+    };
+
     return (
         <MyPageContainer>
             <ProfileContainer>
@@ -92,10 +96,11 @@ export default function MyPage() {
                         내가 받은 후기
                     </Txt>
                     <Row
-                        style={{ width: 'auto' }}
+                        style={{ width: 'auto', cursor: 'pointer' }}
                         alignItems="center"
                         gap={4}
                         justifyContent="flex-end"
+                        onClick={() => navigate('/mypage/my-received-reviews')}
                     >
                         <Txt variant="caption1" color={colors.black}>
                             더보기
@@ -114,7 +119,7 @@ export default function MyPage() {
 
             <ThickDevider />
 
-            <DeleteAccountButton>
+            <DeleteAccountButton onClick={handleDeleteAccountButtonClick}>
                 <Txt variant="caption2" color={colors.white_30}>
                     회원탈퇴
                 </Txt>
