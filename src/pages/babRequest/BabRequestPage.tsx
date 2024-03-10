@@ -230,6 +230,7 @@ const RequestContainer = styled.div`
     width: 100%;
     padding: 0 20px;
     margin-top: 25px;
+    overflow-y: auto;
 `;
 
 const TextContainer = styled.div`
