@@ -10,11 +10,19 @@ export interface ProfileDetailsType {
         good: number;
         bad: number;
     };
-    reviews: {
-        appointmentId: number;
-        reviewComment: string;
-        reviewCreateDate: string;
-        reviewId: number;
-        reviewRate: string;
-    }[];
+    reviews: ReviewType[];
 }
+
+export type ReviewCountType = {
+    bestCount: number;
+    greatCount: number;
+    badCount: number;
+}
+
+export type ReviewType = {
+    appointmentId: number;
+    reviewComment: string;
+    reviewCreateDate: string;
+    reviewId: number;
+    reviewRate: string;
+};
