@@ -37,19 +37,23 @@ export default function SignUpPage() {
     const [completePopupOpen, setCompletePopupOpen] = useState(false);
     const [isSignUpError, setIsSignUpError] = useState(false);
 
-    const handleSignUp = (path: string) => {
+    const handleSignUp = () => {
         // uuid가 없을 때 에러 발생
         if (!uuid) {
             setIsSignUpError(true);
         }
         const signUpRequestBody = {
-            userUuid: '',
+            userUuid: uuid as string,
             userGrade: signUpInfo.division,
             keywords: Object.values(signUpInfo.keywordGroups).flat(),
         };
-        const signUpRes = signUpRequest(signUpRequestBody);
-        setCompletePopupOpen(false);
-        handleNavigate(path);
+        console.log(signUpRequestBody)
+        signUpRequest(signUpRequestBody)
+        .then((res) => {
+            if(res.code === 200) {
+                setCompletePopupOpen(true);
+            }
+        }).catch(console.error)
     };
 
     const signUpValidateCheck = () => {
@@ -77,7 +81,7 @@ export default function SignUpPage() {
                             text="완료"
                             disabled={!signUpValidateCheck()}
                             type={signUpValidateCheck() ? 'accept' : 'refuse'}
-                            onClick={() => setCompletePopupOpen(true)}
+                            onClick={handleSignUp}
                         />
                     </ButtonContainer>
                 </SignUpSection>
@@ -87,9 +91,9 @@ export default function SignUpPage() {
                     <Popup
                         text="회원가입을 완료했어요!"
                         secondText="프로필카드를 작성하러 가볼까요?"
-                        button={<Button text="바로가기" onClick={() => handleSignUp('/mypage/modify-profile')} />}
+                        button={<Button text="바로가기" onClick={() => handleNavigate('/mypage/profile-modify')} />}
                         secondButton={
-                            <Button text="나중에" type="refuse" onClick={() => handleSignUp('/')} />
+                            <Button text="나중에" type="refuse" onClick={() => handleNavigate('/')} />
                         }
                         closePopup={() => setCompletePopupOpen(false)}
                     />
