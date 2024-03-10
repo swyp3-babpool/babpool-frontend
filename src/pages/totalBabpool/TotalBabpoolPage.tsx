@@ -22,7 +22,6 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import LoadingGif from '@/assets/gif/loading.gif';
 import Loading from '@/components/common/loading/Loading';
 
 export default function TotalBabpoolPage() {
@@ -69,7 +68,7 @@ export default function TotalBabpoolPage() {
 
     const handleProfileSelect = (profile: ProfileType) => {
         setSearchInfo((prev) => ({ ...prev, prevFilterKeyword: prev.filterKeyword }));
-        navigate(`profile/${profile.userId}`);
+        navigate(`profile/${profile.profileId}`);
     };
 
     // searchBar 검색어 변경
