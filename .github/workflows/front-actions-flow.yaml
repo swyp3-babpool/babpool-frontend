@@ -1,4 +1,4 @@
-name: React auto cicd version 0.0.8
+name: React auto cicd version 0.0.9
 
 on:
   push:
