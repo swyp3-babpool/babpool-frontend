@@ -77,7 +77,7 @@ export default function ReceivedReviewPage() {
                         <ReviewCount count={reviewCounts.badCount} text="별로에요" />
                     </ReviewCountContainer>
                     <ReviewTextContainer>
-                        {data.pages.length !== 0 ? (
+                        {data.pages[0].content.length !== 0 ? (
                             <>
                                 {data.pages.map((page) => {
                                     return page.content.map((review: ReviewType) => {
