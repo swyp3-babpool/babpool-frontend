@@ -69,8 +69,8 @@ export default function ProfileDetailsPage() {
                 </KeywordContainer>
                 <ReviewContainer>
                     <ReviewTitleBox>
-                        <Txt variant="h5">{'조민택'}님이 받은 후기</Txt>
-                        <ReviewDetailsBox onClick={() => navigate('review')}>
+                        <Txt variant="h5">{profile.name}님이 받은 후기</Txt>
+                        <ReviewDetailsBox onClick={() => navigate(`/total/profile/${userId}-${profile.name}/review`)}>
                             <Txt variant="caption1" color={colors.white_50}>
                                 더보기
                             </Txt>
@@ -191,7 +191,7 @@ export const ReviewCountContainer = styled.div`
 
 export const ReviewTextContainer = styled.div`
     width: 100%;
-    max-height: 580px;
+    max-height: 500px;
 
     display: flex;
     flex-direction: column;

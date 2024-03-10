@@ -31,7 +31,7 @@ export default function RouteProvider() {
                 <Route path="explanation" element={<ExplanationPage />} />
                 <Route path='total' element={<TotalBabpoolPage />} />
                 <Route path='total/profile/:userId' element={<ProfileDetailsPage />} />
-                <Route path='total/profile/:userId/review' element={<ReceivedReviewPage />} />
+                <Route path='total/profile/:userInfo/review' element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
                 <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
