@@ -17,7 +17,7 @@ export default function HomePage() {
     };
 
     useEffect(() => {
-        setSearchInfo((prev) => ({...prev, prevFilterKeyword: INIT_INTEREST_KEYWORD}))
+        setSearchInfo((prev) => ({...prev, page: 0, searchText: '', prevFilterKeyword: INIT_INTEREST_KEYWORD}))
     }, [])
 
     return (

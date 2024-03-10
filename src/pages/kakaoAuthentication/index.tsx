@@ -1,12 +1,15 @@
 import { signInRequest } from '@/api/auth/auth';
+import { searchInfoState } from '@/atom/searchInfoStore';
 import { useNavigation } from '@/hooks/useNavigation';
 import { SignInRequestDataType } from '@/interface/api/authType';
 import React, { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 export default function KakaoAuthenticationPage() {
     const params = new URL(document.URL).searchParams;
     const code = params.get('code');
     const { goHome, navigate } = useNavigation();
+    const setSearchInfoState = useSetRecoilState(searchInfoState);
 
     // 카카오에서 인가코드를 리다이렉트 url로 받음
     // 받은 인가코드로 access token을 받아야함
@@ -21,13 +24,18 @@ export default function KakaoAuthenticationPage() {
             console.log(res);
             const accessToken = res.data.accessToken;
             if (res.status === 'UNAUTHORIZED' && res.code === 401) {
-                navigate(`/sign/in?uuid=${res.data.userUuid}`);
+                navigate(`/signup/${res.data.userUuid}`);
                 return;
             }
-            console.log(res.code)
+            console.log(res.code);
             if (res.code === 200) {
-                console.log('로그인 성공.')
+                console.log('로그인 성공.');
+                const grade = [res.data.userGrade];
                 localStorage.setItem('accessToken', String(accessToken));
+                setSearchInfoState((prev) => ({
+                    ...prev,
+                    division: grade,
+                }));
             }
             goHome();
         });

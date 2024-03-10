@@ -17,7 +17,7 @@ export const searchInfoState = atom({
     key: 'searchInfoState',
     default: {
         searchText: '',
-        division: ['1학년'],
+        division: [] as string[],
         filterKeyword: INIT_INTEREST_KEYWORD,
         prevFilterKeyword: INIT_INTEREST_KEYWORD,
         page: 0,
