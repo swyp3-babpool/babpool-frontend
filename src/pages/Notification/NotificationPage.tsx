@@ -12,8 +12,32 @@ import {
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
 import Header from '@/components/common/header';
+import { SentBabAppointmentType, ReceivedBabAppointmentType } from '@/interface/api/notifications';
+import { useQuery } from '@tanstack/react-query';
+import {
+    getReceivedBabAppointment,
+    getSentBabAppointment,
+} from '@/api/notification/notificationApi';
 
 export default function NotificationPage() {
+    const {
+        data: sentList,
+        isError: isErrorSent,
+        isLoading: isLoadingSent,
+    } = useQuery<SentBabAppointmentType[]>({
+        queryKey: [`/api/appointment/list/send`],
+        queryFn: () => getSentBabAppointment(),
+    });
+
+    const {
+        data: receivedList,
+        isError: isErrorReceived,
+        isLoading: isLoadingReceived,
+    } = useQuery<ReceivedBabAppointmentType[]>({
+        queryKey: [`/api/appointment/list/received`],
+        queryFn: () => getReceivedBabAppointment(),
+    });
+
     const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
 
@@ -57,26 +81,33 @@ export default function NotificationPage() {
                 <TabBar selected={selected === 'sent'} />
             </TabBarContainer>
             <GridContainer>
-                <NotificationCard
-                    type="waiting"
-                    name="이름"
-                    content="2023년"
-                    onClick={() => handleNotificationCardClick('waiting')}
-                />
-                <NotificationCard
-                    type="accept"
-                    name="이름"
-                    content="2023년"
-                    onClick={() => handleNotificationCardClick('accept')}
-                />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
-                <NotificationCard type="accept" name="이름" content="2023년" />
+                {selected === 'received'
+                    ? receivedList?.map((item) => (
+                          <NotificationCard
+                              key={item.appointmentId}
+                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
+                              name={item.appointmentReceiverUserNickname}
+                              content={
+                                  item.appointmentStatus === 'ACCEPT'
+                                      ? item.appointmentFixDateTime
+                                      : '수락 대기중'
+                              }
+                              onClick={() => handleNotificationCardClick(selected)}
+                          />
+                      ))
+                    : sentList?.map((item) => (
+                          <NotificationCard
+                              key={item.appointmentId}
+                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
+                              name={item.appointmentSenderUserNickname}
+                              content={
+                                  item.appointmentStatus === 'ACCEPT'
+                                      ? item.appointmentFixDateTime
+                                      : '수락 대기중'
+                              }
+                              onClick={() => handleNotificationCardClick(selected)}
+                          />
+                      ))}
             </GridContainer>
         </NotificationPageContainer>
     );
