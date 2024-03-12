@@ -4,6 +4,29 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import { WEEKS } from './constant';
 
+export const getDate = (date: string) => {
+    const dateObj = new Date(date);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
+    const hour = dateObj.getHours();
+    const period = hour < 12 ? '오전' : '오후';
+    const hour12 = hour <= 12 ? hour : hour - 12;
+    return `${month}/${day}(${dayOfWeek}) ${period} ${hour12}-${hour12 !== 12 ? hour12 + 1 : 1}시`;
+};
+
+export const getReviewType = (reviewType: string) => {
+    switch (reviewType) {
+        case 'best':
+            return '최고예요';
+        case 'good':
+            return '좋아요';
+        case 'bad':
+            return '별로예요';
+        default:
+            return '';
+    }
+};
 
 export const getKeywordGroupTitle = (keywordGroup: KeywordType) => {
     switch (keywordGroup) {
@@ -110,7 +133,7 @@ export const getKeywordId = (keyword: string) => {
 };
 
 export const getMonthFormatDate = (date: Date | string) => {
-    const day = new Date(date).getDay()
+    const day = new Date(date).getDay();
     const formatDate = moment(date).locale('ko').format('MM/DD');
     return `${formatDate} (${WEEKS[day]})`;
 };
