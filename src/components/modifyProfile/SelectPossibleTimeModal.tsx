@@ -123,17 +123,20 @@ export default function SelectPossibleTimeModal({
 }
 
 const SelectScheduleModalModalContainer = styled.div<{ open: boolean }>`
-    width: 100%;
+    max-width: 512px;
+    min-width: 375px;
+    width: 100vw;
     height: auto;
     background-color: white;
-    position: absolute;
-    bottom: ${(props) => (props.open ? 0 : '-100%')};
+    position: fixed; // 변경된 부분
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 20px 20px 0 0;
     z-index: 10;
-    transition: all 0.5s ease;
+    transform: translateY(${(props) => (props.open ? '0' : '100%')});
+    transition: transform 0.5s ease;
 `;
 
 const TitleBox = styled.div`
