@@ -5,7 +5,7 @@ import { AuthResponseType, SignInRequestDataType, SignUpRequestDataType } from "
 export const signUpRequest = async (requestBody: SignUpRequestDataType): Promise<CommonResponseType<AuthResponseType>> => {
     const res = await post(`/api/user/sign/up`, requestBody)
     console.log(res)
-    return res.data
+    return res
 }
 
 export const signInRequest = async (requestBody: SignInRequestDataType): Promise<CommonResponseType<AuthResponseType>> => {
