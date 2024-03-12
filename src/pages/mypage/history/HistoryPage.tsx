@@ -12,22 +12,42 @@ import {
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
 import Header from '@/components/common/header';
+import { useQuery } from '@tanstack/react-query';
+import { HistoryType, RejectHistoryType } from '@/interface/mypageType';
+import { getAcceptHistory, getRejectHistory } from '@/api/profile/mypageApi';
+import { Col } from '@/components/common/flex/Flex';
+import { getDate } from '@/utils/util';
 
 export default function HistoryPage() {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState<'complete' | 'reject' | 'accept' | 'waiting'>(
-        'complete'
-    );
 
-    const handleSelectedToggle = (select: 'complete' | 'reject' | 'accept' | 'waiting') => {
+    const {
+        data: doneList,
+        isError: isErrorDone,
+        isLoading: isLoadingDone,
+    } = useQuery<HistoryType[]>({
+        queryKey: [`/api/appointment/list/done`],
+        queryFn: () => getAcceptHistory(),
+    });
+
+    const {
+        data: rejectList,
+        isError: isErrorReject,
+        isLoading: isLoadingReject,
+    } = useQuery<RejectHistoryType[]>({
+        queryKey: [`/api/appointment/list/refuse`],
+        queryFn: () => getRejectHistory(),
+    });
+
+    const [selected, setSelected] = useState('done');
+
+    const handleSelectedToggle = (select: string) => {
         setSelected(select);
     };
 
-    const handleNotificationCardClick = () => {
-        if (selected === 'complete') {
+    const handleNotificationCardClick = (review: boolean) => {
+        if (review) {
             navigate('/mypage/review');
-        } else {
-            navigate(`/mypage/history/${selected}`);
         }
     };
 
@@ -37,11 +57,11 @@ export default function HistoryPage() {
             <TabBarTextContainer>
                 <TextButtonContainer>
                     <Txt
-                        variant={selected === 'complete' ? 'h5' : 'body'}
+                        variant={selected === 'done' ? 'h5' : 'body'}
                         align="center"
-                        color={selected === 'complete' ? colors.purple_light_40 : colors.white_30}
+                        color={selected === 'done' ? colors.purple_light_40 : colors.white_30}
                         style={{ width: '100%' }}
-                        onClick={() => handleSelectedToggle('complete')}
+                        onClick={() => handleSelectedToggle('done')}
                     >
                         완료
                     </Txt>
@@ -59,26 +79,51 @@ export default function HistoryPage() {
                 </TextButtonContainer>
             </TabBarTextContainer>
             <TabBarContainer>
-                <TabBar selected={selected === 'complete'} />
+                <TabBar selected={selected === 'done'} />
                 <TabBar selected={selected === 'reject'} />
             </TabBarContainer>
-            <GridContainer>
-                <NotificationCard
-                    type="waiting"
-                    name="이름"
-                    content="후기 작성하기"
-                    onClick={handleNotificationCardClick}
-                />
-                <NotificationCard type={selected} name="이름" content="2023년" />
-                <NotificationCard type={selected} name="이름" content="2023년" />
-                <NotificationCard type={selected} name="이름" content="2023년" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-                <NotificationCard type={selected} name="이름" content="개인 사유" />
-            </GridContainer>
+            {(selected === 'done' && doneList === undefined) ||
+            (selected === 'reject' && rejectList === undefined) ? (
+                <Col padding="100px 0" justifyContent="center" alignItems="">
+                    <Txt variant="caption1" color={colors.white_30} align="center">
+                        아직 {selected === 'done' ? '완료된' : '거절한'} 밥약 히스토리가 없어요
+                    </Txt>
+                </Col>
+            ) : (
+                <GridContainer>
+                    {selected === 'done'
+                        ? doneList &&
+                          doneList?.map((item) => (
+                              <NotificationCard
+                                  key={item.appointmentId}
+                                  type={item.appointmentStatus}
+                                  name={item.appointmentReceiverUserNickname}
+                                  content={
+                                      item.reviewRequired === 'REVIEW_REQUIRED'
+                                          ? '후기 보내기'
+                                          : getDate(item.appointmentFixDateTime)
+                                  }
+                                  image={item.appointmentReceiverProfileImageUrl}
+                                  onClick={() =>
+                                      handleNotificationCardClick(
+                                          item.reviewRequired === 'REVIEW_REQUIRED'
+                                      )
+                                  }
+                              />
+                          ))
+                        : rejectList &&
+                          rejectList?.map((item) => (
+                              <NotificationCard
+                                  key={item.appointmentId}
+                                  type={item.appointmentStatus}
+                                  name={item.appointmentReceiverUserNickname}
+                                  content={item.refuseType}
+                                  image={item.appointmentReceiverProfileImageUrl}
+                                  onClick={() => handleNotificationCardClick(false)}
+                              />
+                          ))}
+                </GridContainer>
+            )}
         </NotificationPageContainer>
     );
 }
