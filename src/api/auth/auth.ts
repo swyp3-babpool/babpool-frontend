@@ -23,3 +23,8 @@ export const regenerateAccessTokenRequest = async (): Promise<CommonResponseType
     const res = await post(`api/token/access/refresh`, {})
     return res
 }
+
+export const deleteAccountRequest = async (requestBody: {exitReason: string[]}): Promise<CommonResponseType<null>> => {
+    const res = await post(`/api/user/sign/down`, requestBody, {})
+    return res
+}
