@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { colors } from '@/assets/styles/theme';
 
 export const MyPageContainer = styled.div`
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     position: relative;

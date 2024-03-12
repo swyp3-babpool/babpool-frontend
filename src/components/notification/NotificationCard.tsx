@@ -3,7 +3,6 @@ import { colors } from '@/assets/styles/theme';
 import Txt from '../common/text';
 import ProfileDefaultIcon from '@/assets/icons/ic_profile_default.png';
 import ProfileDefaultPurpleIcon from '@/assets/icons/ic_profile_default_purple.png';
-import exp from 'constants';
 
 type NotificaionCardProps = {
     image?: string;
@@ -21,10 +20,11 @@ export default function NotificationCard({
     onClick,
 }: NotificaionCardProps) {
     const renderImage = () => {
+        console.log(image);
         if (image) {
             return <Image src={image} />;
         }
-        if (type === 'accept' || type === 'complete') {
+        if (type !== 'waiting') {
             return (
                 <ImageDefault color="purple">
                     <ImageIcon src={ProfileDefaultIcon} />
@@ -40,43 +40,63 @@ export default function NotificationCard({
     };
 
     const renderBackground = () => {
-        if (type === 'accept' || type === 'complete') {
+        if (type !== 'waiting') {
             return colors.white;
         } else {
             return colors.purple_light_30;
         }
     };
 
-    const renderFontColor = () => {
-        if (type !== 'accept' && type !== 'complete') {
-            return colors.white;
+    const renderContent = () => {
+        if (type === 'waiting') {
+            return (
+                <Txt variant="caption1" color={colors.white}>
+                    {content}
+                </Txt>
+            );
+        } else if (type === 'reject') {
+            return (
+                <Txt
+                    style={{ borderRadius: 8, backgroundColor: colors.white_10, padding: 6 }}
+                    variant="caption1"
+                    color={colors.purple_light_30}
+                >
+                    {content}
+                </Txt>
+            );
+        } else {
+            return (
+                <Txt variant="caption1" color={colors.black}>
+                    {content}
+                </Txt>
+            );
         }
     };
 
     return (
-        <Container background={renderBackground()} onClick={onClick}>
+        <Container
+            background={renderBackground()}
+            onClick={onClick}
+            disabled={onClick ? false : true}
+            cursor={onClick ? 'pointer' : 'default'}
+        >
             <SubContainer>
                 {renderImage()}
                 <InfoContainer>
                     <Txt
-                        variant="body"
-                        color={renderFontColor() ? renderFontColor() : colors.purple_light_40}
+                        variant="button"
+                        color={type === 'waiting' ? colors.white : colors.purple_light_40}
                     >
                         {name}
                     </Txt>
-                    <Txt
-                        variant="body"
-                        color={renderFontColor() ? renderFontColor() : colors.black}
-                    >
-                        {content}
-                    </Txt>
+                    {renderContent()}
                 </InfoContainer>
             </SubContainer>
         </Container>
     );
 }
 
-export const Container = styled.div<{ background: string }>`
+export const Container = styled.button<{ background: string; cursor: string }>`
     min-width: 0;
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -86,13 +106,14 @@ export const Container = styled.div<{ background: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
+    cursor: ${(props) => props.cursor};
 `;
 
 export const SubContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 25px 48px 20px;
     align-items: center;
     justify-content: center;
     gap: 10px;

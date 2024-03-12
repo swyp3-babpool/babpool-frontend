@@ -142,6 +142,7 @@ export const InputWrapper = styled.div`
     position: relative;
     flex-shrink: 0;
     width: 57.7%;
+    box-sizing: border-box;
 `;
 
 export const ContactInput = styled.input`
@@ -182,18 +183,44 @@ export const UnderLine = styled.div`
     gap: 8px;
 `;
 
-export const AddPossibleTimeButton = styled.button`
+export const AddPossibleTimeButton = styled.button<{ isExist: boolean }>`
     width: 100%;
     height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    border: 1px dashed var(--black, #000);
+    border: ${(props) =>
+        props.isExist ? `1px solid ${colors.purple_light_40}` : `1px dashed ${colors.black}`};
+    cursor: pointer;
+`;
+
+export const DeleteButton = styled.button`
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
     cursor: pointer;
 `;
 
 export const ButtonContainer = styled.div`
     width: 100%;
     height: 48px;
+`;
+
+export const ImageInput = styled.input`
+    display: none;
+`;
+
+export const AlbumButtonContainer = styled.div`
+    position: absolute;
+    width: 100%;
+    padding: 0 30px;
+    height: 48px;
+    bottom: 40px;
 `;

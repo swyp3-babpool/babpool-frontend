@@ -14,13 +14,16 @@ import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import ReceivedReviewPage from '@/pages/receivedReview/ReceivedReviewPage';
 import BabRequestPage from '@/pages/babRequest/BabRequestPage';
 import MyPage from '@/pages/mypage/Mypage';
-import ModifyProfileCardPage from '@/pages/mypage/ModifyProfileCardPage';
-import RejectPage from '@/pages/Notification/RejectPage';
-import NotificationPage from '@/pages/Notification/NotificationPage';
-import NotificationDetailPage from '@/pages/Notification/NotificationDetailPage';
-import AcceptPage from '@/pages/Notification/AcceptPage';
-import AuthProvider from '@/provider/AuthRoute';
+import ModifyProfileCardPage from '@/pages/mypage/modifyProfile/ModifyProfileCardPage';
+import HistoryPage from '@/pages/mypage/history/HistoryPage';
+import SendReviewPage from '@/pages/mypage/review/SendReviewPage';
+import MyReceivedReviewsPage from '@/pages/mypage/review/MyReceivedReviews';
+import DeleteAccountPage from '@/pages/deleteAccount/DeleteAccountPage';
 import AuthRoute from '@/provider/AuthRoute';
+import NotificationPage from '@/pages/Notification/NotificationPage';
+import NotificationDetailPage from '@/pages/Notification/detail/NotificationDetailPage';
+import AcceptPage from '@/pages/Notification/accept/AcceptPage';
+import RejectPage from '@/pages/Notification/reject/RejectPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -44,6 +47,14 @@ export default function RouteProvider() {
                 <Route path="reject" element={<AuthRoute><RejectPage /></AuthRoute>} />
                 <Route path="mypage" element={<AuthRoute><MyPage /></AuthRoute>} />
                 <Route path="mypage/profile-modify" element={<AuthRoute><ModifyProfileCardPage /></AuthRoute>} />
+                <Route
+                    path="total/profile/:targetProfileIdAndName/request"
+                    element={<BabRequestPage />}
+                />
+                <Route path="mypage/history" element={<AuthRoute><HistoryPage /></AuthRoute>} />
+                <Route path="mypage/review" element={<AuthRoute><SendReviewPage /></AuthRoute>} />
+                <Route path="mypage/my-received-reviews" element={<AuthRoute><MyReceivedReviewsPage /></AuthRoute>} />
+                <Route path="deleteAccount" element={<AuthRoute><DeleteAccountPage /></AuthRoute>} />
             </>
         )
     );

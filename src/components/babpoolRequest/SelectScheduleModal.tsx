@@ -6,7 +6,7 @@ import { colors } from '@/assets/styles/theme';
 import SelectTimeBox from './SelectTimeBox';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import ScheduleCalendar from '../common/calendar/ScheduleCalendar';
-import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { useQuery } from '@tanstack/react-query';
 import { getAvailableSchedule } from '@/api/babRequest/babRequestApi';
 import { UserScheduleType } from '@/interface/api/babRequestType';
@@ -19,7 +19,12 @@ type SelectScheduleModalProps = {
     onClose: () => void;
 };
 
-export default function SelectScheduleModal({ isOpen, userId, handleSelectSchedule, onClose }: SelectScheduleModalProps) {
+export default function SelectScheduleModal({
+    isOpen,
+    userId,
+    handleSelectSchedule,
+    onClose,
+}: SelectScheduleModalProps) {
     const [possibleScheduleList, setPossibleScheduleList] = useState<UserScheduleType[]>([]);
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +65,11 @@ export default function SelectScheduleModal({ isOpen, userId, handleSelectSchedu
                     <Txt variant="caption1">선호하는 시간대 1개를 선택해주세요</Txt>
                     <SelectTimeContainer>
                         {possibleScheduleList.map((schedule) => (
-                            <SelectTimeBox key={schedule.possibleTimeId} schedule={schedule} handleSelectSchedule={handleSelectSchedule} />
+                            <SelectTimeBox
+                                key={schedule.possibleTimeId}
+                                schedule={schedule}
+                                handleSelectSchedule={handleSelectSchedule}
+                            />
                         ))}
                     </SelectTimeContainer>
                 </SelectScheduleContainer>
