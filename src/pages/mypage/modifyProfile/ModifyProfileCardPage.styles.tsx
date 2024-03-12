@@ -213,6 +213,10 @@ export const ButtonContainer = styled.div`
     height: 48px;
 `;
 
+export const ImageInput = styled.input`
+    display: none;
+`;
+
 export const AlbumButtonContainer = styled.div`
     position: absolute;
     width: 100%;

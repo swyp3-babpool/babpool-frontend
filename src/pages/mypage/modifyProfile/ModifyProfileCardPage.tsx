@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
@@ -20,6 +20,7 @@ import {
     ImageContainer,
     ImageDefaultContainer,
     ImageIcon,
+    ImageInput,
     InputWrapper,
     IntroduceInput,
     ModifyProfileImgButton,
@@ -32,7 +33,18 @@ import SelectInput from '@/components/common/select/SelectInput';
 import KeywordGroup from '@/components/signup/KeywordGroup';
 import SelectPossibleTimeModal from '@/components/modifyProfile/SelectPossibleTimeModal';
 import Overlay from '@/components/common/overlay';
-import { TimeRange } from '@/interface/api/modifyProfileType';
+import {
+    GetModifyProfilePossibleTimeType,
+    ModifyProfileType,
+    TimeRange,
+} from '@/interface/api/modifyProfileType';
+import {
+    getModifyProfile,
+    getModifyProfileAvailableSchedule,
+    modifyProfileRequest,
+} from '@/api/profile/modifyProfileApi';
+import { useQuery } from '@tanstack/react-query';
+import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
 
 export interface ModifyProfileInfo {
     division: string;
@@ -45,6 +57,27 @@ export interface ModifyProfileInfo {
 }
 
 export default function ModifyProfileCardPage() {
+    const userId = 41;
+    const {
+        data: defaultProfileInfo,
+        isError: isError,
+        isLoading: isLoading,
+    } = useQuery<ModifyProfileType>({
+        queryKey: [`/api/appointment/list/receive`],
+        queryFn: () => getModifyProfile(),
+    });
+
+    const {
+        data: userSchedule,
+        isError: isLoadingPossibleTime,
+        isLoading: isErrorPossibleTime,
+    } = useQuery<GetModifyProfilePossibleTimeType[]>({
+        queryKey: [`/api/appointment/${userId}/datetime`],
+        queryFn: () => getModifyProfileAvailableSchedule(userId),
+    });
+
+    const [file, setFile] = useState<File>();
+
     const navigate = useNavigate();
     const userType = [
         { key: 1, value: '1학년' },
@@ -59,14 +92,6 @@ export default function ModifyProfileCardPage() {
         { key: 1, value: '연락처' },
         { key: 2, value: '오픈채팅방' },
     ];
-    const [keywords, setKeywords] = useState<string[]>([
-        '편입생',
-        '자취',
-        '동아리',
-        '진로탐색',
-        '대학원',
-    ]);
-
     const [modifyProfileInfo, setModifyProfileInfo] = useState<ModifyProfileInfo>({
         division: '',
         keywordGroups: {
@@ -77,18 +102,149 @@ export default function ModifyProfileCardPage() {
         },
     });
 
-    const [possibleDate, setPossibleDate] = useState<TimeRange[]>([]);
+    const [possibleDate, setPossibleDate] = useState<TimeRange>({});
     const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
-    // 'https://fastly.picsum.photos/id/338/200/300.jpg?hmac=rE5P3WDLKY1VMpd9y_FLo_OKhTzG4_3zCbGjKvgOL5w'
-    const [selectedUserType, setSelectedUserType] = useState<string>('1학년');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clickedAlbumButton, setClickedAlbumButton] = useState(false);
+    const [nickName, setNickName] = useState<string>('');
+    const [selectedUserType, setSelectedUserType] = useState<string>('');
+    const [summaryIntroduce, setSummaryIntroduce] = useState<string>('');
+    const [introduce, setIntroduce] = useState<string>('');
     const [contactInput, setContactInput] = useState('');
     const [selectedContactType, setSelectedContactType] = useState<string>('연락처');
+    const profileImageInputRef = useRef<HTMLInputElement>(null);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
+    const handleVerifyInput = () => {
+        if (!nickName) {
+            return false;
+        }
+        if (!selectedUserType) {
+            return false;
+        }
+        if (!summaryIntroduce) {
+            return false;
+        }
+        if (!introduce) {
+            return false;
+        }
+        if (!selectedContactType) {
+            return false;
+        }
+        if (!contactInput) {
+            return false;
+        }
+        if (Object.keys(possibleDate).length === 0) {
+            return false;
+        }
+        return true;
+    };
+
+    const isInputVerified = handleVerifyInput();
+
+    const handleCompleteButton = () => {
+        const reqBody = {
+            userNickName: nickName,
+            userGrade: getDivisionId(selectedUserType) as string,
+            profileIntro: summaryIntroduce,
+            profileContents: introduce,
+            profileContactPhone: selectedContactType === '연락처' ? contactInput : undefined,
+            profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : undefined,
+            keywords: Object.values(modifyProfileInfo.keywordGroups)
+                .flat()
+                .map((keyword) => getKeywordId(keyword)),
+            possibleDate: possibleDate,
+        };
+
+        console.log(reqBody);
+        const formData = new FormData();
+        if (file) {
+            formData.append('profileImageFile', file);
+        }
+
+        const json = JSON.stringify(reqBody);
+        const blob = new Blob([json], { type: 'application/json' });
+        formData.append('profileInfo', blob);
+
+        modifyProfileRequest(formData).then((res) => {
+            if (res.code === 200) {
+                navigate('/mypage');
+            }
+        });
+
+        console.log('요청', formData);
+    };
+
+    const handleProfileImgFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const fileObj = event.target.files?.[0];
+        if (!fileObj) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setProfileImgUrl(reader.result as string);
+            setFile(fileObj);
+        };
+        reader.readAsDataURL(fileObj);
+    };
+
+    const handleSelectFromAlbum = () => {
+        setClickedAlbumButton(false);
+        profileImageInputRef.current?.click();
+    };
+
+    useEffect(() => {
+        if (defaultProfileInfo) {
+            setNickName(defaultProfileInfo.userNickName);
+            setProfileImgUrl(defaultProfileInfo.imgUrl);
+            const division = getDivisionName(defaultProfileInfo.userGrade);
+            setSelectedUserType(String(division));
+            setSummaryIntroduce(defaultProfileInfo.profileIntro);
+            setIntroduce(defaultProfileInfo.profileContents);
+            if (defaultProfileInfo.profileContactPhone === '') {
+                setSelectedContactType('오픈채팅방');
+                setContactInput(defaultProfileInfo.profileContactChat);
+            } else {
+                setSelectedContactType('연락처');
+                setContactInput(defaultProfileInfo.profileContactPhone);
+            }
+            setContactInput(defaultProfileInfo.profileContactPhone);
+            setModifyProfileInfo({
+                division: defaultProfileInfo.userGrade,
+                keywordGroups: {
+                    university: defaultProfileInfo.keywords.대학생활
+                        ? defaultProfileInfo.keywords.대학생활
+                        : [],
+                    exam: defaultProfileInfo.keywords.수험 ? defaultProfileInfo.keywords.수험 : [],
+                    employment: defaultProfileInfo.keywords.취업
+                        ? defaultProfileInfo.keywords.취업
+                        : [],
+                    graduateSchool: defaultProfileInfo.keywords.대학원
+                        ? defaultProfileInfo.keywords.대학원
+                        : [],
+                },
+            });
+        }
+    }, [defaultProfileInfo]);
+
+    useEffect(() => {
+        if (userSchedule) {
+            const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
+                if (acc[schedule.possibleDate]) {
+                    acc[schedule.possibleDate].push(schedule.possibleTime);
+                } else {
+                    acc[schedule.possibleDate] = [schedule.possibleTime];
+                }
+                return acc;
+            }, {} as TimeRange);
+            setPossibleDate(dates);
+        }
+        console.log('날짜배열', possibleDate);
+    }, [userSchedule]);
 
     return (
         <ModifyProfilePageContainer>
@@ -122,10 +278,16 @@ export default function ModifyProfileCardPage() {
                     </Row>
 
                     <Row justifyContent="space-between">
-                        <NickNameInput type="text" placeholder="닉네임" />
+                        <NickNameInput
+                            type="text"
+                            placeholder="닉네임"
+                            value={nickName}
+                            onChange={(e) => setNickName(e.target.value)}
+                        />
                         <SelectInput
+                            key={selectedUserType}
                             optionData={userType}
-                            initialValue="대학원생"
+                            initialValue={selectedUserType}
                             onValueChange={(value) => {
                                 setSelectedUserType(value);
                             }}
@@ -136,13 +298,24 @@ export default function ModifyProfileCardPage() {
                     <Txt variant="h5" color={colors.black}>
                         한줄소개*
                     </Txt>
-                    <SummaryIntroduceInput type="text" placeholder="20자 이내로 작성해주세요" />
+                    <SummaryIntroduceInput
+                        type="text"
+                        placeholder="20자 이내로 작성해주세요"
+                        maxLength={20}
+                        value={summaryIntroduce}
+                        onChange={(e) => setSummaryIntroduce(e.target.value)}
+                    />
                 </Col>
                 <Col gap={10}>
                     <Txt variant="h5" color={colors.black}>
                         자기소개*
                     </Txt>
-                    <IntroduceInput placeholder="1000자 이내로 작성해주세요" />
+                    <IntroduceInput
+                        placeholder="1000자 이내로 작성해주세요"
+                        maxLength={1000}
+                        value={introduce}
+                        onChange={(e) => setIntroduce(e.target.value)}
+                    />
                 </Col>
 
                 <Col gap={16}>
@@ -156,8 +329,9 @@ export default function ModifyProfileCardPage() {
                     </Col>
                     <Row gap={12} justifyContent="space-between">
                         <SelectInput
+                            key={selectedContactType}
                             optionData={contactType}
-                            initialValue="연락처"
+                            initialValue={selectedContactType}
                             onValueChange={(value) => {
                                 setSelectedContactType(value);
                             }}
@@ -199,10 +373,10 @@ export default function ModifyProfileCardPage() {
                         </Txt>
                     </Col>
                     <AddPossibleTimeButton
-                        isExist={possibleDate.length > 0}
+                        isExist={Object.keys(possibleDate).length > 0}
                         onClick={() => setIsModalOpen(true)}
                     >
-                        {possibleDate.length > 0 ? (
+                        {Object.keys(possibleDate).length > 0 ? (
                             <Txt variant="body" color={colors.purple_light_40}>
                                 확인/수정하기
                             </Txt>
@@ -214,12 +388,19 @@ export default function ModifyProfileCardPage() {
                 <ButtonContainer>
                     <Button
                         text="완료"
-                        disabled={false}
-                        type={'refuse'}
-                        onClick={() => navigate('/mypage')}
+                        disabled={!isInputVerified}
+                        type={isInputVerified ? 'accept' : 'refuse'}
+                        onClick={handleCompleteButton}
                     />
                 </ButtonContainer>
             </Col>
+            <ImageInput
+                id="profileImg"
+                ref={profileImageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImgFileChange}
+            />
             <SelectPossibleTimeModal
                 selectedDates={possibleDate}
                 setSelectedDates={setPossibleDate}
@@ -231,12 +412,7 @@ export default function ModifyProfileCardPage() {
             )}
             {clickedAlbumButton && (
                 <AlbumButtonContainer onClick={(e) => e.stopPropagation()}>
-                    <Button
-                        text="앨범에서 선택"
-                        disabled={false}
-                        type={'accept'}
-                        onClick={() => setClickedAlbumButton(false)}
-                    />
+                    <Button text="앨범에서 선택" type={'accept'} onClick={handleSelectFromAlbum} />
                 </AlbumButtonContainer>
             )}
         </ModifyProfilePageContainer>
