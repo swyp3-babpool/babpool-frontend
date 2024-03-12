@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
-import {
-    GridContainer,
-    NotificationPageContainer,
-    TabBar,
-    TabBarContainer,
-    TabBarTextContainer,
-    TextButtonContainer,
-} from './NotificationPage.styles';
+
 import Txt from '@/components/common/text';
 import NotificationCard from '@/components/notification/NotificationCard';
 import Header from '@/components/common/header';
@@ -18,6 +11,7 @@ import {
     getReceivedBabAppointment,
     getSentBabAppointment,
 } from '@/api/notification/notificationApi';
+import { GridContainer, NotificationPageContainer, TabBar, TabBarContainer, TabBarTextContainer, TextButtonContainer } from './NotificationPage.styles';
 
 export default function NotificationPage() {
     const {
