@@ -32,7 +32,7 @@ export default function ProfileKeywords({ keywords, padding, color }: ProfileKey
 }
 
 export const KeywordBox = styled.div<{ color: string | undefined }>`
-    padding: 4px 12px 2px 12px;
+    padding: 4px 12px 4px 12px;
     border: 1px solid ${(props) => (props.color ? props.color : colors.purple_light_40)};
     border-radius: 30px;
     display: flex;
