@@ -5,6 +5,7 @@ import C_Banner_2 from '@/assets/banner/banner2.png';
 import { colors } from '@/assets/styles/theme';
 import { CarouselProvider } from '../carousel/Carousel';
 import { Link } from 'react-router-dom';
+import { useNavigation } from '@/hooks/useNavigation';
 
 export default function HomeSection() {
     const MAIN_GROUP = [
@@ -25,15 +26,27 @@ export default function HomeSection() {
             url: 'total?groupName=exam',
         },
     ];
+
+    const { handleNavigate } = useNavigation();
     return (
         <HomeContainer>
             <CarouselContainer>
                 <CarouselProvider>
-                    <BannerImage src={C_Banner} alt="testBanner" />
-                    <BannerImage src={C_Banner_2} alt="testBanner" />
+                    <BannerImage
+                        src={C_Banner}
+                        alt="testBanner"
+                        onClick={() => handleNavigate('/explanation')}
+                    />
+                    {/* TODO: 노션 디자인 완료되면 연결 */}
+                    <LinkBox href="https://www.instagram.com/babpool2024/?igsh=bXptZ3N3N2xseTh5" target="_blank">
+                        <BannerImage src={C_Banner_2} alt="testBanner" />
+                    </LinkBox>
                 </CarouselProvider>
             </CarouselContainer>
             <GroupSection>
+                <CategoryTitle>
+                    <Txt variant='h4'>밥풀러 카테고리</Txt>
+                </CategoryTitle>
                 <GroupContainer>
                     {MAIN_GROUP.map((group, index) => {
                         return (
@@ -71,12 +84,17 @@ export const BannerImage = styled.img`
     border-radius: 10px;
 `;
 
+export const CategoryTitle = styled.div`
+    width: 100%;
+`;
+
 export const GroupSection = styled.div`
     width: 100%;
-    height: 100%;
-    padding: 50px 20px;
-    display: grid;
-    place-items: center;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+    margin-top: 25px;
 `;
 
 export const GroupContainer = styled.div`
@@ -108,3 +126,5 @@ export const GroupBox = styled(Link)`
         }
     }
 `;
+
+export const LinkBox = styled.a``;

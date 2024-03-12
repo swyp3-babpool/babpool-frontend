@@ -7,13 +7,13 @@ import moment from 'moment';
 import { Value } from 'node_modules/react-calendar/dist/cjs/shared/types';
 import { ReactComponent as NextIcon } from '@/assets/icons/ic_next.svg';
 import { ReactComponent as PrevIcon } from '@/assets/icons/ic_prev.svg';
-import { TimeRange } from '@/components/modifyProfile/SelectPossibleTimeModal';
+import { TimeRange } from '@/interface/api/modifyProfileType';
 type PossibleTimeCalendarProps = {
     onClose: () => void;
     selectedDate?: string;
     setSelectedDate: (date: string) => void;
-    selectedDates?: TimeRange[];
-    setSelectedDates: (dates: TimeRange[]) => void;
+    selectedDates?: TimeRange;
+    setSelectedDates: (dates: TimeRange) => void;
 };
 export default function PossibleTimeCalendar({
     onClose,
@@ -31,12 +31,13 @@ export default function PossibleTimeCalendar({
 
     // 선택한 날짜에 대한 스타일을 정의하는 함수
     const tileContent = ({ date, view }: { date: any; view: any }) => {
-        const selected = selectedDate === moment(date).format('YYYY-MM-DD');
-        const today = moment().startOf('day');
-        const currentDay = moment(date);
-
+        const formattedDate = moment(date).format('YYYY-MM-DD');
+        const selected = selectedDate === formattedDate;
+        const existingDate = selectedDates?.[formattedDate];
         if (view === 'month' && selected) {
             return <div className="circle">{`${date.getDate()}`}</div>;
+        } else if (view === 'month' && existingDate) {
+            return <div className="highlight">{`${date.getDate()}`}</div>;
         } else {
             return null;
         }

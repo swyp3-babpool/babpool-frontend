@@ -18,7 +18,7 @@ import { CheckboxList } from '../signup/DivisionGroup';
 import { KeywordType } from '../signup/KeywordGroup';
 import { useEffect, useRef, useState } from 'react';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
-import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { SearchInfoType } from '@/atom/searchInfoStore';
 
 type FilterModalProps = {
