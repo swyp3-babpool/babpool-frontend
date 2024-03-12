@@ -2,15 +2,7 @@ import { useState } from 'react';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
-import {
-    NotificationDetailPageContainer,
-    NotificationDetailPageSection,
-    PossibleTimeBox,
-    QueryBox,
-    ButtonContainer,
-    Devider,
-    PossibleTimeRadioButton,
-} from './NotificationDetailPage.styles';
+
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
@@ -19,6 +11,7 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
+import { ButtonContainer, Devider, NotificationDetailPageContainer, NotificationDetailPageSection, PossibleTimeBox, PossibleTimeRadioButton, QueryBox } from './NotificationDetailPage.styles';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();

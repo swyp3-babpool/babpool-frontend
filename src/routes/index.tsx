@@ -20,10 +20,10 @@ import SendReviewPage from '@/pages/mypage/review/SendReviewPage';
 import MyReceivedReviewsPage from '@/pages/mypage/review/MyReceivedReviews';
 import DeleteAccountPage from '@/pages/deleteAccount/DeleteAccountPage';
 import AuthRoute from '@/provider/AuthRoute';
-import NotificationPage from '@/pages/Notification/NotificationPage';
-import NotificationDetailPage from '@/pages/Notification/detail/NotificationDetailPage';
-import AcceptPage from '@/pages/Notification/accept/AcceptPage';
-import RejectPage from '@/pages/Notification/reject/RejectPage';
+import NotificationPage from '@/pages/notification/NotificationPage';
+import NotificationDetailPage from '@/pages/notification/detail/NotificationDetailPage';
+import AcceptPage from '@/pages/notification/accept/AcceptPage';
+import RejectPage from '@/pages/notification/reject/RejectPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
