@@ -11,7 +11,14 @@ import {
     getReceivedBabAppointment,
     getSentBabAppointment,
 } from '@/api/notification/notificationApi';
-import { GridContainer, NotificationPageContainer, TabBar, TabBarContainer, TabBarTextContainer, TextButtonContainer } from './NotificationPage.styles';
+import {
+    GridContainer,
+    NotificationPageContainer,
+    TabBar,
+    TabBarContainer,
+    TabBarTextContainer,
+    TextButtonContainer,
+} from './NotificationPage.styles';
 
 export default function NotificationPage() {
     const {
