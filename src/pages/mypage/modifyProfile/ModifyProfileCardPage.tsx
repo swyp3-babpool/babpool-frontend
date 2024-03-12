@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
 import ProfileDefaultIcon from '@/assets/icons/ic_profile_default.png';
@@ -57,7 +57,8 @@ export interface ModifyProfileInfo {
 }
 
 export default function ModifyProfileCardPage() {
-    const userId = 41;
+    const location = useLocation();
+    const profileId = location.state as number;
     const {
         data: defaultProfileInfo,
         isError: isError,
@@ -72,8 +73,9 @@ export default function ModifyProfileCardPage() {
         isError: isLoadingPossibleTime,
         isLoading: isErrorPossibleTime,
     } = useQuery<GetModifyProfilePossibleTimeType[]>({
-        queryKey: [`/api/appointment/${userId}/datetime`],
-        queryFn: () => getModifyProfileAvailableSchedule(userId),
+        queryKey: [`/api/appointment/${profileId}/datetime`, profileId],
+        queryFn: () => getModifyProfileAvailableSchedule(profileId),
+        enabled: !!profileId,
     });
 
     const [file, setFile] = useState<File>();
@@ -249,7 +251,7 @@ export default function ModifyProfileCardPage() {
     return (
         <ModifyProfilePageContainer>
             <Header text="프로필카드 수정" />
-            <Col style={{ overflowY: 'scroll' }} gap={40} padding="25px 30px 45px">
+            <Col gap={40} padding="25px 30px 45px">
                 <Row gap={0} justifyContent="center" alignItems="center">
                     {!profileImgUrl ? (
                         <ImageDefaultContainer>
