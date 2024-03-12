@@ -4,15 +4,10 @@ import Header from '@/components/common/header';
 import { Col } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
-import {
-    ButtonContainer,
-    InputContainer,
-    RejectInput,
-    RejectPageContainer,
-} from './RejectPage.styles';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Overlay from '@/components/common/overlay';
 import Popup from '@/components/common/popup';
+import { ButtonContainer, RejectInput, RejectPageContainer } from './RejectPage.styles';
 
 export default function RejectPage() {
     const navigate = useNavigate();

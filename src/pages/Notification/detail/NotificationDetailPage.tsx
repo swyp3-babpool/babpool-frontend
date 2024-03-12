@@ -11,7 +11,15 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
-import { ButtonContainer, Devider, NotificationDetailPageContainer, NotificationDetailPageSection, PossibleTimeBox, PossibleTimeRadioButton, QueryBox } from './NotificationDetailPage.styles';
+import {
+    ButtonContainer,
+    Devider,
+    NotificationDetailPageContainer,
+    NotificationDetailPageSection,
+    PossibleTimeBox,
+    PossibleTimeRadioButton,
+    QueryBox,
+} from './NotificationDetailPage.styles';
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
