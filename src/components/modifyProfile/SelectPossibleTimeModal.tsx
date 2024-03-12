@@ -8,7 +8,7 @@ import { colors } from '@/assets/styles/theme';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import PossibleTimeCalendar from '../common/calendar/PossibleTimeCalendar';
 import { Col, Row } from '../common/flex/Flex';
-import { EmptyDiv } from '@/pages/Notification/NotificationPage.styles';
+import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { Value } from 'node_modules/react-calendar/dist/esm/shared/types';
 import moment from 'moment';
 import { TimeRange } from '@/interface/api/modifyProfileType';
@@ -16,8 +16,8 @@ import { TimeRange } from '@/interface/api/modifyProfileType';
 type SelectPossibleTimeModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    selectedDates?: TimeRange[];
-    setSelectedDates: (dates: TimeRange[]) => void;
+    selectedDates?: TimeRange;
+    setSelectedDates: (dates: TimeRange) => void;
 };
 
 const timeRanges = {
@@ -43,53 +43,33 @@ export default function SelectPossibleTimeModal({
     );
 
     const handleCheckIcon = (time: number) => {
-        const isExist =
-            selectedDates &&
-            selectedDates.find(
-                (date) => date[selectedDate] && date[selectedDate].find((t) => t === time)
-            );
+        if (!selectedDates) return false;
+        const isExist = selectedDates[selectedDate]?.includes(time);
         return isExist;
     };
 
     const handleSelectTime = (time: number) => {
-        console.log('time', time);
-        const isExist =
-            selectedDates &&
-            selectedDates.find(
-                (date) => date[selectedDate] && date[selectedDate].find((t) => t === time)
-            );
-        if (isExist) {
-            setSelectedDates(
-                selectedDates.map((date) =>
-                    Object.keys(date)[0] === selectedDate
-                        ? { [selectedDate]: date[selectedDate].filter((t) => t !== time) }
-                        : date
-                )
-            );
-        } else {
-            const existingDate =
-                selectedDates &&
-                selectedDates.find((date) => Object.keys(date)[0] === selectedDate);
-            if (existingDate) {
-                setSelectedDates(
-                    selectedDates.map((date) =>
-                        Object.keys(date)[0] === selectedDate
-                            ? { [selectedDate]: [...date[selectedDate], time] }
-                            : date
-                    )
-                );
-            } else {
-                setSelectedDates([
-                    ...(selectedDates || []),
-                    {
-                        [selectedDate]: [time],
-                    },
-                ]);
-            }
+        if (!selectedDates) {
+            setSelectedDates({ [selectedDate]: [time] });
+            return;
         }
+        const isExist = selectedDates?.[selectedDate]?.includes(time);
+        if (isExist) {
+            setSelectedDates({
+                ...(selectedDates || {}),
+                [selectedDate]: selectedDates[selectedDate].filter((t) => t !== time),
+            });
+        } else {
+            setSelectedDates({
+                ...(selectedDates || {}),
+                [selectedDate]: [...((selectedDates && selectedDates[selectedDate]) || []), time],
+            });
+        }
+        console.log(selectedDates);
     };
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
+
     return (
         <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
             <TitleBox>

@@ -12,8 +12,8 @@ type PossibleTimeCalendarProps = {
     onClose: () => void;
     selectedDate?: string;
     setSelectedDate: (date: string) => void;
-    selectedDates?: TimeRange[];
-    setSelectedDates: (dates: TimeRange[]) => void;
+    selectedDates?: TimeRange;
+    setSelectedDates: (dates: TimeRange) => void;
 };
 export default function PossibleTimeCalendar({
     onClose,
@@ -33,8 +33,7 @@ export default function PossibleTimeCalendar({
     const tileContent = ({ date, view }: { date: any; view: any }) => {
         const formattedDate = moment(date).format('YYYY-MM-DD');
         const selected = selectedDate === formattedDate;
-        const existingDate =
-            selectedDates && selectedDates.find((date) => Object.keys(date)[0] === formattedDate);
+        const existingDate = selectedDates?.[formattedDate];
         if (view === 'month' && selected) {
             return <div className="circle">{`${date.getDate()}`}</div>;
         } else if (view === 'month' && existingDate) {
