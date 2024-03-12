@@ -1,5 +1,5 @@
 
-name: React auto cicd version 0.1.7
+name: React auto cicd version 0.1.8
 
 on:
   push:
