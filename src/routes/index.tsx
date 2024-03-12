@@ -14,11 +14,15 @@ import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import ReceivedReviewPage from '@/pages/receivedReview/ReceivedReviewPage';
 import BabRequestPage from '@/pages/babRequest/BabRequestPage';
 import MyPage from '@/pages/mypage/Mypage';
-import ModifyProfileCardPage from '@/pages/mypage/ModifyProfileCardPage';
-import RejectPage from '@/pages/Notification/RejectPage';
-import NotificationPage from '@/pages/Notification/NotificationPage';
-import NotificationDetailPage from '@/pages/Notification/NotificationDetailPage';
-import AcceptPage from '@/pages/Notification/AcceptPage';
+import ModifyProfileCardPage from '@/pages/mypage/modifyProfile/ModifyProfileCardPage';
+import RejectPage from '@/pages/notification/reject/RejectPage';
+import NotificationPage from '@/pages/notification/NotificationPage';
+import NotificationDetailPage from '@/pages/notification/detail/NotificationDetailPage';
+import AcceptPage from '@/pages/notification/accept/AcceptPage';
+import HistoryPage from '@/pages/mypage/history/HistoryPage';
+import SendReviewPage from '@/pages/mypage/review/SendReviewPage';
+import MyReceivedReviewsPage from '@/pages/mypage/review/MyReceivedReviews';
+import DeleteAccountPage from '@/pages/deleteAccount/DeleteAccountPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -34,13 +38,23 @@ export default function RouteProvider() {
                 <Route path='total/profile/:userInfo/review' element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
-                <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
+                <Route path="total/profile/:userId/review" element={<ReceivedReviewPage />} />
+                <Route path="total" element={<TotalBabpoolPage />} />
+                <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
+                <Route
+                    path="total/profile/:targetProfileIdAndName/request"
+                    element={<BabRequestPage />}
+                />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="notification/:type" element={<NotificationDetailPage />} />
                 <Route path="accept" element={<AcceptPage />} />
                 <Route path="reject" element={<RejectPage />} />
                 <Route path="mypage" element={<MyPage />} />
                 <Route path="mypage/profile-modify" element={<ModifyProfileCardPage />} />
+                <Route path="mypage/history" element={<HistoryPage />} />
+                <Route path="mypage/review" element={<SendReviewPage />} />
+                <Route path="mypage/my-received-reviews" element={<MyReceivedReviewsPage />} />
+                <Route path="deleteAccount" element={<DeleteAccountPage />} />
             </>
         )
     );

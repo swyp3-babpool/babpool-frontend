@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
 import Txt from '../text';
+import { colors } from '@/assets/styles/theme';
 
 type PopupProps = {
     text: string; // 팝업 내용
@@ -9,9 +10,17 @@ type PopupProps = {
     button: React.ReactNode; // 팝업 버튼
     secondButton?: React.ReactNode; // 팝업 버튼
     closePopup: () => void;
+    deleteAccount?: boolean;
 };
 
-export default function Popup({ text, secondText, button, secondButton, closePopup }: PopupProps) {
+export default function Popup({
+    text,
+    secondText,
+    button,
+    secondButton,
+    closePopup,
+    deleteAccount,
+}: PopupProps) {
     useEffect(() => {
         document.body.style.cssText = `
           position: fixed; 
@@ -25,10 +34,16 @@ export default function Popup({ text, secondText, button, secondButton, closePop
         };
     }, []);
 
+    const TextWithHighlight = () => (
+        <>
+            정말 <span style={{ color: colors.purple_light_40 }}>탈퇴</span>하시겠어요?
+        </>
+    );
+
     return (
         <PopupWrapper>
             <PopupTextContainer>
-                <Txt variant="h4">{text}</Txt>
+                <Txt variant="h4">{deleteAccount ? <TextWithHighlight /> : text}</Txt>
                 {secondText && <Txt variant="h4">{secondText}</Txt>}
             </PopupTextContainer>
             <ButtonContainer>
