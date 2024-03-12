@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
@@ -34,7 +34,7 @@ export default function NotificationPage() {
         isError: isErrorReceived,
         isLoading: isLoadingReceived,
     } = useQuery<ReceivedBabAppointmentType[]>({
-        queryKey: [`/api/appointment/list/received`],
+        queryKey: [`/api/appointment/list/receive`],
         queryFn: () => getReceivedBabAppointment(),
     });
 
@@ -48,6 +48,11 @@ export default function NotificationPage() {
     const handleNotificationCardClick = (state: string) => {
         navigate(`/notification/${selected}?state=${state}`);
     };
+
+    useEffect(() => {
+        console.log('sentList', sentList);
+        console.log('receivedList', receivedList);
+    });
 
     return (
         <NotificationPageContainer>
@@ -82,20 +87,8 @@ export default function NotificationPage() {
             </TabBarContainer>
             <GridContainer>
                 {selected === 'received'
-                    ? receivedList?.map((item) => (
-                          <NotificationCard
-                              key={item.appointmentId}
-                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
-                              name={item.appointmentReceiverUserNickname}
-                              content={
-                                  item.appointmentStatus === 'ACCEPT'
-                                      ? item.appointmentFixDateTime
-                                      : '수락 대기중'
-                              }
-                              onClick={() => handleNotificationCardClick(selected)}
-                          />
-                      ))
-                    : sentList?.map((item) => (
+                    ? receivedList &&
+                      receivedList?.map((item) => (
                           <NotificationCard
                               key={item.appointmentId}
                               type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
@@ -105,6 +98,22 @@ export default function NotificationPage() {
                                       ? item.appointmentFixDateTime
                                       : '수락 대기중'
                               }
+                              image={item.appointmentSenderProfileImageUrl}
+                              onClick={() => handleNotificationCardClick(selected)}
+                          />
+                      ))
+                    : sentList &&
+                      sentList?.map((item) => (
+                          <NotificationCard
+                              key={item.appointmentId}
+                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
+                              name={item.appointmentReceiverUserNickname}
+                              content={
+                                  item.appointmentStatus === 'ACCEPT'
+                                      ? item.appointmentFixDateTime
+                                      : '수락 대기중'
+                              }
+                              image={item.appointmentReceiverProfileImageUrl}
                               onClick={() => handleNotificationCardClick(selected)}
                           />
                       ))}

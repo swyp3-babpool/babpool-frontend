@@ -11,7 +11,7 @@ export const getSentBabAppointment = async () => {
 };
 
 export const getReceivedBabAppointment = async () => {
-    const res = (await get(`/api/appointment/list/received`)) as CommonResponseType<
+    const res = (await get(`/api/appointment/list/receive`)) as CommonResponseType<
         ReceivedBabAppointmentType[]
     >;
     console.log(res);

@@ -1,4 +1,4 @@
-export interface ReceivedBabAppointmentType {
+export interface SentBabAppointmentType {
     appointmentId: number;
     appointmentReceiverProfileId: number;
     appointmentReceiverUserNickname: string;
@@ -8,7 +8,7 @@ export interface ReceivedBabAppointmentType {
     appointmentFixDateTime: string;
 }
 
-export interface SentBabAppointmentType {
+export interface ReceivedBabAppointmentType {
     appointmentId: number;
     appointmentSenderProfileId: number;
     appointmentSenderUserNickname: string;
