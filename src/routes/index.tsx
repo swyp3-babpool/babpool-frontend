@@ -19,28 +19,31 @@ import RejectPage from '@/pages/Notification/RejectPage';
 import NotificationPage from '@/pages/Notification/NotificationPage';
 import NotificationDetailPage from '@/pages/Notification/NotificationDetailPage';
 import AcceptPage from '@/pages/Notification/AcceptPage';
+import AuthProvider from '@/provider/AuthRoute';
+import AuthRoute from '@/provider/AuthRoute';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
-                <Route path="/" element={<HomePage />} />
+                <Route index element={<HomePage />} />
                 <Route path="/auth/kakao/callback" element={<KakaoAuthenticationPage />} />
                 <Route path="signin" element={<SignInPage />} />
                 <Route path="signup/:uuid" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
-                <Route path='total' element={<TotalBabpoolPage />} />
-                <Route path='total/profile/:userId' element={<ProfileDetailsPage />} />
-                <Route path='total/profile/:userInfo/review' element={<ReceivedReviewPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
-                <Route path="total/profile/:userId" element={<ProfileDetailsPage />} />
-                <Route path="total/profile/:targetProfileIdAndName/request" element={<BabRequestPage />} />
-                <Route path="notification" element={<NotificationPage />} />
-                <Route path="notification/:type" element={<NotificationDetailPage />} />
-                <Route path="accept" element={<AcceptPage />} />
-                <Route path="reject" element={<RejectPage />} />
-                <Route path="mypage" element={<MyPage />} />
-                <Route path="mypage/profile-modify" element={<ModifyProfileCardPage />} />
+                <Route path="total/profile/:userInfo/review" element={<AuthRoute><ReceivedReviewPage /></AuthRoute>} />
+                <Route path="total/profile/:userId" element={<AuthRoute><ProfileDetailsPage /></AuthRoute>} />
+                <Route
+                    path="total/profile/:targetProfileIdAndName/request"
+                    element={<AuthRoute><BabRequestPage /></AuthRoute>}
+                />
+                <Route path="notification" element={<AuthRoute><NotificationPage /></AuthRoute>} />
+                <Route path="notification/:type" element={<AuthRoute><NotificationDetailPage /></AuthRoute>} />
+                <Route path="accept" element={<AuthRoute><AcceptPage /></AuthRoute>} />
+                <Route path="reject" element={<AuthRoute><RejectPage /></AuthRoute>} />
+                <Route path="mypage" element={<AuthRoute><MyPage /></AuthRoute>} />
+                <Route path="mypage/profile-modify" element={<AuthRoute><ModifyProfileCardPage /></AuthRoute>} />
             </>
         )
     );
