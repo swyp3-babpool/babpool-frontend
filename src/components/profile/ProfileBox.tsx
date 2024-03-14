@@ -40,13 +40,15 @@ export default function ProfileBox({
                             {group}
                         </Txt>
                     </NameContainer>
-                    <Txt
-                        style={{ width: '100%' }}
-                        variant="caption2"
-                        color={textColor ? textColor : colors.black}
-                    >
-                        {content}
-                    </Txt>
+                    {content !== '' && (
+                        <Txt
+                            style={{ width: '100%' }}
+                            variant="caption2"
+                            color={textColor ? textColor : colors.black}
+                        >
+                            {content}
+                        </Txt>
+                    )}
                 </InfoContainer>
             </Container>
         </div>
@@ -97,7 +99,7 @@ export const InfoContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 4px;
 `;
 

@@ -41,7 +41,7 @@ export const Devider = styled.div`
     background-color: ${colors.white_10};
 `;
 
-export const PossibleTimeRadioButton = styled.button<{ selected: boolean }>`
+export const PossibleTimeRadioButton = styled.button<{ selected: boolean; cursor: string }>`
     width: 16px;
     height: 16px;
     box-sizing: border-box;
@@ -50,18 +50,19 @@ export const PossibleTimeRadioButton = styled.button<{ selected: boolean }>`
     justify-content: center;
     border-radius: 50%;
     flex-shrink: 0;
+    cursor: ${(props) => props.cursor};
     border: ${(props) =>
         props.selected ? `4px solid ${colors.purple_light_30}` : `1px solid ${colors.black}`};
 `;
 
-export const PossibleTimeBox = styled.div`
+export const PossibleTimeBox = styled.div<{ selected: boolean }>`
     width: 100%;
     padding: 15px 16px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     border-radius: 10px;
-    border: 1px solid ${colors.purple_light_30};
+    border: 1px solid ${(props) => (props.selected ? colors.purple_light_30 : colors.white_20)};
 `;
 
 export const QueryBox = styled.div`

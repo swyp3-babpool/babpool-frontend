@@ -8,7 +8,8 @@ type NotificaionCardProps = {
     image?: string;
     name?: string;
     content?: string;
-    type?: 'complete' | 'reject' | 'accept' | 'waiting';
+    reviewRequired?: boolean;
+    type?: string;
     onClick?: () => void;
 };
 
@@ -17,6 +18,7 @@ export default function NotificationCard({
     name,
     content,
     type,
+    reviewRequired,
     onClick,
 }: NotificaionCardProps) {
     const renderImage = () => {
@@ -24,7 +26,7 @@ export default function NotificationCard({
         if (image) {
             return <Image src={image} />;
         }
-        if (type !== 'waiting') {
+        if (type !== 'WAITING' && !reviewRequired) {
             return (
                 <ImageDefault color="purple">
                     <ImageIcon src={ProfileDefaultIcon} />
@@ -40,7 +42,7 @@ export default function NotificationCard({
     };
 
     const renderBackground = () => {
-        if (type !== 'waiting') {
+        if (type !== 'WAITING' && !reviewRequired) {
             return colors.white;
         } else {
             return colors.purple_light_30;
@@ -48,16 +50,20 @@ export default function NotificationCard({
     };
 
     const renderContent = () => {
-        if (type === 'waiting') {
+        if (type === 'WAITING' || reviewRequired) {
             return (
                 <Txt variant="caption1" color={colors.white}>
                     {content}
                 </Txt>
             );
-        } else if (type === 'reject') {
+        } else if (type === 'REJECT' || type === 'EXPIRE') {
             return (
                 <Txt
-                    style={{ borderRadius: 8, backgroundColor: colors.white_10, padding: 6 }}
+                    style={{
+                        borderRadius: 8,
+                        backgroundColor: colors.white_10,
+                        padding: '4px 6px',
+                    }}
                     variant="caption1"
                     color={colors.purple_light_30}
                 >
@@ -85,7 +91,11 @@ export default function NotificationCard({
                 <InfoContainer>
                     <Txt
                         variant="button"
-                        color={type === 'waiting' ? colors.white : colors.purple_light_40}
+                        color={
+                            type === 'WAITING' || reviewRequired
+                                ? colors.white
+                                : colors.purple_light_40
+                        }
                     >
                         {name}
                     </Txt>
@@ -104,9 +114,9 @@ export const Container = styled.button<{ background: string; cursor: string }>`
     border-radius: 8px;
     border: 1px solid ${colors.purple_light_20};
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
     cursor: ${(props) => props.cursor};
 `;
 
