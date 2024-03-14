@@ -172,13 +172,23 @@ export default function TotalBabpoolPage() {
                     />
                 </SearchBarContainer>
                 <FilterBoxContainer>
-                    {FILTER_CATEGORY.map((category) => (
-                        <FilterBox
-                            key={category}
-                            text={category}
-                            onClick={() => handleSetFilterModal(category)}
-                        />
-                    ))}
+                    {FILTER_CATEGORY.map((category) => {
+                        const keywordLength = Object.values(searchInfo.filterKeyword)
+                            .flat()
+                            .map((item) => getKeywordId(item)).length;
+                        return (
+                            <FilterBox
+                                key={category}
+                                text={category}
+                                filterLength={
+                                    category === '구분'
+                                        ? searchInfo.division.length
+                                        : keywordLength
+                                }
+                                onClick={() => handleSetFilterModal(category)}
+                            />
+                        );
+                    })}
                 </FilterBoxContainer>
 
                 {!isLoading && data ? (
