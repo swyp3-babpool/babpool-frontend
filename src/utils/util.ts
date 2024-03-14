@@ -4,7 +4,7 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import { WEEKS } from './constant';
 
-export const getDate = (date: string) => {
+export const getDateTime = (date: string) => {
     const dateObj = new Date(date);
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
@@ -13,6 +13,19 @@ export const getDate = (date: string) => {
     const period = hour < 12 ? '오전' : '오후';
     const hour12 = hour <= 12 ? hour : hour - 12;
     return `${month}/${day}(${dayOfWeek}) ${period} ${hour12}-${hour12 !== 12 ? hour12 + 1 : 1}시`;
+};
+
+export const getDate = (date: string, hour: number) => {
+    const dateObj = new Date(date);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
+    const hour2 = hour + 1;
+    const period1 = hour < 12 ? '오전' : '오후';
+    const period2 = hour2 < 12 ? '오전' : '오후';
+    const hour1by12 = hour % 12 === 0 ? 12 : hour % 12;
+    const hour2by12 = hour2 % 12 === 0 ? 12 : hour2 % 12;
+    return `${month}/${day}(${dayOfWeek}) ${period1} ${hour1by12}:00 ~ ${period2} ${hour2by12}:00`;
 };
 
 export const getReviewType = (reviewType: string) => {
