@@ -8,9 +8,20 @@ import Header from '@/components/common/header';
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
+
 import { AcceptContentType } from '@/interface/api/notifications';
 import { getDate, getDateTime, getDivisionName } from '@/utils/util';
 import { AcceptPageContainer, ButtonContainer, Devider, IconContainer, QueryBox, ThickDevider } from './AcceptPage.styles';
+
+interface AcceptPageProps {
+    appointmentId: number;
+    userNickName: string;
+    userGrade: string;
+    profileIntro: string;
+    profileImgUrl: string;
+    keywords: string[];
+}
+
 
 export default function AcceptPage() {
     const navigate = useNavigate();
