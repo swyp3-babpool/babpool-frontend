@@ -4,17 +4,11 @@ import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
 import { ReactComponent as CheckIcon } from '@/assets/icons/ic_complete.svg';
 import Header from '@/components/common/header';
-import {
-    AcceptPageContainer,
-    ButtonContainer,
-    Devider,
-    IconContainer,
-    QueryBox,
-    ThickDevider,
-} from './AcceptPage.styles';
+
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
+import { AcceptPageContainer, ButtonContainer, Devider, IconContainer, QueryBox, ThickDevider } from './AcceptPage.styles';
 
 interface AcceptPageProps {
     appointmentId: number;

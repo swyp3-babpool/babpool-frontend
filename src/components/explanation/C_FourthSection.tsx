@@ -4,8 +4,10 @@ import { styled } from 'styled-components';
 import { HOW_TO_USE_LIST } from '@/utils/constant';
 import HowToUseCard from './HowToUseCard';
 import { colors } from '@/assets/styles/theme';
+import { useNavigation } from '@/hooks/useNavigation';
 
 export default function C_FourthSection() {
+    const { handleNavigate } = useNavigation()
     return (
         <FourthSection>
                 <Txt style={{ fontSize: '20px', fontWeight: 700, lineHeight: '30px' }}>
@@ -26,6 +28,7 @@ export default function C_FourthSection() {
                         ))}
                     </HowToUseCardContainer>
                 </FourthSectionSubTitleBox>
+                <LinkText onClick={() => handleNavigate('/total')}>밥풀 전체보기</LinkText>
             </FourthSection>
     );
 }
@@ -55,3 +58,11 @@ export const HowToUseCardContainer = styled.div`
     gap: 20px;
     margin-top: 40px;
 `;
+
+export const LinkText = styled.div`
+    text-align: center;
+    margin-top: 30px;
+    color: ${colors.purple_light_40};
+    text-decoration: underline;
+    cursor: pointer;
+`

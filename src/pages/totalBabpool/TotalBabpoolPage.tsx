@@ -1,4 +1,4 @@
-import { getProfiles } from '@/api/profile/profileApi';
+import { getProfiles, getisRegistrationProfile } from '@/api/profile/profileApi';
 import { colors } from '@/assets/styles/theme';
 import { SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
 import Header from '@/components/common/header';
@@ -20,9 +20,12 @@ import {
 import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import Loading from '@/components/common/loading/Loading';
+import { loginCheck } from '@/utils/validate';
+import Popup from '@/components/common/popup';
+import Button from '@/components/common/button';
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
@@ -30,6 +33,8 @@ export default function TotalBabpoolPage() {
     const groupName = searchParams.get('groupName') ? searchParams.get('groupName') : '';
 
     const [filterModalOpen, setFilterModalOpen] = useState(false);
+    const [isProfileRegister, setIsProfileRegister] = useState(false);
+    const [profileCheckModalOpen, setProfileCheckModalOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [searchInfo, setSearchInfo] = useRecoilState(searchInfoState);
 
@@ -64,9 +69,15 @@ export default function TotalBabpoolPage() {
         queryKey: ['profiles', searchInfo],
         queryFn: fetchProfileList,
     });
-    const { navigate } = useNavigation();
+    const { navigate, authCheck } = useNavigation();
 
     const handleProfileSelect = (profile: ProfileType) => {
+        if (!authCheck()) {
+        }
+        if (!isProfileRegister) {
+            setProfileCheckModalOpen(true);
+            return;
+        }
         setSearchInfo((prev) => ({ ...prev, prevFilterKeyword: prev.filterKeyword }));
         navigate(`profile/${profile.profileId}`);
     };
@@ -139,6 +150,14 @@ export default function TotalBabpoolPage() {
         }));
     }, [groupName]);
 
+    useEffect(() => {
+        if (loginCheck()) {
+            getisRegistrationProfile().then((res) => {
+                setIsProfileRegister(res.register);
+            });
+        }
+    }, []);
+
     return (
         <>
             <TotalBabpoolPageContainer>
@@ -200,6 +219,21 @@ export default function TotalBabpoolPage() {
                             handleSetFilterModal={handleSetFilterModal}
                             handleCloseModal={handleCloseModal}
                         />
+                        {profileCheckModalOpen && (
+                            <Overlay>
+                                <Popup
+                                    text="밥풀러의 프로필카드를 보기 전에"
+                                    secondText="나의 프로필카드를 작성하러 가볼까요?"
+                                    button={
+                                        <Button
+                                            text="바로가기"
+                                            onClick={() => navigate('/mypage/profile-modify')}
+                                        />
+                                    }
+                                    closePopup={() => setProfileCheckModalOpen(false)}
+                                />
+                            </Overlay>
+                        )}
                         {filterModalOpen && <Overlay />}
                     </>
                 ) : (

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
+
 import {
     NotificationDetailPageContainer,
     NotificationDetailPageSection,
@@ -12,6 +13,7 @@ import {
     PossibleTimeRadioButton,
 } from './NotificationDetailPage.styles';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Button from '@/components/common/button';
@@ -19,6 +21,7 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
+
 import { DetailBabAppointmentType } from '@/interface/api/notifications';
 import { appointmentAccept, getDetailBabAppointment } from '@/api/notification/notificationApi';
 import { useQuery } from '@tanstack/react-query';
@@ -28,6 +31,7 @@ interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
+
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
