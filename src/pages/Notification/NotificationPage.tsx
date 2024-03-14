@@ -128,7 +128,7 @@ export default function NotificationPage() {
                                   content={
                                       item.appointmentStatus === 'WAITING'
                                           ? '수락 대기중'
-                                          : item.appointmentFixDateTime
+                                          : getDateTime(item.appointmentFixDateTime)
                                   }
                                   image={item.appointmentReceiverProfileImageUrl}
                                   onClick={() =>

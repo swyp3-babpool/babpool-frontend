@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
@@ -16,7 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { HistoryType, RejectHistoryType } from '@/interface/mypageType';
 import { getAcceptHistory, getRejectHistory } from '@/api/profile/mypageApi';
 import { Col } from '@/components/common/flex/Flex';
-import { getDate } from '@/utils/util';
+import { getDate, getDateTime } from '@/utils/util';
 
 export default function HistoryPage() {
     const navigate = useNavigate();
@@ -50,6 +50,11 @@ export default function HistoryPage() {
             navigate('/mypage/review');
         }
     };
+
+    useEffect(() => {
+        console.log('doneList', doneList);
+        console.log('rejectList', rejectList);
+    }, [doneList, rejectList]);
 
     return (
         <NotificationPageContainer>
@@ -101,7 +106,7 @@ export default function HistoryPage() {
                                   content={
                                       item.reviewRequired === 'REVIEW_REQUIRED'
                                           ? '후기 보내기'
-                                          : getDate(item.appointmentFixDateTime)
+                                          : getDateTime(item.appointmentFixDateTime)
                                   }
                                   image={item.appointmentReceiverProfileImageUrl}
                                   onClick={() =>
@@ -117,9 +122,8 @@ export default function HistoryPage() {
                                   key={item.appointmentId}
                                   type={item.appointmentStatus}
                                   name={item.appointmentReceiverUserNickname}
-                                  content={item.refuseType}
+                                  content={item.refuseType ? '개인 사유' : '시간 만료'}
                                   image={item.appointmentReceiverProfileImageUrl}
-                                  onClick={() => handleNotificationCardClick(false)}
                               />
                           ))}
                 </GridContainer>

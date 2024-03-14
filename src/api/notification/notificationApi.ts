@@ -34,3 +34,16 @@ export const appointmentAccept = async (reqBody: any) => {
     const res = (await post(`/api/appointment/accept`, reqBody)) as CommonResponseType<any>;
     return res;
 };
+
+export const appointmentReject = async (reqBody: any) => {
+    const res = (await post(`/api/appointment/reject`, reqBody)) as CommonResponseType<any>;
+    return res;
+};
+
+export const appointmentCancel = async (appointmentId: number) => {
+    const res = (await post(
+        `/api/appointment/cancel/${appointmentId}`,
+        {}
+    )) as CommonResponseType<any>;
+    return res;
+};

@@ -40,3 +40,15 @@ interface PossibleTime {
     possibleDate: string;
     possibleTimeStart: number;
 }
+
+export interface AcceptContentType {
+    requesterNickName: string;
+    requesterProfileImageUrl: string;
+    requesterGrade: string;
+    requesterIntro: string;
+    date: string;
+    time: number;
+    requesterContactPhone: string;
+    requesterContactChat: string;
+    question: string;
+}
