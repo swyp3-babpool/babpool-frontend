@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
 import { ReactComponent as CheckIcon } from '@/assets/icons/ic_complete.svg';
@@ -15,18 +15,23 @@ import {
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
-
-interface AcceptPageProps {
-    appointmentId: number;
-    userNickName: string;
-    userGrade: string;
-    profileIntro: string;
-    profileImgUrl: string;
-    keywords: string[];
-}
+import { AcceptContentType } from '@/interface/api/notifications';
+import { getDate, getDateTime, getDivisionName } from '@/utils/util';
 
 export default function AcceptPage() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const {
+        requesterNickName,
+        requesterProfileImageUrl,
+        requesterGrade,
+        requesterIntro,
+        date,
+        time,
+        requesterContactPhone,
+        requesterContactChat,
+        question,
+    } = location.state as AcceptContentType;
     return (
         <AcceptPageContainer>
             <Header />
@@ -40,7 +45,9 @@ export default function AcceptPage() {
                             밥약 수락 완료
                         </Txt>
                         <Txt variant="caption1" color={colors.black} align="center">
-                            {`{연락처로} 밥약 장소를 정해보세요!`}
+                            {`${
+                                requesterContactPhone ? '{연락처로}' : '{오픈채팅방으로}'
+                            } 밥약 장소를 정해보세요!`}
                         </Txt>
                     </Col>
                 </Col>
@@ -49,9 +56,10 @@ export default function AcceptPage() {
             <Col gap="20" padding="40px 30px 0">
                 <Col gap="15">
                     <ProfileBox
-                        name="송채영"
-                        group="대학생"
-                        content="대학생활 고민 같이 나누며 이야기 해요!"
+                        url={requesterProfileImageUrl}
+                        name={requesterNickName}
+                        group={getDivisionName(requesterGrade)}
+                        content={requesterIntro}
                     />
                     <Devider />
                 </Col>
@@ -61,15 +69,15 @@ export default function AcceptPage() {
                             밥약시간
                         </Txt>
                         <Txt variant="caption1" color={colors.black}>
-                            2/7(수) 오후 07:00 ~ 오후 08:00
+                            {getDate(date, time)}
                         </Txt>
                     </Row>
                     <Row gap="20">
                         <Txt variant="h6" color={colors.black}>
-                            연락처
+                            {requesterContactPhone ? '연락처' : '오픈채팅방'}
                         </Txt>
                         <Txt variant="caption1" color={colors.black}>
-                            010-0000-0000
+                            {requesterContactPhone || requesterContactChat}
                         </Txt>
                     </Row>
                 </Col>
@@ -80,7 +88,7 @@ export default function AcceptPage() {
                     </Txt>
                     <QueryBox>
                         <Txt variant="caption1" color={colors.black}>
-                            "대학생활에 대해 궁금한게 많아요. 어떤 동아리가 있을까요?"
+                            {question}
                         </Txt>
                     </QueryBox>
                 </Col>
@@ -88,7 +96,11 @@ export default function AcceptPage() {
             <ButtonContainer>
                 <Button
                     text="상세 내역 보기"
-                    onClick={() => navigate(`/notification/received?state=accept`)}
+                    onClick={() =>
+                        navigate(`/notification/received`, {
+                            state: { state: 'ACCEPT', appointmentId: 63 },
+                        })
+                    }
                 />
             </ButtonContainer>
         </AcceptPageContainer>
