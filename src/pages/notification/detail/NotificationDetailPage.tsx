@@ -28,6 +28,7 @@ import {
     getDetailBabAppointment,
 } from '@/api/notification/notificationApi';
 
+
 import { useQuery } from '@tanstack/react-query';
 import { getDate, getDivisionName } from '@/utils/util';
 
@@ -35,6 +36,7 @@ interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
+
 
 export default function NotificationDetailPage() {
     const { type } = useParams();

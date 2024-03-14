@@ -21,6 +21,7 @@ interface RejectPageProps {
     keywords: string[];
 }
 
+
 export default function RejectPage() {
     const navigate = useNavigate();
     const location = useLocation();

@@ -12,6 +12,16 @@ import { AcceptContentType } from '@/interface/api/notifications';
 import { getDate, getDateTime, getDivisionName } from '@/utils/util';
 import { AcceptPageContainer, ButtonContainer, Devider, IconContainer, QueryBox, ThickDevider } from './AcceptPage.styles';
 
+interface AcceptPageProps {
+    appointmentId: number;
+    userNickName: string;
+    userGrade: string;
+    profileIntro: string;
+    profileImgUrl: string;
+    keywords: string[];
+}
+
+
 export default function AcceptPage() {
     const navigate = useNavigate();
     const location = useLocation();
