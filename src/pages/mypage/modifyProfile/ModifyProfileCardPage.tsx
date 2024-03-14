@@ -176,8 +176,6 @@ export default function ModifyProfileCardPage() {
                 navigate('/mypage');
             }
         });
-
-        console.log('요청', formData);
     };
 
     const handleProfileImgFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,7 +248,7 @@ export default function ModifyProfileCardPage() {
 
     return (
         <ModifyProfilePageContainer>
-            <Header text="프로필카드 수정" />
+            <Header text="프로필카드 수정" destination="/mypage" />
             <Col gap={40} padding="25px 30px 45px">
                 <Row gap={0} justifyContent="center" alignItems="center">
                     {!profileImgUrl ? (
