@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
@@ -11,7 +11,7 @@ import {
     Devider,
     PossibleTimeRadioButton,
 } from './NotificationDetailPage.styles';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Button from '@/components/common/button';
@@ -19,39 +19,55 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
+import { DetailBabAppointmentType } from '@/interface/api/notifications';
+import { appointmentAccept, getDetailBabAppointment } from '@/api/notification/notificationApi';
+import { useQuery } from '@tanstack/react-query';
+import { getDate, getDivisionName } from '@/utils/util';
+
+interface NotificationDetailPageProps {
+    state: string;
+    appointmentId: number;
+}
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
-    const [searchParams] = useSearchParams();
-    const state = searchParams.get('state');
-    const [keywords, setKeywords] = useState<string[]>([
-        '편입생',
-        '자취',
-        '동아리',
-        '진로탐색',
-        '대학원',
-    ]);
+    const location = useLocation();
+    const { state, appointmentId } = location.state as NotificationDetailPageProps;
 
-    const [times, setTimes] = useState<string[]>([
-        '2/7(수) 오후 07:00 ~ 오후 08:00',
-        '2/8(목) 오후 07:00 ~ 오후 08:00',
-        '2/9(금) 오후 07:00 ~ 오후 08:00',
-    ]);
-
+    const {
+        data: detailAppointment,
+        isError: isError,
+        isLoading: isLoading,
+    } = useQuery<DetailBabAppointmentType>({
+        queryKey: [`/api/appointment/detail/${appointmentId}`],
+        queryFn: () => getDetailBabAppointment(appointmentId),
+    });
     const navigate = useNavigate();
-    const [selectedTimeIdx, setSelectedTimeIdx] = useState(-1);
+    const [selectedTime, setSelectedTime] = useState(-1);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isPopupSecondButton, setIsPopupSecondButton] = useState(false);
     const [modalTitle, setModalTitle] = useState('밥약 요청을 수락했어요!');
 
+    const handleAppointmentAccept = () => {
+        const reqBody = {
+            appointmentId: appointmentId,
+            possibleTimeId: selectedTime,
+        };
+        appointmentAccept(reqBody).then((res) => {
+            if (res.code === 200) {
+                setModalTitle('밥약 요청을 수락했어요!');
+            }
+        });
+    };
+
     const handlePopupOpen = () => {
         setIsPopupOpen(true);
         if (type === 'received') {
-            if (state === 'waiting') {
-                if (selectedTimeIdx === -1) {
+            if (state === 'WAITING') {
+                if (selectedTime === -1) {
                     setModalTitle('가능하신 시간대 1개를');
                 } else {
-                    setModalTitle('밥약 요청을 수락했어요!');
+                    handleAppointmentAccept();
                 }
             }
         } else {
@@ -67,12 +83,12 @@ export default function NotificationDetailPage() {
     const handlePopupButtonClick = () => {
         setIsPopupOpen(false);
         if (type === 'received') {
-            if (state === 'waiting') {
-                if (selectedTimeIdx === -1) {
+            if (state === 'WAITING') {
+                if (selectedTime === -1) {
                     setIsPopupOpen(false);
                     return;
                 } else {
-                    navigate(`/accept`);
+                    navigate(`/accept`, { state: appointmentId });
                 }
             }
         } else {
@@ -81,6 +97,10 @@ export default function NotificationDetailPage() {
         }
     };
 
+    useEffect(() => {
+        console.log('detailAppointment', detailAppointment);
+    }, [detailAppointment]);
+
     return (
         <NotificationDetailPageContainer>
             <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
@@ -88,26 +108,31 @@ export default function NotificationDetailPage() {
                 <Col gap="20">
                     <Col gap="0">
                         <ProfileBox
-                            name="송채영"
-                            group="대학생"
-                            content="대학생활 고민 같이 나누며 이야기 해요!"
+                            name={detailAppointment?.userNickName}
+                            group={
+                                detailAppointment?.userGrade &&
+                                getDivisionName(detailAppointment?.userGrade)
+                            }
+                            content={detailAppointment?.profileIntro}
                             padding="25px 0px 16px 0px"
                         />
-                        <ProfileKeywords keywords={keywords} />
+                        <ProfileKeywords keywords={detailAppointment?.keywords} />
                     </Col>
                     <Devider />
                     <Row gap="20">
                         <Txt variant="h5" color={colors.black}>
-                            {state === 'waiting' ? '만료까지 남은 시간' : '연락처'}
+                            {state === 'WAITING' ? '만료까지 남은 시간' : '연락처'}
                         </Txt>
                         <Txt
                             variant="caption1"
-                            color={state === 'waiting' ? colors.purple_light_40 : colors.black}
+                            color={state === 'WAITING' ? colors.purple_light_40 : colors.black}
                         >
-                            {state === 'waiting' ? '00시간 00분' : '010-0000-0000'}
+                            {state === 'WAITING'
+                                ? `${detailAppointment?.lastingTime.hour}시간 ${detailAppointment?.lastingTime.minute}분`
+                                : '010-0000-0000'}
                         </Txt>
                     </Row>
-                    {state === 'waiting' && type === 'sent' && (
+                    {state === 'WAITING' && type === 'sent' && (
                         <>
                             <Devider />
                             <Row gap="20">
@@ -126,25 +151,36 @@ export default function NotificationDetailPage() {
                             <Txt variant="h5" color={colors.black}>
                                 이때 가능해요
                             </Txt>
-                            {state === 'waiting' && type === 'received' && (
+                            {state === 'WAITING' && type === 'received' && (
                                 <Txt variant="caption2" color={colors.white_20}>
                                     밥약 수락을 위해 가능한 시간대 1개를 선택해주세요
                                 </Txt>
                             )}
                         </Col>
                         <Col gap="16">
-                            {times.map((time, idx) => (
+                            {detailAppointment?.possibleDateTimes.map((time, idx) => (
                                 <Row gap="14" key={idx} alignItems="center">
-                                    {!(state === 'waiting' && type === 'sent') && (
+                                    {!(state === 'WAITING' && type === 'sent') && (
                                         <PossibleTimeRadioButton
-                                            selected={selectedTimeIdx === idx}
-                                            disabled={!(type === 'received' && state === 'waiting')}
-                                            onClick={() => setSelectedTimeIdx(idx)}
+                                            selected={selectedTime === time.possibleTimeId}
+                                            disabled={!(type === 'received' && state === 'WAITING')}
+                                            cursor={
+                                                type === 'received' && state === 'WAITING'
+                                                    ? 'pointer'
+                                                    : 'default'
+                                            }
+                                            onClick={() => setSelectedTime(time.possibleTimeId)}
                                         />
                                     )}
-                                    <PossibleTimeBox>
+                                    <PossibleTimeBox
+                                        selected={
+                                            state === 'ACCEPT'
+                                                ? selectedTime === time.possibleTimeId
+                                                : true
+                                        }
+                                    >
                                         <Txt variant="caption1" color={colors.black}>
-                                            {time}
+                                            {getDate(time.possibleDate, time.possibleTimeStart)}
                                         </Txt>
                                     </PossibleTimeBox>
                                 </Row>
@@ -166,19 +202,28 @@ export default function NotificationDetailPage() {
             </NotificationDetailPageSection>
             <ButtonContainer type={type}>
                 {type === 'sent' ? (
-                    state === 'accept' ? (
+                    state === 'ACCEPT' ? (
                         <></>
                     ) : (
                         <Button text="요청 취소" onClick={handlePopupOpen} />
                     )
-                ) : state === 'waiting' ? (
+                ) : state === 'WAITING' ? (
                     <>
                         <Button text="수락" onClick={handlePopupOpen} />
                         <Button
                             text="다음에요"
                             type="refuse"
                             onClick={() => {
-                                navigate(`/reject`);
+                                navigate(`/reject`, {
+                                    state: {
+                                        appointmentId: appointmentId,
+                                        userNickName: detailAppointment?.userNickName,
+                                        userGrade: detailAppointment?.userGrade,
+                                        profileIntro: detailAppointment?.profileIntro,
+                                        profileImgUrl: detailAppointment?.profileImgUrl,
+                                        keywords: detailAppointment?.keywords,
+                                    },
+                                });
                             }}
                         />
                     </>
@@ -190,7 +235,7 @@ export default function NotificationDetailPage() {
                 <Overlay>
                     <Popup
                         text={modalTitle}
-                        secondText={selectedTimeIdx === -1 ? '선택해주세요!' : undefined}
+                        secondText={selectedTime === -1 ? '선택해주세요!' : undefined}
                         button={
                             <Button
                                 text={isPopupSecondButton ? '네' : '확인'}

@@ -16,6 +16,15 @@ import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
 
+interface AcceptPageProps {
+    appointmentId: number;
+    userNickName: string;
+    userGrade: string;
+    profileIntro: string;
+    profileImgUrl: string;
+    keywords: string[];
+}
+
 export default function AcceptPage() {
     const navigate = useNavigate();
     return (
