@@ -3,13 +3,19 @@ import { ReactComponent as C_BackIcon } from '@/assets/icons/ic_back.svg';
 import Txt from '../text';
 import { useNavigation } from '@/hooks/useNavigation';
 
-export default function Header({ text = '' }: { text?: string }) {
-    const { goBack } = useNavigation();
+export default function Header({
+    text = '',
+    destination,
+}: {
+    text?: string;
+    destination?: string;
+}) {
+    const { goBack, handleNavigate } = useNavigation();
 
     return (
         <HeaderContainer>
             <Txt variant="h4">{text}</Txt>
-            <BackIcon onClick={goBack} />
+            <BackIcon onClick={() => (destination ? handleNavigate(destination) : goBack())} />
         </HeaderContainer>
     );
 }

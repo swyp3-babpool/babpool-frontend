@@ -17,3 +17,26 @@ export interface ReceivedBabAppointmentType {
     appointmentCreateDate: string;
     appointmentFixDateTime: string;
 }
+
+export interface DetailBabAppointmentType {
+    userNickName: string;
+    userGrade: string;
+    profileIntro: string;
+    profileImgUrl: string;
+    keywords: string[];
+    lastingTime: LastingTime;
+    possibleDateTimes: PossibleTime[];
+    question: string;
+}
+
+interface LastingTime {
+    hour: number;
+    minute: number;
+}
+
+interface PossibleTime {
+    possibleTimeId: number;
+    possibleDateId: number;
+    possibleDate: string;
+    possibleTimeStart: number;
+}
