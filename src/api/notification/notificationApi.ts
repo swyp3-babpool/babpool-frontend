@@ -1,6 +1,10 @@
 import { CommonResponseType } from '@/interface/api/commonType';
 import { get, post } from '../api';
-import { SentBabAppointmentType, ReceivedBabAppointmentType } from '@/interface/api/notifications';
+import {
+    SentBabAppointmentType,
+    ReceivedBabAppointmentType,
+    DetailBabAppointmentType,
+} from '@/interface/api/notifications';
 
 export const getSentBabAppointment = async () => {
     const res = (await get(`/api/appointment/list/send`)) as CommonResponseType<
@@ -18,7 +22,15 @@ export const getReceivedBabAppointment = async () => {
     return res.data;
 };
 
-export const appointmentRequest = async (reqBody: any) => {
-    const res = (await post(`/api/appointment`, reqBody)) as CommonResponseType<any>;
+export const getDetailBabAppointment = async (appointmentId: number) => {
+    const res = (await get(
+        `/api/appointment/detail/${appointmentId}`
+    )) as CommonResponseType<DetailBabAppointmentType>;
+    console.log(res);
+    return res.data;
+};
+
+export const appointmentAccept = async (reqBody: any) => {
+    const res = (await post(`/api/appointment/accept`, reqBody)) as CommonResponseType<any>;
     return res;
 };
