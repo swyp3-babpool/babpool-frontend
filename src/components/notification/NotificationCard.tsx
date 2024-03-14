@@ -56,10 +56,14 @@ export default function NotificationCard({
                     {content}
                 </Txt>
             );
-        } else if (type === 'REJECT') {
+        } else if (type === 'REJECT' || type === 'EXPIRE') {
             return (
                 <Txt
-                    style={{ borderRadius: 8, backgroundColor: colors.white_10, padding: 6 }}
+                    style={{
+                        borderRadius: 8,
+                        backgroundColor: colors.white_10,
+                        padding: '4px 6px',
+                    }}
                     variant="caption1"
                     color={colors.purple_light_30}
                 >
@@ -110,9 +114,9 @@ export const Container = styled.button<{ background: string; cursor: string }>`
     border-radius: 8px;
     border: 1px solid ${colors.purple_light_20};
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.12);
     cursor: ${(props) => props.cursor};
 `;
 
