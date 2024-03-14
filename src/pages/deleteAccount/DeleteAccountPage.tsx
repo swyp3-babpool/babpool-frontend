@@ -10,6 +10,7 @@ import Button from '@/components/common/button';
 import { useNavigation } from '@/hooks/useNavigation';
 import Overlay from '@/components/common/overlay';
 import Popup from '@/components/common/popup';
+import { deleteAccountRequest } from '@/api/auth/auth';
 
 export default function DeleteAccountPage() {
     const reason = [
@@ -39,6 +40,21 @@ export default function DeleteAccountPage() {
         const isExist = selectedReason && selectedReason.find((content) => content === reason);
         return isExist;
     };
+
+    const handleDeleteAccount = () => {
+        const requestBody = {
+            exitReason: selectedReason,
+        }
+        deleteAccountRequest(requestBody)
+        .then((res) => {
+            if(res.code === 200) {
+                localStorage.removeItem('accessToken');
+                goHome();
+            }
+        })
+    }
+
+    
 
     return (
         <DeleteAccountPageContainer>
@@ -97,7 +113,7 @@ export default function DeleteAccountPage() {
                     <Popup
                         text="정말 탈퇴하시겠어요?"
                         secondText="너무 아쉬워요."
-                        button={<Button text="탈퇴" onClick={goHome} />}
+                        button={<Button text="탈퇴" onClick={handleDeleteAccount} />}
                         secondButton={
                             <Button
                                 text="취소"

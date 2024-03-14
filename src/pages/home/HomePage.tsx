@@ -6,6 +6,9 @@ import HomeSection from '@/components/home/HomeSection';
 import { useSetRecoilState } from 'recoil';
 import { searchInfoState } from '@/atom/searchInfoStore';
 import { INIT_INTEREST_KEYWORD } from '@/utils/constant';
+import { useQuery } from '@tanstack/react-query';
+import { getUserGrade, getisRegistrationProfile } from '@/api/profile/profileApi';
+import { getDivisionName } from '@/utils/util';
 
 export default function HomePage() {
 
@@ -16,8 +19,18 @@ export default function HomePage() {
         setIsOpenMenu(!isOpenMenu);
     };
 
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['/api/user/grade'],
+        queryFn: () => getUserGrade()
+    })
+
+    data && console.log(data)
+
     useEffect(() => {
-        setSearchInfo((prev) => ({...prev, page: 0, searchText: '', prevFilterKeyword: INIT_INTEREST_KEYWORD}))
+        if(!isLoading) {
+            const grade = [getDivisionName(data.userGrade)] as string[]
+            setSearchInfo((prev) => ({...prev, page: 0, division: grade, searchText: '', prevFilterKeyword: INIT_INTEREST_KEYWORD}))
+        }
     }, [])
 
     return (

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
+
 import {
     NotificationDetailPageContainer,
     NotificationDetailPageSection,
@@ -12,6 +13,7 @@ import {
     PossibleTimeRadioButton,
 } from './NotificationDetailPage.styles';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Button from '@/components/common/button';
@@ -19,8 +21,18 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
+<<<<<<< HEAD
+import { AcceptContentType, DetailBabAppointmentType } from '@/interface/api/notifications';
+import {
+    appointmentAccept,
+    appointmentCancel,
+    getDetailBabAppointment,
+} from '@/api/notification/notificationApi';
+=======
+
 import { DetailBabAppointmentType } from '@/interface/api/notifications';
 import { appointmentAccept, getDetailBabAppointment } from '@/api/notification/notificationApi';
+>>>>>>> ce33cca5da9568b68e64fdf04938292f8c6da3ab
 import { useQuery } from '@tanstack/react-query';
 import { getDate, getDivisionName } from '@/utils/util';
 
@@ -28,6 +40,7 @@ interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
+
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -46,7 +59,9 @@ export default function NotificationDetailPage() {
     const [selectedTime, setSelectedTime] = useState(-1);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isPopupSecondButton, setIsPopupSecondButton] = useState(false);
+    const [isPopupSecondText, setIsPopupSecondText] = useState(false);
     const [modalTitle, setModalTitle] = useState('밥약 요청을 수락했어요!');
+    const [acceptContent, setAcceptContent] = useState<AcceptContentType>();
 
     const handleAppointmentAccept = () => {
         const reqBody = {
@@ -55,22 +70,36 @@ export default function NotificationDetailPage() {
         };
         appointmentAccept(reqBody).then((res) => {
             if (res.code === 200) {
+                setIsPopupOpen(true);
                 setModalTitle('밥약 요청을 수락했어요!');
+                setAcceptContent(res.data);
+            }
+        });
+    };
+
+    const handleAppointmentCacel = () => {
+        appointmentCancel(appointmentId).then((res) => {
+            if (res.code === 200) {
+                setModalTitle('밥약 요청을 취소했어요!');
+                setIsPopupSecondButton(false);
+                navigate('/notification', { replace: true });
             }
         });
     };
 
     const handlePopupOpen = () => {
-        setIsPopupOpen(true);
         if (type === 'received') {
             if (state === 'WAITING') {
                 if (selectedTime === -1) {
+                    setIsPopupOpen(true);
+                    setIsPopupSecondText(true);
                     setModalTitle('가능하신 시간대 1개를');
                 } else {
                     handleAppointmentAccept();
                 }
             }
         } else {
+            setIsPopupOpen(true);
             setModalTitle('밥약 요청을 취소하시겠어요?');
             setIsPopupSecondButton(true);
         }
@@ -88,18 +117,14 @@ export default function NotificationDetailPage() {
                     setIsPopupOpen(false);
                     return;
                 } else {
-                    navigate(`/accept`, { state: appointmentId });
+                    navigate(`/accept`, { state: acceptContent });
                 }
             }
         } else {
-            setModalTitle('밥약 요청을 취소하시겠어요?');
-            setIsPopupSecondButton(true);
+            handleAppointmentCacel();
         }
+        setIsPopupSecondText(false);
     };
-
-    useEffect(() => {
-        console.log('detailAppointment', detailAppointment);
-    }, [detailAppointment]);
 
     return (
         <NotificationDetailPageContainer>
@@ -108,6 +133,7 @@ export default function NotificationDetailPage() {
                 <Col gap="20">
                     <Col gap="0">
                         <ProfileBox
+                            url={detailAppointment?.profileImgUrl}
                             name={detailAppointment?.userNickName}
                             group={
                                 detailAppointment?.userGrade &&
@@ -228,14 +254,19 @@ export default function NotificationDetailPage() {
                         />
                     </>
                 ) : (
-                    <Button text="확인" onClick={() => navigate(-1)} />
+                    <Button
+                        text="확인"
+                        onClick={() => navigate('/notification', { replace: true })}
+                    />
                 )}
             </ButtonContainer>
             {isPopupOpen && (
                 <Overlay>
                     <Popup
                         text={modalTitle}
-                        secondText={selectedTime === -1 ? '선택해주세요!' : undefined}
+                        secondText={
+                            selectedTime === -1 && isPopupSecondText ? '선택해주세요!' : undefined
+                        }
                         button={
                             <Button
                                 text={isPopupSecondButton ? '네' : '확인'}

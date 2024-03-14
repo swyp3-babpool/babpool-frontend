@@ -4,19 +4,13 @@ import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
 import { ReactComponent as CheckIcon } from '@/assets/icons/ic_complete.svg';
 import Header from '@/components/common/header';
-import {
-    AcceptPageContainer,
-    ButtonContainer,
-    Devider,
-    IconContainer,
-    QueryBox,
-    ThickDevider,
-} from './AcceptPage.styles';
+
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
 import { AcceptContentType } from '@/interface/api/notifications';
 import { getDate, getDateTime, getDivisionName } from '@/utils/util';
+import { AcceptPageContainer, ButtonContainer, Devider, IconContainer, QueryBox, ThickDevider } from './AcceptPage.styles';
 
 export default function AcceptPage() {
     const navigate = useNavigate();

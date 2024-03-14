@@ -11,7 +11,7 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
     const [isLogin, setIsLogin] = useState(false);
     const [isLogoutPopup, setIsLogoutPopup] = useState(false);
 
-    const { handleNavigate } = useNavigation();
+    const { handleNavigate, loginCheckNavigate } = useNavigation();
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
@@ -49,7 +49,7 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
             url: 'total',
         },
         {
-            text: '우편함',
+            text: '밥약 알림',
             url: 'notification',
         },
         {
@@ -73,6 +73,8 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
                             onClick={
                                 menu.text === '로그아웃'
                                     ? handleLogoutPopup
+                                    : menu.text === '밥약 알림' || menu.text === '마이페이지'
+                                    ? () => loginCheckNavigate(menu.url)
                                     : () => handleNavigate(menu.url)
                             }
                         >

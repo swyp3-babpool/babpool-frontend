@@ -1,4 +1,8 @@
+
 import { useNavigate } from 'react-router-dom';
+
+import { loginCheck } from "@/utils/validate";
+
 
 export const useNavigation = () => {
     const navigate = useNavigate();
@@ -14,6 +18,22 @@ export const useNavigation = () => {
     const goHome = () => {
         navigate('/');
     };
+    const loginCheckNavigate = (url: string) => {
+        if(loginCheck()) {
+            navigate(url);
+        } else {
+            navigate('/signin');
+        }
+    }
 
-    return { navigate, handleNavigate, goHome, goBack };
-};
+    const authCheck = () => {
+        if(!loginCheck()) {
+            navigate('/signin');
+            return false
+        }
+        return true
+    }
+
+    return {navigate, handleNavigate, authCheck, loginCheckNavigate, goHome, goBack};
+}
+
