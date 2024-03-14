@@ -24,7 +24,7 @@ import ReviewCount from '@/components/common/review/ReviewCount';
 import { GetMypageType } from '@/interface/mypageType';
 import { useQuery } from '@tanstack/react-query';
 import { getMypageInfo } from '@/api/profile/mypageApi';
-import { getDate, getDivisionName, getReviewType } from '@/utils/util';
+import { getDate, getDateTime, getDivisionName, getReviewType } from '@/utils/util';
 
 export default function MyPage() {
     const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function MyPage() {
     return (
         <MyPageContainer>
             <ProfileContainer>
-                <Header text="마이페이지" />
+                <Header text="마이페이지" destination="/" />
                 <ProfileBox
                     url={mypageInfo?.profileImg}
                     name={mypageInfo?.name}
@@ -121,7 +121,7 @@ export default function MyPage() {
                                 type={history.appointmentStatus}
                                 reviewRequired={false}
                                 name={history.appointmentReceiverUserNickname}
-                                content={getDate(history.appointmentFixDateTime)}
+                                content={getDateTime(history.appointmentFixDateTime)}
                             />
                         ))}
                     </Row>
@@ -141,7 +141,11 @@ export default function MyPage() {
                         alignItems="center"
                         gap={4}
                         justifyContent="flex-end"
-                        onClick={() => navigate('/mypage/my-received-reviews')}
+                        onClick={() =>
+                            navigate('/mypage/my-received-reviews', {
+                                state: mypageInfo?.profileId,
+                            })
+                        }
                     >
                         <Txt variant="caption1" color={colors.black}>
                             더보기
