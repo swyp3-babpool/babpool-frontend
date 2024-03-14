@@ -54,14 +54,17 @@ client.interceptors.request.use(
 client.interceptors.response.use(
     (res) => {
         if (res.data.code === 401 && res.data.message === '기간이 만료된 토큰') {
-            regenerateAccessTokenRequest().then((res) => {
-                if (res.code === 200) {
+            regenerateAccessTokenRequest().then((response) => {
+                if (response.code === 200) {
                     console.log('토큰 재발급 성공');
-                    localStorage.setItem('accessToken', res.data);
+                    localStorage.setItem('accessToken', response.data);
+                    res.config.headers['Authorization'] = `Bearer ${response.data}`;
+                    return client(res.config);
                 }
-                if (res.code === 401 || res.code === 404) {
+                if (response.code === 401 || response.code === 404) {
                     logoutRequest().then((res) => {
                         console.log('리프레시 토큰이 만료되서 로그아웃 처리되었습니다.');
+                        localStorage.removeItem('accessToken');
                     });
                 }
             });
