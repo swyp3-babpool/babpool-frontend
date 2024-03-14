@@ -29,9 +29,11 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
                 setIsLogin(false);
                 setIsLogoutPopup(false);
                 handleMenu()
-                handleNavigate('/signin')
+                handleNavigate('/')
             }
         
+        }).finally(() => {
+            handleNavigate('/')
         })
     };
 

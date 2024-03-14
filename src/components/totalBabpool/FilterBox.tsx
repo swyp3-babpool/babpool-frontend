@@ -6,19 +6,25 @@ import { colors } from '@/assets/styles/theme';
 
 type FilterBoxProps = {
     text: string;
+    filterLength: number;
     onClick: () => void;
 }
 
-export default function FilterBox({text, onClick}: FilterBoxProps) {
+export default function FilterBox({text, filterLength, onClick}: FilterBoxProps) {
+    console.log(filterLength)
+    const isLength = filterLength > 0;
     return (
-        <FilterBoxContainer onClick={onClick}>
-            <Txt variant='caption2'>{text}</Txt>
+        <FilterBoxContainer isLength={isLength} onClick={onClick}>
+            <Txt variant='caption2' color={isLength ? colors.purple_light_20 : ''}>{text}</Txt>
+            {
+                filterLength > 0 && <Txt variant='caption2' color={colors.purple_light_20}>{filterLength}</Txt>
+            }
             <FilterArrowIcon />
         </FilterBoxContainer>
     );
 }
 
-const FilterBoxContainer = styled.div`
+const FilterBoxContainer = styled.div<{isLength: boolean}>`
     padding: 6px 12px;
     display: flex;
     align-items: center;
