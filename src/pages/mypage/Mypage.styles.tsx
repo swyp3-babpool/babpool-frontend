@@ -11,19 +11,19 @@ export const MyPageContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden;
+    overflow-y: scroll;
 `;
 
 export const ProfileContainer = styled.div`
     position: relative;
     width: 100%;
-    height: 238px;
+    height: 30%;
+    min-height: 238px;
     background: linear-gradient(45deg, #9170f7 14.16%, #d2c3f9 85.67%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    overflow: hidden;
 `;
 
 export const ProfileModifyButton = styled.button`

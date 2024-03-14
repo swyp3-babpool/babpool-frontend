@@ -11,6 +11,8 @@ import {
     getReceivedBabAppointment,
     getSentBabAppointment,
 } from '@/api/notification/notificationApi';
+import { Col } from '@/components/common/flex/Flex';
+import { getDate, getDateTime } from '@/utils/util';
 import {
     GridContainer,
     NotificationPageContainer,
@@ -41,13 +43,14 @@ export default function NotificationPage() {
 
     const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
+    const [appoinmentId, setAppoinmentId] = useState();
 
     const handleSelectedToggle = (select: string) => {
         setSelected(select);
     };
 
-    const handleNotificationCardClick = (state: string) => {
-        navigate(`/notification/${selected}?state=${state}`);
+    const handleNotificationCardClick = (state: string, appointmentId: number) => {
+        navigate(`/notification/${selected}`, { state: { state, appointmentId } });
     };
 
     useEffect(() => {
@@ -57,7 +60,7 @@ export default function NotificationPage() {
 
     return (
         <NotificationPageContainer>
-            <Header text="밥약 알림" />
+            <Header text="밥약 알림" destination="/" />
             <TabBarTextContainer>
                 <TextButtonContainer>
                     <Txt
@@ -86,39 +89,58 @@ export default function NotificationPage() {
                 <TabBar selected={selected === 'received'} />
                 <TabBar selected={selected === 'sent'} />
             </TabBarContainer>
-            <GridContainer>
-                {selected === 'received'
-                    ? receivedList &&
-                      receivedList?.map((item) => (
-                          <NotificationCard
-                              key={item.appointmentId}
-                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
-                              name={item.appointmentSenderUserNickname}
-                              content={
-                                  item.appointmentStatus === 'ACCEPT'
-                                      ? item.appointmentFixDateTime
-                                      : '수락 대기중'
-                              }
-                              image={item.appointmentSenderProfileImageUrl}
-                              onClick={() => handleNotificationCardClick(selected)}
-                          />
-                      ))
-                    : sentList &&
-                      sentList?.map((item) => (
-                          <NotificationCard
-                              key={item.appointmentId}
-                              type={item.appointmentStatus === 'ACCEPT' ? 'accept' : 'waiting'}
-                              name={item.appointmentReceiverUserNickname}
-                              content={
-                                  item.appointmentStatus === 'ACCEPT'
-                                      ? item.appointmentFixDateTime
-                                      : '수락 대기중'
-                              }
-                              image={item.appointmentReceiverProfileImageUrl}
-                              onClick={() => handleNotificationCardClick(selected)}
-                          />
-                      ))}
-            </GridContainer>
+            {(selected === 'received' && receivedList === undefined) ||
+            (selected === 'sent' && sentList === undefined) ? (
+                <Col padding="100px 0" justifyContent="center" alignItems="">
+                    <Txt variant="caption1" color={colors.white_30} align="center">
+                        아직 {selected === 'received' ? '받은' : '보낸'} 밥약이 없어요
+                    </Txt>
+                </Col>
+            ) : (
+                <GridContainer>
+                    {selected === 'received'
+                        ? receivedList &&
+                          receivedList?.map((item) => (
+                              <NotificationCard
+                                  key={item.appointmentId}
+                                  type={item.appointmentStatus}
+                                  name={item.appointmentSenderUserNickname}
+                                  content={
+                                      item.appointmentStatus === 'WAITING'
+                                          ? '수락 대기중'
+                                          : getDateTime(item.appointmentFixDateTime)
+                                  }
+                                  image={item.appointmentSenderProfileImageUrl}
+                                  onClick={() =>
+                                      handleNotificationCardClick(
+                                          item.appointmentStatus,
+                                          item.appointmentId
+                                      )
+                                  }
+                              />
+                          ))
+                        : sentList &&
+                          sentList?.map((item) => (
+                              <NotificationCard
+                                  key={item.appointmentId}
+                                  type={item.appointmentStatus}
+                                  name={item.appointmentReceiverUserNickname}
+                                  content={
+                                      item.appointmentStatus === 'WAITING'
+                                          ? '수락 대기중'
+                                          : getDateTime(item.appointmentFixDateTime)
+                                  }
+                                  image={item.appointmentReceiverProfileImageUrl}
+                                  onClick={() =>
+                                      handleNotificationCardClick(
+                                          item.appointmentStatus,
+                                          item.appointmentId
+                                      )
+                                  }
+                              />
+                          ))}
+                </GridContainer>
+            )}
         </NotificationPageContainer>
     );
 }
