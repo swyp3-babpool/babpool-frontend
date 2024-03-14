@@ -4,7 +4,7 @@ import Header from '@/components/common/header';
 import { Col } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
-<<<<<<< HEAD
+
 import { ButtonContainer, RejectInput, RejectPageContainer } from './RejectPage.styles';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Overlay from '@/components/common/overlay';
@@ -20,12 +20,6 @@ interface RejectPageProps {
     profileImgUrl: string;
     keywords: string[];
 }
-=======
-import ProfileKeywords from '@/components/profile/ProfileKeywords';
-import Overlay from '@/components/common/overlay';
-import Popup from '@/components/common/popup';
-import { ButtonContainer, RejectInput, RejectPageContainer } from './RejectPage.styles';
->>>>>>> ce33cca5da9568b68e64fdf04938292f8c6da3ab
 
 export default function RejectPage() {
     const navigate = useNavigate();

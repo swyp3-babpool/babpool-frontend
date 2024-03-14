@@ -21,18 +21,13 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
-<<<<<<< HEAD
 import { AcceptContentType, DetailBabAppointmentType } from '@/interface/api/notifications';
 import {
     appointmentAccept,
     appointmentCancel,
     getDetailBabAppointment,
 } from '@/api/notification/notificationApi';
-=======
 
-import { DetailBabAppointmentType } from '@/interface/api/notifications';
-import { appointmentAccept, getDetailBabAppointment } from '@/api/notification/notificationApi';
->>>>>>> ce33cca5da9568b68e64fdf04938292f8c6da3ab
 import { useQuery } from '@tanstack/react-query';
 import { getDate, getDivisionName } from '@/utils/util';
 
@@ -40,7 +35,6 @@ interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
-
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
