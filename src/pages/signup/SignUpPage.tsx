@@ -52,7 +52,9 @@ export default function SignUpPage() {
         signUpRequest(signUpRequestBody)
         .then((res) => {
             if(res.code === 200) {
+                console.log(res)
                 setCompletePopupOpen(true);
+                localStorage.setItem('accessToken', res.data.accessToken);
             }
         }).catch(console.error)
     };
