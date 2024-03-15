@@ -360,7 +360,7 @@ export default function ModifyProfileCardPage() {
                                 onChange={(e) => {
                                     setContactInput(e.target.value);
                                     if (selectedContactType === '연락처') {
-                                        const phoneRegex = /^010-\d{4}-\d{4}$/;
+                                        const phoneRegex = /^010\d{4}\d{4}$/;
                                         if (!phoneRegex.test(e.target.value)) {
                                             setIsContactInputVerified(false);
                                         } else {
@@ -378,7 +378,7 @@ export default function ModifyProfileCardPage() {
                                 }}
                                 placeholder={
                                     selectedContactType === '연락처'
-                                        ? '010-0000-0000'
+                                        ? '01000000000'
                                         : 'open.kakao.com/...'
                                 }
                             />
