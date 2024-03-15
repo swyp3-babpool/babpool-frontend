@@ -115,37 +115,47 @@ export default function ModifyProfileCardPage() {
     const [contactInput, setContactInput] = useState('');
     const [selectedContactType, setSelectedContactType] = useState<string>('연락처');
     const profileImageInputRef = useRef<HTMLInputElement>(null);
+    const [isInputVerified, setIsInputVerified] = useState(false);
+    const [isContactInputVerified, setIsContactInputVerified] = useState(false);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
     const handleVerifyInput = () => {
-        if (!nickName) {
+        if (!nickName || nickName.length < 1) {
             return false;
         }
         if (!selectedUserType) {
             return false;
         }
-        if (!summaryIntroduce) {
+        if (!summaryIntroduce || summaryIntroduce.length < 1) {
             return false;
         }
-        if (!introduce) {
+        if (!introduce || introduce.length < 1) {
             return false;
         }
         if (!selectedContactType) {
             return false;
         }
+
         if (!contactInput) {
             return false;
         }
         if (Object.keys(possibleDate).length === 0) {
             return false;
         }
+        if (
+            !modifyProfileInfo ||
+            Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
+        ) {
+            return false;
+        }
+        if (!isContactInputVerified) {
+            return false;
+        }
         return true;
     };
-
-    const isInputVerified = handleVerifyInput();
 
     const handleCompleteButton = () => {
         const reqBody = {
@@ -160,8 +170,6 @@ export default function ModifyProfileCardPage() {
                 .map((keyword) => getKeywordId(keyword)),
             possibleDate: possibleDate,
         };
-
-        console.log(reqBody);
         const formData = new FormData();
         if (file) {
             formData.append('profileImageFile', file);
@@ -232,6 +240,38 @@ export default function ModifyProfileCardPage() {
     }, [defaultProfileInfo]);
 
     useEffect(() => {
+        setIsInputVerified(handleVerifyInput());
+    }, [
+        nickName,
+        selectedUserType,
+        summaryIntroduce,
+        introduce,
+        selectedContactType,
+        contactInput,
+        possibleDate,
+        modifyProfileInfo,
+        isContactInputVerified,
+    ]);
+
+    useEffect(() => {
+        if (selectedContactType === '연락처') {
+            const phoneRegex = /^010\d{8}$/;
+            if (!phoneRegex.test(contactInput)) {
+                setIsContactInputVerified(false);
+            } else {
+                setIsContactInputVerified(true);
+            }
+        } else {
+            const urlRegex = /^open\.kakao\.com+$/;
+            if (!urlRegex.test(contactInput)) {
+                setIsContactInputVerified(false);
+            } else {
+                setIsContactInputVerified(true);
+            }
+        }
+    }, [contactInput]);
+
+    useEffect(() => {
         if (userSchedule) {
             const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
                 if (acc[schedule.possibleDate]) {
@@ -243,7 +283,6 @@ export default function ModifyProfileCardPage() {
             }, {} as TimeRange);
             setPossibleDate(dates);
         }
-        console.log('날짜배열', possibleDate);
     }, [userSchedule]);
 
     return (
@@ -340,10 +379,12 @@ export default function ModifyProfileCardPage() {
                             <ContactInput
                                 type="text"
                                 value={contactInput}
-                                onChange={(e) => setContactInput(e.target.value)}
+                                onChange={(e) => {
+                                    setContactInput(e.target.value);
+                                }}
                                 placeholder={
                                     selectedContactType === '연락처'
-                                        ? '010-0000-0000'
+                                        ? '01000000000'
                                         : 'open.kakao.com/...'
                                 }
                             />

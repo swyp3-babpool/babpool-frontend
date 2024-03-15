@@ -16,7 +16,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
     return (
         <PageNationContainer>
             {currentPage !== 1 && (
-                <IconBox>
+                <IconBox onClick={() => handlePageChange(currentPage-2)}>
                     <ArrowLeft />
                 </IconBox>
             )}
@@ -96,7 +96,7 @@ export default function PageNation({currentPage, totalPage, handlePageChange}: P
                 )}
             {currentPage !== totalPage && (
                 <IconBox>
-                    <ArrowRight />
+                    <ArrowRight onClick={() => handlePageChange(currentPage)}/>
                 </IconBox>
             )}
         </PageNationContainer>

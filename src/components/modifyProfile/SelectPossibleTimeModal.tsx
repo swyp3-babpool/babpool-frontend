@@ -21,6 +21,9 @@ type SelectPossibleTimeModalProps = {
 };
 
 const timeRanges = {
+    8: '오전 8:00 ~ 오전 9:00',
+    9: '오전 9:00 ~ 오전 10:00',
+    10: '오전 10:00 ~ 오전 11:00',
     11: '오전 11:00 ~ 오후 12:00',
     12: '오후 12:00 ~ 오후 1:00',
     13: '오후 1:00 ~ 오후 2:00',
@@ -29,6 +32,9 @@ const timeRanges = {
     16: '오후 4:00 ~ 오후 5:00',
     17: '오후 5:00 ~ 오후 6:00',
     18: '오후 6:00 ~ 오후 7:00',
+    19: '오후 7:00 ~ 오후 8:00',
+    20: '오후 8:00 ~ 오후 9:00',
+    21: '오후 9:00 ~ 오후 10:00',
 };
 
 export default function SelectPossibleTimeModal({
@@ -55,10 +61,16 @@ export default function SelectPossibleTimeModal({
         }
         const isExist = selectedDates?.[selectedDate]?.includes(time);
         if (isExist) {
-            setSelectedDates({
-                ...(selectedDates || {}),
-                [selectedDate]: selectedDates[selectedDate].filter((t) => t !== time),
-            });
+            const filteredTimes = selectedDates[selectedDate].filter((t) => t !== time);
+            if (filteredTimes.length === 0) {
+                const { [selectedDate]: _, ...rest } = selectedDates;
+                setSelectedDates(rest);
+            } else {
+                setSelectedDates({
+                    ...(selectedDates || {}),
+                    [selectedDate]: filteredTimes,
+                });
+            }
         } else {
             setSelectedDates({
                 ...(selectedDates || {}),
@@ -90,7 +102,7 @@ export default function SelectPossibleTimeModal({
             </CalendarContainer>
             <SelectScheduleContainer>
                 <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
-                <Col style={{ width: 172 }} gap={12} alignItems="center" justifyContent="center">
+                <Col style={{ width: 176 }} gap={12} alignItems="center" justifyContent="center">
                     {Object.entries(timeRanges).map(([startTime, timeRange]) => (
                         <Row
                             gap={10}
@@ -153,6 +165,8 @@ const CalendarContainer = styled.div`
 
 const SelectScheduleContainer = styled.div`
     width: 100%;
+    height: 345px;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
