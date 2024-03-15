@@ -38,7 +38,7 @@ export default function HomeSection() {
                         onClick={() => handleNavigate('/explanation')}
                     />
                     {/* TODO: 노션 디자인 완료되면 연결 */}
-                    <LinkBox href="https://www.instagram.com/babpool2024/?igsh=bXptZ3N3N2xseTh5" target="_blank">
+                    <LinkBox href="https://www.notion.so/yazii-village/cae8f69344654808a2e0ec2ac43426ee" target="_blank">
                         <BannerImage src={C_Banner_2} alt="testBanner" />
                     </LinkBox>
                 </CarouselProvider>
