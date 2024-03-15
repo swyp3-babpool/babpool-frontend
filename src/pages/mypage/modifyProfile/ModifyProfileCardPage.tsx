@@ -115,37 +115,41 @@ export default function ModifyProfileCardPage() {
     const [contactInput, setContactInput] = useState('');
     const [selectedContactType, setSelectedContactType] = useState<string>('연락처');
     const profileImageInputRef = useRef<HTMLInputElement>(null);
+    const [isInputVerified, setIsInputVerified] = useState(false);
+    const [isContactInputVerified, setIsContactInputVerified] = useState(false);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
     const handleVerifyInput = () => {
-        if (!nickName) {
+        if (!nickName || nickName.length < 1) {
             return false;
         }
         if (!selectedUserType) {
             return false;
         }
-        if (!summaryIntroduce) {
+        if (!summaryIntroduce || summaryIntroduce.length < 1) {
             return false;
         }
-        if (!introduce) {
+        if (!introduce || introduce.length < 1) {
             return false;
         }
         if (!selectedContactType) {
             return false;
         }
+
         if (!contactInput) {
             return false;
         }
         if (Object.keys(possibleDate).length === 0) {
             return false;
         }
+        if (!isContactInputVerified) {
+            return false;
+        }
         return true;
     };
-
-    const isInputVerified = handleVerifyInput();
 
     const handleCompleteButton = () => {
         const reqBody = {
@@ -232,6 +236,20 @@ export default function ModifyProfileCardPage() {
     }, [defaultProfileInfo]);
 
     useEffect(() => {
+        setIsInputVerified(handleVerifyInput());
+    }, [
+        nickName,
+        selectedUserType,
+        summaryIntroduce,
+        introduce,
+        selectedContactType,
+        contactInput,
+        possibleDate,
+        modifyProfileInfo,
+        isContactInputVerified,
+    ]);
+
+    useEffect(() => {
         if (userSchedule) {
             const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
                 if (acc[schedule.possibleDate]) {
@@ -243,7 +261,6 @@ export default function ModifyProfileCardPage() {
             }, {} as TimeRange);
             setPossibleDate(dates);
         }
-        console.log('날짜배열', possibleDate);
     }, [userSchedule]);
 
     return (
@@ -340,7 +357,25 @@ export default function ModifyProfileCardPage() {
                             <ContactInput
                                 type="text"
                                 value={contactInput}
-                                onChange={(e) => setContactInput(e.target.value)}
+                                onChange={(e) => {
+                                    setContactInput(e.target.value);
+                                    if (selectedContactType === '연락처') {
+                                        const phoneRegex = /^010-\d{4}-\d{4}$/;
+                                        if (!phoneRegex.test(e.target.value)) {
+                                            setIsContactInputVerified(false);
+                                        } else {
+                                            setIsContactInputVerified(true);
+                                        }
+                                    }
+                                    if (selectedContactType === '오픈채팅방') {
+                                        const urlRegex = /^(http|https):\/\/[^ "]+$/;
+                                        if (!urlRegex.test(e.target.value)) {
+                                            setIsContactInputVerified(false);
+                                        } else {
+                                            setIsContactInputVerified(true);
+                                        }
+                                    }
+                                }}
                                 placeholder={
                                     selectedContactType === '연락처'
                                         ? '010-0000-0000'
