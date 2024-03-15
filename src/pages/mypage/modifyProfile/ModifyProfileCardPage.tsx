@@ -145,6 +145,12 @@ export default function ModifyProfileCardPage() {
         if (Object.keys(possibleDate).length === 0) {
             return false;
         }
+        if (
+            !modifyProfileInfo ||
+            Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
+        ) {
+            return false;
+        }
         if (!isContactInputVerified) {
             return false;
         }
@@ -237,6 +243,10 @@ export default function ModifyProfileCardPage() {
 
     useEffect(() => {
         setIsInputVerified(handleVerifyInput());
+        console.log(
+            '검증',
+            Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
+        );
     }, [
         nickName,
         selectedUserType,
@@ -248,6 +258,27 @@ export default function ModifyProfileCardPage() {
         modifyProfileInfo,
         isContactInputVerified,
     ]);
+
+    useEffect(() => {
+        if (selectedContactType === '연락처') {
+            const phoneRegex = /^010\d{8}$/;
+            if (!phoneRegex.test(contactInput)) {
+                setIsContactInputVerified(false);
+            } else {
+                setIsContactInputVerified(true);
+            }
+        } else {
+            const urlRegex = /^open\.kakao\.com+$/;
+            if (!urlRegex.test(contactInput)) {
+                setIsContactInputVerified(false);
+            } else {
+                setIsContactInputVerified(true);
+            }
+        }
+
+        console.log(contactInput);
+        console.log(isContactInputVerified);
+    }, [contactInput]);
 
     useEffect(() => {
         if (userSchedule) {
@@ -359,22 +390,6 @@ export default function ModifyProfileCardPage() {
                                 value={contactInput}
                                 onChange={(e) => {
                                     setContactInput(e.target.value);
-                                    if (selectedContactType === '연락처') {
-                                        const phoneRegex = /^010\d{4}\d{4}$/;
-                                        if (!phoneRegex.test(e.target.value)) {
-                                            setIsContactInputVerified(false);
-                                        } else {
-                                            setIsContactInputVerified(true);
-                                        }
-                                    }
-                                    if (selectedContactType === '오픈채팅방') {
-                                        const urlRegex = /^open\.kakao\.com\/.+$/;
-                                        if (!urlRegex.test(e.target.value)) {
-                                            setIsContactInputVerified(false);
-                                        } else {
-                                            setIsContactInputVerified(true);
-                                        }
-                                    }
                                 }}
                                 placeholder={
                                     selectedContactType === '연락처'
