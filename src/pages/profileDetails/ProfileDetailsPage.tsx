@@ -37,7 +37,7 @@ export default function ProfileDetailsPage() {
 
     return (
         <ProfileDetailsPageContainer>
-            <Header text="프로필카드 보기" />
+            <Header text="프로필카드 보기" destination='/total' />
             {
                 !isLoading && profile && reviewCount ? (
                     <ContentSection>

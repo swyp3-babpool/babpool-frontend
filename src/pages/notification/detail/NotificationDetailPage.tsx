@@ -21,7 +21,6 @@ import Header from '@/components/common/header';
 import Popup from '@/components/common/popup';
 import Overlay from '@/components/common/overlay';
 import { Col, Row } from '@/components/common/flex/Flex';
-
 import { AcceptContentType, DetailBabAppointmentType } from '@/interface/api/notifications';
 import {
     appointmentAccept,

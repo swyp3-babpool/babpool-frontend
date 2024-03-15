@@ -120,11 +120,6 @@ export default function TotalBabpoolPage() {
         setSearchInfo((prev) => ({ ...prev, page }));
     };
 
-    useEffect(() => {
-        if (searchInputRef.current) {
-            searchInputRef.current?.focus();
-        }
-    }, [isLoading]);
 
     useEffect(() => {
         // 이전 필터 키워드가 존재하면 유지, 없으면 초기화
@@ -161,7 +156,7 @@ export default function TotalBabpoolPage() {
     return (
         <>
             <TotalBabpoolPageContainer>
-                <Header text="밥풀 전체보기" />
+                <Header text="밥풀 전체보기" destination='/'/>
                 <SearchBarContainer>
                     <Searchbar
                         value={searchValue}
