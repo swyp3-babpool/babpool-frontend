@@ -368,7 +368,7 @@ export default function ModifyProfileCardPage() {
                                         }
                                     }
                                     if (selectedContactType === '오픈채팅방') {
-                                        const urlRegex = /^(http|https):\/\/[^ "]+$/;
+                                        const urlRegex = /^open\.kakao\.com\/.+$/;
                                         if (!urlRegex.test(e.target.value)) {
                                             setIsContactInputVerified(false);
                                         } else {
