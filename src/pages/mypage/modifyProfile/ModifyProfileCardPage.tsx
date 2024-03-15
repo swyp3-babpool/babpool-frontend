@@ -170,8 +170,6 @@ export default function ModifyProfileCardPage() {
                 .map((keyword) => getKeywordId(keyword)),
             possibleDate: possibleDate,
         };
-
-        console.log(reqBody);
         const formData = new FormData();
         if (file) {
             formData.append('profileImageFile', file);
@@ -243,10 +241,6 @@ export default function ModifyProfileCardPage() {
 
     useEffect(() => {
         setIsInputVerified(handleVerifyInput());
-        console.log(
-            '검증',
-            Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
-        );
     }, [
         nickName,
         selectedUserType,
@@ -275,9 +269,6 @@ export default function ModifyProfileCardPage() {
                 setIsContactInputVerified(true);
             }
         }
-
-        console.log(contactInput);
-        console.log(isContactInputVerified);
     }, [contactInput]);
 
     useEffect(() => {
