@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
-import Calendar from 'react-calendar';
+import Calendar, { TileContentFunc } from 'react-calendar';
 import { styled } from 'styled-components';
 import { colors } from '@/assets/styles/theme';
 import moment from 'moment';
@@ -23,24 +23,11 @@ export default function PossibleTimeCalendar({
     setSelectedDates,
 }: PossibleTimeCalendarProps) {
     const [date, setDate] = useState<Value>(new Date());
+    const [tileContent, setTileContent] = useState<TileContentFunc | undefined>(undefined);
 
     const handleDateChange = (date: Value) => {
         const selected = Array.isArray(date) ? date[0] : date;
         setSelectedDate(moment(selected).format('YYYY-MM-DD'));
-    };
-
-    // 선택한 날짜에 대한 스타일을 정의하는 함수
-    const tileContent = ({ date, view }: { date: any; view: any }) => {
-        const formattedDate = moment(date).format('YYYY-MM-DD');
-        const selected = selectedDate === formattedDate;
-        const existingDate = selectedDates?.[formattedDate];
-        if (view === 'month' && selected) {
-            return <div className="circle">{`${date.getDate()}`}</div>;
-        } else if (view === 'month' && existingDate) {
-            return <div className="highlight">{`${date.getDate()}`}</div>;
-        } else {
-            return null;
-        }
     };
 
     const tileClassName = ({ date, view }: { date: any; view: any }) => {
@@ -53,6 +40,23 @@ export default function PossibleTimeCalendar({
             return null;
         }
     };
+
+    useEffect(() => {
+        setTileContent(() => {
+            return ({ date, view }: { date: any; view: any }) => {
+                const formattedDate = moment(date).format('YYYY-MM-DD');
+                const selected = selectedDate === formattedDate;
+                const existingDate = selectedDates?.[formattedDate];
+                if (view === 'month' && selected) {
+                    return <div className="circle">{`${date.getDate()}`}</div>;
+                } else if (view === 'month' && existingDate) {
+                    return <div className="highlight">{`${date.getDate()}`}</div>;
+                } else {
+                    return null;
+                }
+            };
+        });
+    }, [selectedDates, selectedDate]);
 
     return (
         <S_Calendar
