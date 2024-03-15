@@ -11,7 +11,7 @@ export default function ExplanationPage() {
     return (
         <Suspense fallback={null}>
             <ExplanationContainer>
-                <Header text="밥풀이란?" />
+                <Header text="밥풀이란?" destination='/' />
                 <C_FirstSection />
                 <C_SecondSection />
                 <C_ThirdSection />
