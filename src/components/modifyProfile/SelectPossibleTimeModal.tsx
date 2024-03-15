@@ -55,10 +55,16 @@ export default function SelectPossibleTimeModal({
         }
         const isExist = selectedDates?.[selectedDate]?.includes(time);
         if (isExist) {
-            setSelectedDates({
-                ...(selectedDates || {}),
-                [selectedDate]: selectedDates[selectedDate].filter((t) => t !== time),
-            });
+            const filteredTimes = selectedDates[selectedDate].filter((t) => t !== time);
+            if (filteredTimes.length === 0) {
+                const { [selectedDate]: _, ...rest } = selectedDates;
+                setSelectedDates(rest);
+            } else {
+                setSelectedDates({
+                    ...(selectedDates || {}),
+                    [selectedDate]: filteredTimes,
+                });
+            }
         } else {
             setSelectedDates({
                 ...(selectedDates || {}),
