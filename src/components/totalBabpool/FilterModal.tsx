@@ -184,8 +184,6 @@ export default function FilterModal({
                 <Button
                     text="적용"
                     onClick={handleSubmit}
-                    type={filterValidate ? 'accept' : 'refuse'}
-                    disabled={!filterValidate}
                 />
             </FilterButtonBox>
         </FilterModalContainer>
