@@ -34,3 +34,12 @@ export type RejectHistoryType = {
     refuseCreateDate: string;
     refuseType: string;
 };
+
+export type GetRejectDetailType = {
+    receiverNickName: string;
+    receiverProfileImage: string;
+    receiverGrade: string;
+    receiverProfileIntro: string;
+    keywords: string[];
+    message: string;
+};

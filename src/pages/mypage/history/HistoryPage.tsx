@@ -18,6 +18,8 @@ import { getAcceptHistory, getRejectHistory } from '@/api/profile/mypageApi';
 import { Col } from '@/components/common/flex/Flex';
 import { getDate, getDateTime } from '@/utils/util';
 import { it } from 'node:test';
+import Overlay from '@/components/common/overlay';
+import RejectPopup from '@/components/common/popup/RejectPopup';
 
 export default function HistoryPage() {
     const navigate = useNavigate();
@@ -41,6 +43,8 @@ export default function HistoryPage() {
     });
 
     const [selected, setSelected] = useState('done');
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [appointmentId, setAppointmentId] = useState(0);
 
     const handleSelectedToggle = (select: string) => {
         setSelected(select);
@@ -138,9 +142,21 @@ export default function HistoryPage() {
                                           : '시간 만료'
                                   }
                                   image={item.appointmentReceiverProfileImageUrl}
+                                  onClick={() => {
+                                      setIsPopupOpen(true);
+                                      setAppointmentId(item.appointmentId);
+                                  }}
                               />
                           ))}
                 </GridContainer>
+            )}
+            {isPopupOpen && (
+                <Overlay>
+                    <RejectPopup
+                        appointmentId={appointmentId}
+                        closePopup={() => setIsPopupOpen(false)}
+                    />
+                </Overlay>
             )}
         </NotificationPageContainer>
     );
