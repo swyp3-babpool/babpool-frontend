@@ -262,7 +262,7 @@ export default function ModifyProfileCardPage() {
                 setIsContactInputVerified(true);
             }
         } else {
-            const urlRegex = /^open\.kakao\.com+$/;
+            const urlRegex = /https?:\/\/open\.kakao\.com\/o\/[a-zA-Z0-9_-]+/;
             if (!urlRegex.test(contactInput)) {
                 setIsContactInputVerified(false);
             } else {
@@ -373,6 +373,7 @@ export default function ModifyProfileCardPage() {
                             initialValue={selectedContactType}
                             onValueChange={(value) => {
                                 setSelectedContactType(value);
+                                setContactInput('');
                             }}
                         />
                         <InputWrapper>
@@ -380,11 +381,20 @@ export default function ModifyProfileCardPage() {
                                 type="text"
                                 value={contactInput}
                                 onChange={(e) => {
-                                    setContactInput(e.target.value);
+                                    if (selectedContactType === '연락처') {
+                                        const reg = /^[0-9-]*$/;
+                                        if (reg.test(e.target.value)) {
+                                            const text = e.target.value.replace('-', '');
+                                            setContactInput(text);
+                                        }
+                                        return
+                                    } else {
+                                        setContactInput(e.target.value);
+                                    }
                                 }}
                                 placeholder={
                                     selectedContactType === '연락처'
-                                        ? '01000000000'
+                                        ? '01012341234'
                                         : 'open.kakao.com/...'
                                 }
                             />
