@@ -41,6 +41,19 @@ export const getReviewType = (reviewType: string) => {
     }
 };
 
+export const getReviewTypeToServer = (reviewType: string) => {
+    switch (reviewType) {
+        case '최고예요':
+            return 'BEST';
+        case '좋아요':
+            return 'GOOD';
+        case '별로예요':
+            return 'BAD';
+        default:
+            return '';
+    }
+};
+
 export const getKeywordGroupTitle = (keywordGroup: KeywordType) => {
     switch (keywordGroup) {
         case 'university':
