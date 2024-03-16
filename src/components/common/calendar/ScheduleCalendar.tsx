@@ -8,21 +8,21 @@ import { Value } from 'node_modules/react-calendar/dist/cjs/shared/types';
 import { UserScheduleType } from '@/interface/api/babRequestType';
 import { ReactComponent as NextIcon } from '@/assets/icons/ic_next.svg';
 import { ReactComponent as PrevIcon } from '@/assets/icons/ic_prev.svg';
+import { RequestInfoType } from '@/pages/babRequest/BabRequestPage';
 
 type ScheduleCalendarProps = {
     userSchedule: UserScheduleType[];
+    requestInfo: RequestInfoType;
     handleSetPossibleSchedule: (scheduleList: UserScheduleType[]) => void;
-    onClose: () => void;
 };
 
 export default function ScheduleCalendar({
     userSchedule,
+    requestInfo,
     handleSetPossibleSchedule,
-    onClose,
 }: ScheduleCalendarProps) {
     const [date, setDate] = useState<Value>(new Date());
-    const [selectedDate, setSelectedDate] = useState<string | null>(userSchedule[0].possibleDate);
-
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
     // 선택 가능한 날짜(일)
     const possibleDate = [
         ...new Set(userSchedule.map((schedule: UserScheduleType) => schedule.possibleDate)),
@@ -37,10 +37,11 @@ export default function ScheduleCalendar({
     // 선택한 날짜에 대한 스타일을 정의하는 함수
     const tileContent = ({ date, view }: { date: any; view: any }) => {
         const formatDate = moment(date).format('YYYY-MM-DD');
+        const today = moment().format('YYYY-MM-DD');
         const selected = possibleDate.find((test) => test === formatDate);
-        if (view === 'month' && selectedDate === formatDate) {
+        if (view === 'month' && selectedDate === formatDate && formatDate >= today) {
             return <div className="user-selected">{`${date.getDate()}`}</div>;
-        } else if (view === 'month' && selected) {
+        } else if (view === 'month' && selected && formatDate >= today) {
             return <div className="highlight">{`${date.getDate()}`}</div>;
         } else {
             return null;
@@ -49,6 +50,8 @@ export default function ScheduleCalendar({
 
     const handleDateChange = (date: Value) => {
         const formatDate = moment(date as MomentInput).format('YYYY-MM-DD');
+        const today = moment().format('YYYY-MM-DD');
+        if(formatDate < today) return; 
         const userScheduleDates = userSchedule.map(
             (schedule: UserScheduleType) => schedule.possibleDate
         );
@@ -59,8 +62,24 @@ export default function ScheduleCalendar({
     };
 
     useEffect(() => {
+        const today = moment().format('YYYY-MM-DD');
+        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        setSelectedDate(filterDate[0].possibleDate)
+        setDate(new Date(filterDate[0].possibleDate))
+    }, [])
+
+    useEffect(() => {
+        const today = moment().format('YYYY-MM-DD');
+        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        setSelectedDate(filterDate[0].possibleDate)
+        setDate(new Date(filterDate[0].possibleDate))
+    }, [requestInfo])
+
+    useEffect(() => {
         handleSetPossibleSchedule(currentSeletedDateScheduleList);
-    }, [selectedDate]);
+    }, [selectedDate, requestInfo]);
+
+    
 
     return (
         <S_Calendar

@@ -10,11 +10,12 @@ import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { useQuery } from '@tanstack/react-query';
 import { getAvailableSchedule } from '@/api/babRequest/babRequestApi';
 import { UserScheduleType } from '@/interface/api/babRequestType';
-import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
+import { RequestInfoType } from '@/pages/babRequest/BabRequestPage';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
     userId: number;
+    requestInfo: RequestInfoType;
     handleSelectSchedule: (selectedSchedule: UserScheduleType) => void;
     onClose: () => void;
 };
@@ -22,6 +23,7 @@ type SelectScheduleModalProps = {
 export default function SelectScheduleModal({
     isOpen,
     userId,
+    requestInfo,
     handleSelectSchedule,
     onClose,
 }: SelectScheduleModalProps) {
@@ -38,9 +40,11 @@ export default function SelectScheduleModal({
     });
 
     const handleSetPossibleSchedule = (scheduleList: UserScheduleType[]) => {
-        setPossibleScheduleList(scheduleList);
+        const filterScheduleList = scheduleList.filter((schedule: UserScheduleType) => {
+            return !requestInfo.possibleTimeIdList.includes(schedule);
+        });
+        setPossibleScheduleList(filterScheduleList);
     };
-
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     return (
@@ -57,20 +61,28 @@ export default function SelectScheduleModal({
                 <CalendarContainer>
                     <ScheduleCalendar
                         userSchedule={userSchedule}
+                        requestInfo={requestInfo}
                         handleSetPossibleSchedule={handleSetPossibleSchedule}
-                        onClose={onClose}
                     />
                 </CalendarContainer>
                 <SelectScheduleContainer>
                     <Txt variant="caption1">선호하는 시간대 1개를 선택해주세요</Txt>
                     <SelectTimeContainer>
-                        {possibleScheduleList.map((schedule) => (
-                            <SelectTimeBox
-                                key={schedule.possibleTimeId}
-                                schedule={schedule}
-                                handleSelectSchedule={handleSelectSchedule}
-                            />
-                        ))}
+                        {possibleScheduleList.length === 0 ? (
+                            <NoTimeBox>
+                                <Txt variant="caption1" color={colors.white_20}>
+                                    선택 가능한 시간이 없습니다.
+                                </Txt>
+                            </NoTimeBox>
+                        ) : (
+                            possibleScheduleList.map((schedule) => (
+                                <SelectTimeBox
+                                    key={schedule.possibleTimeId}
+                                    schedule={schedule}
+                                    handleSelectSchedule={handleSelectSchedule}
+                                />
+                            ))
+                        )}
                     </SelectTimeContainer>
                 </SelectScheduleContainer>
             </SelectScheduleModalModalContainer>
@@ -128,4 +140,10 @@ const IconBox = styled.div`
     width: 24px;
     height: 24px;
     cursor: pointer;
+`;
+
+const NoTimeBox = styled.div`
+    width: 100%;
+    display: grid;
+    place-items: center;
 `;
