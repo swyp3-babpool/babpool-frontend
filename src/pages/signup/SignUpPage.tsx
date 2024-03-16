@@ -48,7 +48,6 @@ export default function SignUpPage() {
             userGrade: getDivisionId(signUpInfo.division) as string,
             keywords: Object.values(signUpInfo.keywordGroups).flat().map((keyword) => getKeywordId(keyword)),
         };
-        console.log(signUpRequestBody)
         signUpRequest(signUpRequestBody)
         .then((res) => {
             if(res.code === 200) {
@@ -58,6 +57,11 @@ export default function SignUpPage() {
             }
         }).catch(console.error)
     };
+
+    const handleClosePopup = () => {
+        setCompletePopupOpen(false)
+        handleNavigate('/')
+    }
 
     const signUpValidateCheck = () => {
         const { division, keywordGroups } = signUpInfo;
@@ -98,7 +102,7 @@ export default function SignUpPage() {
                         secondButton={
                             <Button text="나중에" type="refuse" onClick={() => handleNavigate('/')} />
                         }
-                        closePopup={() => setCompletePopupOpen(false)}
+                        closePopup={handleClosePopup}
                     />
                 </Overlay>
             )}
