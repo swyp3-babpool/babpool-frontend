@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-type RequestInfoType = {
+export type RequestInfoType = {
     targetProfileId: number;
     possibleTimeIdList: UserScheduleType[];
     questionContents: string;
@@ -86,7 +86,8 @@ export default function BabRequestPage() {
     };
 
     useEffect(() => {
-        if (requestInfo.questionContents.length > 200) {
+        const validateStr = requestInfo.questionContents.trim();
+        if (validateStr.length > 200) {
             setRequestInfo((prev) => ({
                 ...prev,
                 questionContents: prev.questionContents.slice(0, 200),
@@ -94,8 +95,8 @@ export default function BabRequestPage() {
         }
         if (
             requestInfo.possibleTimeIdList.length > 0 &&
-            requestInfo.questionContents.length >= 20 &&
-            requestInfo.questionContents.length <= 200
+            validateStr.length >= 20 &&
+            validateStr.length <= 200
         ) {
             setIsRequestValidate(true);
         } else {
@@ -197,6 +198,7 @@ export default function BabRequestPage() {
                     <SelectScheduleModal
                         isOpen={isScheduleSelected}
                         userId={Number(targetProfileId)}
+                        requestInfo={requestInfo}
                         handleSelectSchedule={handleSelectSchedule}
                         onClose={handleCloseModal}
                     />
