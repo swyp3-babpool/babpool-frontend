@@ -1,4 +1,9 @@
-import { GetMypageType, HistoryType, RejectHistoryType } from './../../interface/mypageType';
+import {
+    GetMypageType,
+    GetRejectDetailType,
+    HistoryType,
+    RejectHistoryType,
+} from './../../interface/mypageType';
 import { CommonResponseType } from '@/interface/api/commonType';
 import { get, post } from '../api';
 
@@ -18,6 +23,14 @@ export const getRejectHistory = async () => {
     const res = (await get(`/api/appointment/list/refuse`)) as CommonResponseType<
         RejectHistoryType[]
     >;
+    console.log(res);
+    return res.data;
+};
+
+export const getDetailReject = async (appointmentId: number) => {
+    const res = (await get(
+        `/api/appointment/refuse/${appointmentId}`
+    )) as CommonResponseType<GetRejectDetailType>;
     console.log(res);
     return res.data;
 };
