@@ -43,7 +43,6 @@ export default function NotificationPage() {
 
     const navigate = useNavigate();
     const [selected, setSelected] = useState('received');
-    const [appoinmentId, setAppoinmentId] = useState();
 
     const handleSelectedToggle = (select: string) => {
         setSelected(select);
@@ -89,8 +88,7 @@ export default function NotificationPage() {
                 <TabBar selected={selected === 'received'} />
                 <TabBar selected={selected === 'sent'} />
             </TabBarContainer>
-            {(selected === 'received' && receivedList === undefined) ||
-            (selected === 'sent' && sentList === undefined) ? (
+            {(selected === 'received' && !receivedList) || (selected === 'sent' && !sentList) ? (
                 <Col padding="100px 0" justifyContent="center" alignItems="">
                     <Txt variant="caption1" color={colors.white_30} align="center">
                         아직 {selected === 'received' ? '받은' : '보낸'} 밥약이 없어요
