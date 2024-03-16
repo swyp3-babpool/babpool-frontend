@@ -123,16 +123,16 @@ export default function ModifyProfileCardPage() {
     };
 
     const handleVerifyInput = () => {
-        if (!nickName || nickName.length < 1) {
+        if (!nickName || nickName.trim().length < 1) {
             return false;
         }
         if (!selectedUserType) {
             return false;
         }
-        if (!summaryIntroduce || summaryIntroduce.length < 1) {
+        if (!summaryIntroduce || summaryIntroduce.trim().length < 1) {
             return false;
         }
-        if (!introduce || introduce.length < 1) {
+        if (!introduce || introduce.trim().length < 1) {
             return false;
         }
         if (!selectedContactType) {
