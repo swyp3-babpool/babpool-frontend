@@ -61,6 +61,7 @@ export default function SendReviewPage() {
             <Col gap="30" padding="25px 30px 0">
                 <Col gap="16">
                     <ProfileBox
+                        url={profileInfo?.profileImg}
                         name={profileInfo?.name}
                         group={getDivisionName(profileInfo?.grade || '')}
                         content={profileInfo?.intro}
