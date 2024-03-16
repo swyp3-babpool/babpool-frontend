@@ -206,7 +206,7 @@ export default function ModifyProfileCardPage() {
     };
 
     useEffect(() => {
-        if (defaultProfileInfo) {
+        if (defaultProfileInfo && defaultProfileInfo.keywords) {
             setNickName(defaultProfileInfo.userNickName);
             setProfileImgUrl(defaultProfileInfo.imgUrl);
             const division = getDivisionName(defaultProfileInfo.userGrade);
@@ -387,7 +387,7 @@ export default function ModifyProfileCardPage() {
                                             const text = e.target.value.replace('-', '');
                                             setContactInput(text);
                                         }
-                                        return
+                                        return;
                                     } else {
                                         setContactInput(e.target.value);
                                     }
