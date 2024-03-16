@@ -65,7 +65,7 @@ export default function HistoryPage() {
 
     return (
         <NotificationPageContainer>
-            <Header text="밥약 히스토리" destination='/notification' />
+            <Header text="밥약 히스토리" destination="/mypage" />
             <TabBarTextContainer>
                 <TextButtonContainer>
                     <Txt
