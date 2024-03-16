@@ -21,13 +21,15 @@ import ProfileKeywords from '@/components/profile/ProfileKeywords';
 import Header from '@/components/common/header';
 import NotificationCard from '@/components/notification/NotificationCard';
 import ReviewCount from '@/components/common/review/ReviewCount';
-import { GetMypageType } from '@/interface/mypageType';
+import { GetMypageType, ReviewType } from '@/interface/mypageType';
 import { useQuery } from '@tanstack/react-query';
 import { getMypageInfo } from '@/api/profile/mypageApi';
 import { getDate, getDateTime, getDivisionName, getReviewType } from '@/utils/util';
 
 export default function MyPage() {
     const navigate = useNavigate();
+    const reviewOrder = ['최고예요', '좋아요', '별로예요'];
+    const [reviewCounts, setReviewCounts] = useState<ReviewType>();
 
     const {
         data: mypageInfo,
@@ -45,6 +47,12 @@ export default function MyPage() {
     const handleDeleteAccountButtonClick = () => {
         navigate('/deleteAccount');
     };
+
+    useEffect(() => {
+        if (mypageInfo?.reviewCount !== undefined) {
+            setReviewCounts(mypageInfo?.reviewCount);
+        }
+    }, [mypageInfo]);
 
     return (
         <MyPageContainer>
@@ -156,9 +164,9 @@ export default function MyPage() {
                     </Row>
                 </Row>
                 <Row gap={12} padding="0 10px">
-                    {Object.entries(mypageInfo?.reviewCount || {}).map(([key, value]) => (
-                        <ReviewCount key={key} text={getReviewType(key)} count={value} />
-                    ))}
+                    <ReviewCount count={reviewCounts?.best || 0} text="최고예요" />
+                    <ReviewCount count={reviewCounts?.good || 0} text="좋아요" />
+                    <ReviewCount count={reviewCounts?.bad || 0} text="별로에요" />
                 </Row>
             </Col>
 

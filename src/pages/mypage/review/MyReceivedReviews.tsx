@@ -73,7 +73,7 @@ export default function MyReceivedReviewsPage() {
         isSuccess &&
         !isLoading && (
             <ReceivedReviewPageContainer>
-                <Header text={`내가 받은 후기`} />
+                <Header text={`내가 받은 후기`} destination="/mypage" />
                 <ReviewContainer>
                     <ReviewCountContainer>
                         <ReviewCount count={reviewCounts.bestCount} text="최고예요" />

@@ -128,7 +128,10 @@ export default function NotificationDetailPage() {
 
     return (
         <NotificationDetailPageContainer>
-            <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
+            <Header
+                text={type === 'received' ? '받은 밥약' : '보낸 밥약'}
+                destination="/notification"
+            />
             <NotificationDetailPageSection>
                 <Col gap="20">
                     <Col gap="0">
@@ -154,7 +157,9 @@ export default function NotificationDetailPage() {
                             color={state === 'WAITING' ? colors.purple_light_40 : colors.black}
                         >
                             {state === 'WAITING'
-                                ? `${detailAppointment?.lastingTime.hour}시간 ${detailAppointment?.lastingTime.minute}분`
+                                ? detailAppointment?.lastingTime
+                                    ? `${detailAppointment?.lastingTime.hour}시간 ${detailAppointment?.lastingTime.minute}분`
+                                    : '시간 정보 없음'
                                 : `${
                                       detailAppointment?.contactPhone
                                           ? detailAppointment?.contactPhone

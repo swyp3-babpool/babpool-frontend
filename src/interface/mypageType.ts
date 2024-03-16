@@ -9,11 +9,11 @@ export type GetMypageType = {
     histories: HistoryType[];
 };
 
-type ReviewType = {
+export interface ReviewType {
     best: number;
     good: number;
     bad: number;
-};
+}
 
 export type HistoryType = {
     appointmentId: number;
