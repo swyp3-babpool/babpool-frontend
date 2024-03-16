@@ -40,7 +40,6 @@ export default function TotalBabpoolPage() {
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const filterRef = useRef<SearchInfoType>(searchInfo);
-    console.log(filterRef.current);
 
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
@@ -120,17 +119,14 @@ export default function TotalBabpoolPage() {
         setSearchInfo((prev) => ({ ...prev, page }));
     };
 
-
     useEffect(() => {
         // 이전 필터 키워드가 존재하면 유지, 없으면 초기화
         const validateFilterKeyword = [] as string[];
-        console.log(Object.values(searchInfo.prevFilterKeyword));
         Object.values(searchInfo.prevFilterKeyword).map((groupKeywords) => {
             groupKeywords.map((item) => {
                 validateFilterKeyword.push(item);
             });
         });
-        console.log(validateFilterKeyword);
         setSearchInfo((prev) => ({
             ...prev,
             filterKeyword:
@@ -156,7 +152,7 @@ export default function TotalBabpoolPage() {
     return (
         <>
             <TotalBabpoolPageContainer>
-                <Header text="밥풀 전체보기" destination='/'/>
+                <Header text="밥풀 전체보기" destination="/" />
                 <SearchBarContainer>
                     <Searchbar
                         value={searchValue}
@@ -176,9 +172,7 @@ export default function TotalBabpoolPage() {
                                 key={category}
                                 text={category}
                                 filterLength={
-                                    category === '구분'
-                                        ? searchInfo.division.length
-                                        : keywordLength
+                                    category === '구분' ? searchInfo.division.length : keywordLength
                                 }
                                 onClick={() => handleSetFilterModal(category)}
                             />
