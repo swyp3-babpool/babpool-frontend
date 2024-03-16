@@ -77,7 +77,6 @@ export const Devider = styled.div`
 `;
 
 export const DeleteAccountButton = styled.button`
-    width: 100%;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;

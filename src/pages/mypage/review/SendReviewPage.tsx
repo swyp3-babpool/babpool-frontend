@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '@/components/common/header';
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -17,19 +17,43 @@ import Popup from '@/components/common/popup';
 import Txt from '@/components/common/text';
 import { colors } from '@/assets/styles/theme';
 import { Devider } from '../Mypage.styles';
+import { useQuery } from '@tanstack/react-query';
+import { GetReviewType } from '@/interface/api/reviewType';
+import { getReview, sendReview } from '@/api/review/reviewApi';
+import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
+import { getUserProfile } from '@/api/profile/profileApi';
+import { getDivisionName, getReviewTypeToServer } from '@/utils/util';
 
 export default function SendReviewPage() {
+    const location = useLocation();
+    const appointmentId = location.state.appointmentId;
+    const userProfileId = location.state.profileId;
+
+    const {
+        data: profileInfo,
+        isError: isError,
+        isLoading: isLoading,
+    } = useQuery<ProfileDetailsType>({
+        queryKey: [`/api/profile/detail/${userProfileId}`],
+        queryFn: () => getUserProfile(String(userProfileId)),
+    });
+
     const navigate = useNavigate();
     const [inputValue, setInputValue] = useState('');
     const [selectedButton, setSelectedButton] = useState<string | null>(null);
-    const [keywords, setKeywords] = useState<string[]>([
-        '편입생',
-        '자취',
-        '동아리',
-        '진로탐색',
-        '대학원',
-    ]);
-    const reviewRecipient = '임예지';
+
+    const handleSendReview = () => {
+        const reqBody = {
+            targetAppointmentId: appointmentId,
+            rateType: getReviewTypeToServer(selectedButton || ''),
+            reviewContent: inputValue,
+        };
+        sendReview(reqBody).then((res) => {
+            if (res.code === 200) {
+                navigate('/mypage');
+            }
+        });
+    };
 
     return (
         <ReviewPageContainer>
@@ -37,14 +61,14 @@ export default function SendReviewPage() {
             <Col gap="30" padding="25px 30px 0">
                 <Col gap="16">
                     <ProfileBox
-                        name="송채영"
-                        group="대학생"
-                        content="대학생활 고민 같이 나누며 이야기 해요!"
+                        name={profileInfo?.name}
+                        group={getDivisionName(profileInfo?.grade || '')}
+                        content={profileInfo?.intro}
                     />
-                    <ProfileKeywords keywords={keywords} />
+                    <ProfileKeywords keywords={profileInfo?.keywords} />
                 </Col>
                 <Col gap="16" padding="10px 0 0">
-                    <Txt variant="h5">{reviewRecipient}과 밥약은 어떠셨나요?</Txt>
+                    <Txt variant="h5">{profileInfo?.name}과 밥약은 어떠셨나요?</Txt>
                     <Row gap={12} justifyContent="center" alignItems="center">
                         {['최고예요', '좋아요', '별로예요'].map((text) => (
                             <ReviewButton
@@ -68,10 +92,10 @@ export default function SendReviewPage() {
                 </Col>
                 <Devider />
                 <ReviewInput
-                    placeholder="5자-30자 이내로 작성해주세요"
+                    placeholder="5자-200자 이내로 작성해주세요"
                     value={inputValue}
                     onChange={(e) => {
-                        if (e.target.value.length <= 30) {
+                        if (e.target.value.length <= 200) {
                             setInputValue(e.target.value);
                         }
                     }}
@@ -82,7 +106,9 @@ export default function SendReviewPage() {
                     text="완료"
                     disabled={inputValue.length < 5}
                     type={inputValue.length < 5 ? 'refuse' : 'accept'}
-                    onClick={() => {}}
+                    onClick={() => {
+                        handleSendReview();
+                    }}
                 />
             </ButtonContainer>
         </ReviewPageContainer>
