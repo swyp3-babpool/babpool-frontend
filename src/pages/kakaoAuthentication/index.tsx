@@ -2,6 +2,7 @@ import { signInRequest } from '@/api/auth/auth';
 import { searchInfoState } from '@/atom/searchInfoStore';
 import { useNavigation } from '@/hooks/useNavigation';
 import { SignInRequestDataType } from '@/interface/api/authType';
+import { getDivisionName } from '@/utils/util';
 import React, { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
@@ -30,7 +31,7 @@ export default function KakaoAuthenticationPage() {
             console.log(res.code);
             if (res.code === 200) {
                 console.log('로그인 성공.');
-                const grade = [res.data.userGrade];
+                const grade = [getDivisionName(res.data.userGrade)] as string[]
                 localStorage.setItem('accessToken', String(accessToken));
                 setSearchInfoState((prev) => ({
                     ...prev,
