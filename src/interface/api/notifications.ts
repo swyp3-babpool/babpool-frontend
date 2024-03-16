@@ -27,6 +27,9 @@ export interface DetailBabAppointmentType {
     lastingTime: LastingTime;
     possibleDateTimes: PossibleTime[];
     question: string;
+    fixedDateTimeId: number;
+    contactChat: string;
+    contactPhone: string;
 }
 
 interface LastingTime {
@@ -42,6 +45,7 @@ interface PossibleTime {
 }
 
 export interface AcceptContentType {
+    appointmentId: number;
     requesterNickName: string;
     requesterProfileImageUrl: string;
     requesterGrade: string;
