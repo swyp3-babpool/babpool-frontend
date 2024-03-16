@@ -13,6 +13,7 @@ import {
     ProfileModifyButton,
     RightIconContainer,
     DeleteAccountButton,
+    GridContainer,
 } from './Mypage.styles';
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -122,17 +123,22 @@ export default function MyPage() {
                         </Txt>
                     </Col>
                 ) : (
-                    <Row gap={16}>
+                    <GridContainer>
                         {mypageInfo?.histories.map((history) => (
                             <NotificationCard
                                 key={history.appointmentId}
                                 type={history.appointmentStatus}
-                                reviewRequired={false}
+                                image={history.appointmentReceiverProfileImageUrl}
+                                reviewRequired={history.reviewRequired === 'REVIEW_REQUIRED'}
                                 name={history.appointmentReceiverUserNickname}
-                                content={getDateTime(history.appointmentFixDateTime)}
+                                content={
+                                    history.reviewRequired === 'REVIEW_REQUIRED'
+                                        ? '후기 보내기'
+                                        : getDateTime(history.appointmentFixDateTime)
+                                }
                             />
                         ))}
-                    </Row>
+                    </GridContainer>
                 )}
             </Col>
             <Row padding="0 30px">
