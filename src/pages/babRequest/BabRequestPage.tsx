@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-type RequestInfoType = {
+export type RequestInfoType = {
     targetProfileId: number;
     possibleTimeIdList: UserScheduleType[];
     questionContents: string;
@@ -197,6 +197,7 @@ export default function BabRequestPage() {
                     <SelectScheduleModal
                         isOpen={isScheduleSelected}
                         userId={Number(targetProfileId)}
+                        requestInfo={requestInfo}
                         handleSelectSchedule={handleSelectSchedule}
                         onClose={handleCloseModal}
                     />

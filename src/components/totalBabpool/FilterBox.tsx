@@ -11,7 +11,6 @@ type FilterBoxProps = {
 }
 
 export default function FilterBox({text, filterLength, onClick}: FilterBoxProps) {
-    console.log(filterLength)
     const isLength = filterLength > 0;
     return (
         <FilterBoxContainer isLength={isLength} onClick={onClick}>

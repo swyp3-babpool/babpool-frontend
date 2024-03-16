@@ -37,78 +37,87 @@ export default function ProfileDetailsPage() {
 
     return (
         <ProfileDetailsPageContainer>
-            <Header text="프로필카드 보기" destination='/total' />
-            {
-                !isLoading && profile && reviewCount ? (
-                    <ContentSection>
-                <ProfileBoxContainer>
-                    <ProfileBox
-                        name={profile.name}
-                        url={profile.profileImg}
-                        group={getDivisionName(profile.grade)}
-                        nameType="column"
-                    />
-                </ProfileBoxContainer>
-                <ContentBox>
-                    <Txt variant="h5">{profile.intro}</Txt>
-                    <Txt variant="caption1">{profile.contents}</Txt>
-                </ContentBox>
-                <KeywordContainer>
-                    <Txt variant="h5">관심 키워드</Txt>
-                    <KeywordList>
-                        {profile.keywords.map((keyword: string) => (
-                            <Keyword
-                                key={keyword}
-                                name={keyword}
-                                ischecked={true}
-                                disabled={true}
-                                onChange={() => {}}
+            <Header text="프로필카드 보기" destination="/total" />
+            {!isLoading && profile && reviewCount ? (
+                <ContentSection>
+                    <ProfileBoxContainer>
+                        <ProfileBox
+                            name={profile.name}
+                            url={profile.profileImg}
+                            group={getDivisionName(profile.grade)}
+                            nameType="column"
+                        />
+                    </ProfileBoxContainer>
+                    <ContentBox>
+                        <Txt variant="h5">{profile.intro}</Txt>
+                        <Txt variant="caption1">{profile.contents}</Txt>
+                    </ContentBox>
+                    <KeywordContainer>
+                        <Txt variant="h5">관심 키워드</Txt>
+                        <KeywordList>
+                            {profile.keywords.map((keyword: string) => (
+                                <Keyword
+                                    key={keyword}
+                                    name={keyword}
+                                    ischecked={true}
+                                    disabled={true}
+                                    onChange={() => {}}
+                                />
+                            ))}
+                        </KeywordList>
+                    </KeywordContainer>
+                    <ReviewContainer>
+                        <ReviewTitleBox>
+                            <Txt variant="h5">{profile.name}님이 받은 후기</Txt>
+                            <ReviewDetailsBox
+                                onClick={() =>
+                                    navigate(`/total/profile/${userId}-${profile.name}/review`)
+                                }
+                            >
+                                <Txt variant="caption1" color={colors.white_50}>
+                                    더보기
+                                </Txt>
+                                <RightArrorIcon />
+                            </ReviewDetailsBox>
+                        </ReviewTitleBox>
+                        <ReviewCountContainer>
+                            {['최고예요', '좋아요', '별로예요'].map((text, i) => (
+                                <ReviewCount key={text} text={text} count={reviewCount[i]} />
+                            ))}
+                        </ReviewCountContainer>
+                        <ReviewTextContainer>
+                            {profile.reviews.length > 0 ? (
+                                profile.reviews.map((review, i) => {
+                                    if (i > 2) return;
+                                    return (
+                                        <Review key={review.reviewId} text={review.reviewComment} />
+                                    );
+                                })
+                            ) : (
+                                <>
+                                    <Txt variant="caption1" color={colors.white_30}>
+                                        아직 후기가 없어요
+                                    </Txt>
+                                </>
+                            )}
+                        </ReviewTextContainer>
+                    </ReviewContainer>
+                    {!profile.isApiRequesterSameAsProfileOwner && (
+                        <ButtonBox>
+                            <Button
+                                text="밥약 요청"
+                                onClick={() =>
+                                    navigate(`/total/profile/${userId}-${profile.name}/request`)
+                                }
                             />
-                        ))}
-                    </KeywordList>
-                </KeywordContainer>
-                <ReviewContainer>
-                    <ReviewTitleBox>
-                        <Txt variant="h5">{profile.name}님이 받은 후기</Txt>
-                        <ReviewDetailsBox onClick={() => navigate(`/total/profile/${userId}-${profile.name}/review`)}>
-                            <Txt variant="caption1" color={colors.white_50}>
-                                더보기
-                            </Txt>
-                            <RightArrorIcon />
-                        </ReviewDetailsBox>
-                    </ReviewTitleBox>
-                    <ReviewCountContainer>
-                        {['최고예요', '좋아요', '별로예요'].map((text, i) => (
-                            <ReviewCount key={text} text={text} count={reviewCount[i]} />
-                        ))}
-                    </ReviewCountContainer>
-                    <ReviewTextContainer>
-                        {profile.reviews.length > 0 ? (
-                            profile.reviews.map((review, i) => {
-                                if(i > 2) return
-                                return (
-                                    <Review key={review.reviewId} text={review.reviewComment} />
-                                )})
-                        ) : (
-                            <>
-                                <Txt variant='caption1' color={colors.white_30}>아직 후기가 없어요</Txt>
-
-                            </>
-                        )}
-                    </ReviewTextContainer>
-                </ReviewContainer>
-                <ButtonBox>
-                    <Button text="밥약 요청" onClick={() => navigate(`/total/profile/${userId}-${profile.name}/request`)} />
-                </ButtonBox>
-            </ContentSection>
-                )
-                : (
-                    <Loading />
-                )
-            }
-            
+                        </ButtonBox>
+                    )}
+                </ContentSection>
+            ) : (
+                <Loading />
+            )}
         </ProfileDetailsPageContainer>
-    ) 
+    );
 }
 
 const ProfileDetailsPageContainer = styled.section`

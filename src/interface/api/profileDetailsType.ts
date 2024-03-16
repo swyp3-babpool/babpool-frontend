@@ -11,6 +11,7 @@ export interface ProfileDetailsType {
         bad: number;
     };
     reviews: ReviewType[];
+    isApiRequesterSameAsProfileOwner: boolean;
 }
 
 export type ReviewCountType = {

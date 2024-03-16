@@ -24,8 +24,6 @@ export default function HomePage() {
         queryFn: () => getUserGrade()
     })
 
-    data && console.log(data)
-
     useEffect(() => {
         if(!isLoading) {
             const grade = [getDivisionName(data.userGrade)] as string[]
