@@ -46,7 +46,7 @@ export const getReviewTypeToServer = (reviewType: string) => {
         case '최고예요':
             return 'BEST';
         case '좋아요':
-            return 'GOOD';
+            return 'GREAT';
         case '별로예요':
             return 'BAD';
         default:
