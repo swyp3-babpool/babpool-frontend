@@ -132,7 +132,11 @@ export default function HistoryPage() {
                                   key={item.appointmentId}
                                   type={item.appointmentStatus}
                                   name={item.appointmentReceiverUserNickname}
-                                  content={item.refuseType ? '개인 사유' : '시간 만료'}
+                                  content={
+                                      item.appointmentStatus === 'REJECT'
+                                          ? '개인 사유'
+                                          : '시간 만료'
+                                  }
                                   image={item.appointmentReceiverProfileImageUrl}
                               />
                           ))}
