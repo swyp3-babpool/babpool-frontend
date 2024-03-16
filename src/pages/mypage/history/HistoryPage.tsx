@@ -110,6 +110,7 @@ export default function HistoryPage() {
                                   key={item.appointmentId}
                                   type={item.appointmentStatus}
                                   name={item.appointmentReceiverUserNickname}
+                                  reviewRequired={item.reviewRequired === 'REVIEW_REQUIRED'}
                                   content={
                                       item.reviewRequired === 'REVIEW_REQUIRED'
                                           ? '후기 보내기'

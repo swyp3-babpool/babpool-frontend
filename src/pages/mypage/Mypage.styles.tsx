@@ -14,6 +14,16 @@ export const MyPageContainer = styled.div`
     overflow-y: scroll;
 `;
 
+export const GridContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    overflow-y: auto;
+`;
+
 export const ProfileContainer = styled.div`
     position: relative;
     width: 100%;
