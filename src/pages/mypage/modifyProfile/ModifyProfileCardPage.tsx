@@ -163,8 +163,8 @@ export default function ModifyProfileCardPage() {
             userGrade: getDivisionId(selectedUserType) as string,
             profileIntro: summaryIntroduce,
             profileContents: introduce,
-            profileContactPhone: selectedContactType === '연락처' ? contactInput : undefined,
-            profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : undefined,
+            profileContactPhone: selectedContactType === '연락처' ? contactInput : '',
+            profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : '',
             keywords: Object.values(modifyProfileInfo.keywordGroups)
                 .flat()
                 .map((keyword) => getKeywordId(keyword)),
