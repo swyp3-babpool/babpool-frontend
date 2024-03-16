@@ -10,7 +10,14 @@ import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
 import { AcceptContentType } from '@/interface/api/notifications';
 import { getDate, getDateTime, getDivisionName } from '@/utils/util';
-import { AcceptPageContainer, ButtonContainer, Devider, IconContainer, QueryBox, ThickDevider } from './AcceptPage.styles';
+import {
+    AcceptPageContainer,
+    ButtonContainer,
+    Devider,
+    IconContainer,
+    QueryBox,
+    ThickDevider,
+} from './AcceptPage.styles';
 
 interface AcceptPageProps {
     appointmentId: number;
@@ -21,11 +28,11 @@ interface AcceptPageProps {
     keywords: string[];
 }
 
-
 export default function AcceptPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const {
+        appointmentId,
         requesterNickName,
         requesterProfileImageUrl,
         requesterGrade,
@@ -102,7 +109,7 @@ export default function AcceptPage() {
                     text="상세 내역 보기"
                     onClick={() =>
                         navigate(`/notification/received`, {
-                            state: { state: 'ACCEPT', appointmentId: 63 },
+                            state: { state: 'ACCEPT', appointmentId: appointmentId },
                         })
                     }
                 />

@@ -165,12 +165,13 @@ export default function MyPage() {
             <Row padding="0">
                 <ThickDevider />
             </Row>
-
-            <DeleteAccountButton onClick={handleDeleteAccountButtonClick}>
-                <Txt variant="caption2" color={colors.white_30}>
-                    회원탈퇴
-                </Txt>
-            </DeleteAccountButton>
+            <Row padding="0" justifyContent="flex-end">
+                <DeleteAccountButton onClick={handleDeleteAccountButtonClick}>
+                    <Txt variant="caption2" color={colors.white_30}>
+                        회원탈퇴
+                    </Txt>
+                </DeleteAccountButton>
+            </Row>
         </MyPageContainer>
     );
 }

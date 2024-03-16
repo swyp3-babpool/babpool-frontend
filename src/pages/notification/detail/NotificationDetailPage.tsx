@@ -28,7 +28,6 @@ import {
     getDetailBabAppointment,
 } from '@/api/notification/notificationApi';
 
-
 import { useQuery } from '@tanstack/react-query';
 import { getDate, getDivisionName } from '@/utils/util';
 
@@ -36,7 +35,6 @@ interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
-
 
 export default function NotificationDetailPage() {
     const { type } = useParams();
@@ -122,6 +120,12 @@ export default function NotificationDetailPage() {
         setIsPopupSecondText(false);
     };
 
+    useEffect(() => {
+        if (detailAppointment?.fixedDateTimeId) {
+            setSelectedTime(detailAppointment?.fixedDateTimeId);
+        }
+    }, [detailAppointment]);
+
     return (
         <NotificationDetailPageContainer>
             <Header text={type === 'received' ? '받은 밥약' : '보낸 밥약'} />
@@ -151,7 +155,11 @@ export default function NotificationDetailPage() {
                         >
                             {state === 'WAITING'
                                 ? `${detailAppointment?.lastingTime.hour}시간 ${detailAppointment?.lastingTime.minute}분`
-                                : '010-0000-0000'}
+                                : `${
+                                      detailAppointment?.contactPhone
+                                          ? detailAppointment?.contactPhone
+                                          : detailAppointment?.contactChat
+                                  }`}
                         </Txt>
                     </Row>
                     {state === 'WAITING' && type === 'sent' && (
@@ -162,7 +170,9 @@ export default function NotificationDetailPage() {
                                     연락처
                                 </Txt>
                                 <Txt variant="caption1" color={colors.black}>
-                                    010-0000-0000
+                                    {detailAppointment?.contactPhone
+                                        ? detailAppointment?.contactPhone
+                                        : detailAppointment?.contactChat}
                                 </Txt>
                             </Row>
                         </>
@@ -184,7 +194,10 @@ export default function NotificationDetailPage() {
                                 <Row gap="14" key={idx} alignItems="center">
                                     {!(state === 'WAITING' && type === 'sent') && (
                                         <PossibleTimeRadioButton
-                                            selected={selectedTime === time.possibleTimeId}
+                                            selected={
+                                                selectedTime !== -1 &&
+                                                selectedTime === time.possibleTimeId
+                                            }
                                             disabled={!(type === 'received' && state === 'WAITING')}
                                             cursor={
                                                 type === 'received' && state === 'WAITING'
@@ -216,7 +229,7 @@ export default function NotificationDetailPage() {
                         </Txt>
                         <QueryBox>
                             <Txt variant="caption1" color={colors.black}>
-                                "대학생활에 대해 궁금한게 많아요. 어떤 동아리가 있을까요?"
+                                {detailAppointment?.question}
                             </Txt>
                         </QueryBox>
                     </Col>
