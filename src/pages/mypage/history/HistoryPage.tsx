@@ -17,6 +17,7 @@ import { HistoryType, RejectHistoryType } from '@/interface/mypageType';
 import { getAcceptHistory, getRejectHistory } from '@/api/profile/mypageApi';
 import { Col } from '@/components/common/flex/Flex';
 import { getDate, getDateTime } from '@/utils/util';
+import { it } from 'node:test';
 
 export default function HistoryPage() {
     const navigate = useNavigate();
@@ -45,9 +46,15 @@ export default function HistoryPage() {
         setSelected(select);
     };
 
-    const handleNotificationCardClick = (review: boolean) => {
+    const handleNotificationCardClick = (
+        review: boolean,
+        appointmentId: number,
+        userProfileId: number
+    ) => {
         if (review) {
-            navigate('/mypage/review');
+            navigate('/mypage/review', {
+                state: { appointmentId: appointmentId, profileId: userProfileId },
+            });
         }
     };
 
@@ -111,7 +118,9 @@ export default function HistoryPage() {
                                   image={item.appointmentReceiverProfileImageUrl}
                                   onClick={() =>
                                       handleNotificationCardClick(
-                                          item.reviewRequired === 'REVIEW_REQUIRED'
+                                          item.reviewRequired === 'REVIEW_REQUIRED',
+                                          item.appointmentId,
+                                          item.appointmentReceiverProfileId
                                       )
                                   }
                               />
