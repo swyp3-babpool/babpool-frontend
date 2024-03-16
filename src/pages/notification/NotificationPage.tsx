@@ -99,7 +99,7 @@ export default function NotificationPage() {
             ) : (
                 <GridContainer>
                     {selected === 'received'
-                        ? receivedList &&
+                        ? Array.isArray(receivedList) &&
                           receivedList?.map((item) => (
                               <NotificationCard
                                   key={item.appointmentId}
@@ -119,7 +119,7 @@ export default function NotificationPage() {
                                   }
                               />
                           ))
-                        : sentList &&
+                        : Array.isArray(sentList) &&
                           sentList?.map((item) => (
                               <NotificationCard
                                   key={item.appointmentId}
