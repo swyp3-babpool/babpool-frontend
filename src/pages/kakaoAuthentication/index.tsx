@@ -33,6 +33,7 @@ export default function KakaoAuthenticationPage() {
                 console.log('로그인 성공.');
                 const grade = [getDivisionName(res.data.userGrade)] as string[]
                 localStorage.setItem('accessToken', String(accessToken));
+                localStorage.setItem('uuid', res.data.userUuid);
                 setSearchInfoState((prev) => ({
                     ...prev,
                     division: grade,

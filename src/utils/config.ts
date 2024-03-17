@@ -2,3 +2,4 @@ export const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
 export const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 export const CLIENT_SECRET = import.meta.env.VITE_KAKAO_CLIENT_SECRET;
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
