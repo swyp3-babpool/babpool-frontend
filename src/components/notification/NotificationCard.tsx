@@ -22,7 +22,6 @@ export default function NotificationCard({
     onClick,
 }: NotificaionCardProps) {
     const renderImage = () => {
-        console.log(image);
         if (image) {
             return <Image src={image} />;
         }

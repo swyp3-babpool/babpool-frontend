@@ -46,7 +46,8 @@ export default function PossibleTimeCalendar({
             return ({ date, view }: { date: any; view: any }) => {
                 const formattedDate = moment(date).format('YYYY-MM-DD');
                 const selected = selectedDate === formattedDate;
-                const existingDate = selectedDates?.[formattedDate];
+                const existingDate =
+                    selectedDates?.[formattedDate] && moment().isBefore(formattedDate);
                 if (view === 'month' && selected) {
                     return <div className="circle">{`${date.getDate()}`}</div>;
                 } else if (view === 'month' && existingDate) {
