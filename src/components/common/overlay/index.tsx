@@ -14,7 +14,7 @@ export default function Overlay({
 export const OverayWrapper = styled.div`
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     background-color: rgba(122, 122, 122, 0.7);

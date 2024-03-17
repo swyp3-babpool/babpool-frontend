@@ -45,6 +45,7 @@ import {
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
 import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
+import Popup from '@/components/common/popup';
 
 export interface ModifyProfileInfo {
     division: string;
@@ -59,6 +60,7 @@ export interface ModifyProfileInfo {
 export default function ModifyProfileCardPage() {
     const location = useLocation();
     const profileId = location.state as number;
+    const [isPopupOpen, setIsPopupOpen] = useState(true);
     const {
         data: defaultProfileInfo,
         isError: isError,
@@ -123,16 +125,16 @@ export default function ModifyProfileCardPage() {
     };
 
     const handleVerifyInput = () => {
-        if (!nickName || nickName.length < 1) {
+        if (!nickName || nickName.trim().length < 1) {
             return false;
         }
         if (!selectedUserType) {
             return false;
         }
-        if (!summaryIntroduce || summaryIntroduce.length < 1) {
+        if (!summaryIntroduce || summaryIntroduce.trim().length < 1) {
             return false;
         }
-        if (!introduce || introduce.length < 1) {
+        if (!introduce || introduce.trim().length < 1) {
             return false;
         }
         if (!selectedContactType) {
@@ -182,6 +184,10 @@ export default function ModifyProfileCardPage() {
         modifyProfileRequest(formData).then((res) => {
             if (res.code === 200) {
                 navigate('/mypage');
+            } else if (res.code === 400) {
+                if (res.message === 'File size is too large. Maximum allowed size is 5MB.') {
+                    setIsPopupOpen(true);
+                }
             }
         });
     };
@@ -206,7 +212,7 @@ export default function ModifyProfileCardPage() {
     };
 
     useEffect(() => {
-        if (defaultProfileInfo) {
+        if (defaultProfileInfo && defaultProfileInfo.keywords) {
             setNickName(defaultProfileInfo.userNickName);
             setProfileImgUrl(defaultProfileInfo.imgUrl);
             const division = getDivisionName(defaultProfileInfo.userGrade);
@@ -262,7 +268,7 @@ export default function ModifyProfileCardPage() {
                 setIsContactInputVerified(true);
             }
         } else {
-            const urlRegex = /^open\.kakao\.com+$/;
+            const urlRegex = /https?:\/\/open\.kakao\.com\/o\/[a-zA-Z0-9_-]+/;
             if (!urlRegex.test(contactInput)) {
                 setIsContactInputVerified(false);
             } else {
@@ -373,6 +379,7 @@ export default function ModifyProfileCardPage() {
                             initialValue={selectedContactType}
                             onValueChange={(value) => {
                                 setSelectedContactType(value);
+                                setContactInput('');
                             }}
                         />
                         <InputWrapper>
@@ -380,11 +387,20 @@ export default function ModifyProfileCardPage() {
                                 type="text"
                                 value={contactInput}
                                 onChange={(e) => {
-                                    setContactInput(e.target.value);
+                                    if (selectedContactType === '연락처') {
+                                        const reg = /^[0-9-]*$/;
+                                        if (reg.test(e.target.value)) {
+                                            const text = e.target.value.replace('-', '');
+                                            setContactInput(text);
+                                        }
+                                        return;
+                                    } else {
+                                        setContactInput(e.target.value);
+                                    }
                                 }}
                                 placeholder={
                                     selectedContactType === '연락처'
-                                        ? '01000000000'
+                                        ? '01012341234'
                                         : 'open.kakao.com/...'
                                 }
                             />
@@ -439,7 +455,7 @@ export default function ModifyProfileCardPage() {
                 id="profileImg"
                 ref={profileImageInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg, image/png"
                 onChange={handleProfileImgFileChange}
             />
             <SelectPossibleTimeModal
@@ -455,6 +471,16 @@ export default function ModifyProfileCardPage() {
                 <AlbumButtonContainer onClick={(e) => e.stopPropagation()}>
                     <Button text="앨범에서 선택" type={'accept'} onClick={handleSelectFromAlbum} />
                 </AlbumButtonContainer>
+            )}
+            {isPopupOpen && (
+                <Overlay>
+                    <Popup
+                        text={'이미지용량이 5MB를 초과했습니다.'}
+                        secondText={'이미지를 다시 선택해주세요.'}
+                        button={<Button text={'확인'} onClick={() => setIsPopupOpen(false)} />}
+                        closePopup={() => setIsPopupOpen(false)}
+                    />
+                </Overlay>
             )}
         </ModifyProfilePageContainer>
     );

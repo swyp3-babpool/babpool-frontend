@@ -12,6 +12,7 @@ import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { Value } from 'node_modules/react-calendar/dist/esm/shared/types';
 import moment from 'moment';
 import { TimeRange } from '@/interface/api/modifyProfileType';
+import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 
 type SelectPossibleTimeModalProps = {
     isOpen: boolean;
@@ -20,22 +21,6 @@ type SelectPossibleTimeModalProps = {
     setSelectedDates: (dates: TimeRange) => void;
 };
 
-const timeRanges = {
-    8: '오전 8:00 ~ 오전 9:00',
-    9: '오전 9:00 ~ 오전 10:00',
-    10: '오전 10:00 ~ 오전 11:00',
-    11: '오전 11:00 ~ 오후 12:00',
-    12: '오후 12:00 ~ 오후 1:00',
-    13: '오후 1:00 ~ 오후 2:00',
-    14: '오후 2:00 ~ 오후 3:00',
-    15: '오후 3:00 ~ 오후 4:00',
-    16: '오후 4:00 ~ 오후 5:00',
-    17: '오후 5:00 ~ 오후 6:00',
-    18: '오후 6:00 ~ 오후 7:00',
-    19: '오후 7:00 ~ 오후 8:00',
-    20: '오후 8:00 ~ 오후 9:00',
-    21: '오후 9:00 ~ 오후 10:00',
-};
 
 export default function SelectPossibleTimeModal({
     isOpen,
@@ -102,8 +87,8 @@ export default function SelectPossibleTimeModal({
             </CalendarContainer>
             <SelectScheduleContainer>
                 <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
-                <Col style={{ width: 176 }} gap={12} alignItems="center" justifyContent="center">
-                    {Object.entries(timeRanges).map(([startTime, timeRange]) => (
+                <Col style={{ width: '100%', minWidth: 176, display: 'grid' }} gap={12} alignItems="center" justifyContent="center">
+                    {Object.entries(SELECT_TIME_SCHEDULE).map(([startTime, timeRange]) => (
                         <Row
                             gap={10}
                             alignItems="center"
