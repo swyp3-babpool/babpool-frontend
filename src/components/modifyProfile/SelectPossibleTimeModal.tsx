@@ -21,7 +21,6 @@ type SelectPossibleTimeModalProps = {
     setSelectedDates: (dates: TimeRange) => void;
 };
 
-
 export default function SelectPossibleTimeModal({
     isOpen,
     onClose,
@@ -87,7 +86,12 @@ export default function SelectPossibleTimeModal({
             </CalendarContainer>
             <SelectScheduleContainer>
                 <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
-                <Col style={{ width: '100%', minWidth: 176, display: 'grid' }} gap={12} alignItems="center" justifyContent="center">
+                <Col
+                    style={{ width: '100%', minWidth: 176, display: 'grid' }}
+                    gap={12}
+                    alignItems="center"
+                    justifyContent="center"
+                >
                     {Object.entries(SELECT_TIME_SCHEDULE).map(([startTime, timeRange]) => (
                         <Row
                             gap={10}
@@ -150,7 +154,7 @@ const CalendarContainer = styled.div`
 
 const SelectScheduleContainer = styled.div`
     width: 100%;
-    height: 345px;
+    height: 245px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
