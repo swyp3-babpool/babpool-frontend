@@ -1,15 +1,22 @@
-import { INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from "@/utils/constant";
 import { atom } from "recoil";
 
 export type AlarmInfotype = {
-    requestProfileId: number | null;
-    acceptMessage: string | null;
+    requesterProfileId: number | null;
+    messageType: string | null;
+    isAlarm: number;
 };
 
-export const alarmInfoState = atom({
+export const INIT_ALARM_INFO: AlarmInfotype = {
+    requesterProfileId: null,
+    messageType: null,
+    isAlarm: localStorage.getItem('isAlarm') ? Number(localStorage.getItem('isAlarm')) : 0,
+}
+
+export const alarmInfoState = atom<AlarmInfotype>({
     key: 'alarmInfoState',
     default: {
-        requestProfileId: null,
-        acceptMessage: null,
+        requesterProfileId: null,
+        messageType: null,
+        isAlarm: localStorage.getItem('isAlarm') ? Number(localStorage.getItem('isAlarm')) : 0,
     }
 })

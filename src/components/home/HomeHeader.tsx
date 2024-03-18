@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import { ReactComponent as C_MailIcon } from '@/assets/icons/ic_mail.svg';
+import { ReactComponent as C_Active_MailIcon } from '@/assets/icons/ic_active_mail.svg';
 import { ReactComponent as C_MenuIcon } from '@/assets/icons/ic_menubar.svg';
 import { ReactComponent as C_BabpoolLogo } from '@/assets/logo/babpoolLogo.svg';
 import { ReactComponent as C_CloseIcon } from '@/assets/icons/ic_close.svg';
 import { useNavigation } from '@/hooks/useNavigation';
+import { useRecoilValue } from 'recoil';
+import { alarmInfoState } from '@/atom/alarminfo';
 
 type HomeHeaderProps = {
     isOpenMenu: boolean;
@@ -11,8 +14,10 @@ type HomeHeaderProps = {
 };
 
 export default function HomeHeader({ isOpenMenu, handleMenu }: HomeHeaderProps) {
+    const { handleNavigate } = useNavigation();
 
-    const {handleNavigate} = useNavigation()
+    const {isAlarm} = useRecoilValue(alarmInfoState);
+
     return (
         <HeaderContainer>
             <BabpoolLogo />
@@ -22,7 +27,11 @@ export default function HomeHeader({ isOpenMenu, handleMenu }: HomeHeaderProps) 
                 </IconBox>
             ) : (
                 <HeaderCategoryBox>
-                    <MailIcon onClick={() => handleNavigate('notification')} />
+                    {isAlarm === 1 ? (
+                        <Active_MailIcon onClick={() => handleNavigate('notification')} />
+                    ) : (
+                        <MailIcon onClick={() => handleNavigate('notification')} />
+                    )}
                     <MenuIcon onClick={handleMenu} />
                 </HeaderCategoryBox>
             )}
@@ -54,6 +63,9 @@ export const IconBox = styled.div`
 `;
 
 export const MenuIcon = styled(C_MenuIcon)`
+    cursor: pointer;
+`;
+export const Active_MailIcon = styled(C_Active_MailIcon)`
     cursor: pointer;
 `;
 export const MailIcon = styled(C_MailIcon)`

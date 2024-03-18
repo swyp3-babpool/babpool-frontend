@@ -1,5 +1,8 @@
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { useSetRecoilState } from 'recoil';
+import { alarmInfoState } from '@/atom/alarminfo';
+
 
 export class WebSocketService {
   private client: Client;
@@ -31,6 +34,7 @@ export class WebSocketService {
 
   private subscribeToNotifications(): void {
     const uuid = localStorage.getItem('uuid');
+    // const setAlarmInfo = useSetRecoilState(alarmInfoState)
     if(!uuid) return
     console.log('연결')
     this.client.subscribe(`/topic/appointment/${uuid}`, (message: any) => {
@@ -39,7 +43,7 @@ export class WebSocketService {
       if (message.body) {
         const body = JSON.parse(message.body);
         console.log(body)
-        
+        // setAlarmInfo(body)
         // zustand store에 새로운 데이터 추가
 
         // zustand store의 알림 여부 true

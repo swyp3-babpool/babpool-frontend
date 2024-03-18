@@ -26,11 +26,15 @@ import { GetMypageType, ReviewType } from '@/interface/mypageType';
 import { useQuery } from '@tanstack/react-query';
 import { getMypageInfo } from '@/api/profile/mypageApi';
 import { getDate, getDateTime, getDivisionName, getReviewType } from '@/utils/util';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
 export default function MyPage() {
     const navigate = useNavigate();
     const reviewOrder = ['최고예요', '좋아요', '별로예요'];
     const [reviewCounts, setReviewCounts] = useState<ReviewType>();
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const {
         data: mypageInfo,
@@ -186,6 +190,11 @@ export default function MyPage() {
                     </Txt>
                 </DeleteAccountButton>
             </Row>
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
+            )}
         </MyPageContainer>
     );
 }

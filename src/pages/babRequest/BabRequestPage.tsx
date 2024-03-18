@@ -1,6 +1,8 @@
 import { appointmentRequest, getAvailableSchedule } from '@/api/babRequest/babRequestApi';
 import { colors } from '@/assets/styles/theme';
+import { alarmInfoState } from '@/atom/alarminfo';
 import SelectScheduleModal from '@/components/babpoolRequest/SelectScheduleModal';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 import Button from '@/components/common/button';
 import Divider from '@/components/common/divider';
 import Header from '@/components/common/header';
@@ -16,6 +18,7 @@ import { getMonthFormatDate } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 export type RequestInfoType = {
@@ -38,6 +41,7 @@ export default function BabRequestPage() {
         possibleTimeIdList: [],
         questionContents: '',
     });
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const { navigate } = useNavigation();
 
@@ -105,7 +109,8 @@ export default function BabRequestPage() {
     }, [requestInfo]);
 
     return (
-        targetProfileId && targetProfileName && (
+        targetProfileId &&
+        targetProfileName && (
             <>
                 <BabRequestPageContainer>
                     <Header />
@@ -214,6 +219,11 @@ export default function BabRequestPage() {
                             }
                         />
                     </Overlay>
+                )}
+                {(alarmInfo.messageType) && (
+                    <AlarmModal
+                        messageType={alarmInfo.messageType}
+                    />
                 )}
             </>
         )
