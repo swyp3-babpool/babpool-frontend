@@ -60,13 +60,13 @@ export interface ModifyProfileInfo {
 export default function ModifyProfileCardPage() {
     const location = useLocation();
     const profileId = location.state as number;
-    const [isPopupOpen, setIsPopupOpen] = useState(true);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const {
         data: defaultProfileInfo,
         isError: isError,
         isLoading: isLoading,
     } = useQuery<ModifyProfileType>({
-        queryKey: [`/api/appointment/list/receive`],
+        queryKey: [`/api/profile/default`, profileId],
         queryFn: () => getModifyProfile(),
     });
 
@@ -226,7 +226,6 @@ export default function ModifyProfileCardPage() {
                 setSelectedContactType('연락처');
                 setContactInput(defaultProfileInfo.profileContactPhone);
             }
-            setContactInput(defaultProfileInfo.profileContactPhone);
             setModifyProfileInfo({
                 division: defaultProfileInfo.userGrade,
                 keywordGroups: {
