@@ -6,20 +6,16 @@ import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
 import {
     ButtonContainer,
-    InputContainer,
     ReviewButton,
     ReviewInput,
     ReviewPageContainer,
 } from './SendReviewPage.styles';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
-import Overlay from '@/components/common/overlay';
-import Popup from '@/components/common/popup';
 import Txt from '@/components/common/text';
 import { colors } from '@/assets/styles/theme';
 import { Devider } from '../Mypage.styles';
 import { useQuery } from '@tanstack/react-query';
-import { GetReviewType } from '@/interface/api/reviewType';
-import { getReview, sendReview } from '@/api/review/reviewApi';
+import { sendReview } from '@/api/review/reviewApi';
 import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
 import { getUserProfile } from '@/api/profile/profileApi';
 import { getDivisionName, getReviewTypeToServer } from '@/utils/util';
