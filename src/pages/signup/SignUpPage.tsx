@@ -54,6 +54,7 @@ export default function SignUpPage() {
                 console.log(res)
                 setCompletePopupOpen(true);
                 localStorage.setItem('accessToken', res.data.accessToken);
+                localStorage.setItem('uuid', res.data.userUuid);
             }
         }).catch(console.error)
     };

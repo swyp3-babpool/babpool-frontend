@@ -49,6 +49,7 @@ export default function DeleteAccountPage() {
         .then((res) => {
             if(res.code === 200) {
                 localStorage.removeItem('accessToken');
+                localStorage.removeItem('uuid');
                 goHome();
             }
         })
