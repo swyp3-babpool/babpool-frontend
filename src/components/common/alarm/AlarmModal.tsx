@@ -14,7 +14,8 @@ type AlarmModalProps = {
 export default function AlarmModal({ messageType }: AlarmModalProps) {
     const setAlarmInfo = useSetRecoilState(alarmInfoState);
 
-    const handleCloseModal = () => {
+    const handleCloseModal = (e: any) => {
+        e.stopPropagation();
         setAlarmInfo(INIT_ALARM_INFO);
     };
 
