@@ -30,8 +30,11 @@ import {
 
 import { useQuery } from '@tanstack/react-query';
 import { getDate, getDivisionName } from '@/utils/util';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
-interface NotificationDetailPageProps {
+export interface NotificationDetailPageProps {
     state: string;
     appointmentId: number;
 }
@@ -40,7 +43,7 @@ export default function NotificationDetailPage() {
     const { type } = useParams();
     const location = useLocation();
     const { state, appointmentId } = location.state as NotificationDetailPageProps;
-
+    console.log(location);
     const {
         data: detailAppointment,
         isError: isError,
@@ -56,6 +59,8 @@ export default function NotificationDetailPage() {
     const [isPopupSecondText, setIsPopupSecondText] = useState(false);
     const [modalTitle, setModalTitle] = useState('밥약 요청을 수락했어요!');
     const [acceptContent, setAcceptContent] = useState<AcceptContentType>();
+
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const handleAppointmentAccept = () => {
         const reqBody = {
@@ -295,6 +300,11 @@ export default function NotificationDetailPage() {
                         closePopup={handlePopupClose}
                     />
                 </Overlay>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </NotificationDetailPageContainer>
     );

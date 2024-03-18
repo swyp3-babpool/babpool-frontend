@@ -26,6 +26,8 @@ import Loading from '@/components/common/loading/Loading';
 import { loginCheck } from '@/utils/validate';
 import Popup from '@/components/common/popup';
 import Button from '@/components/common/button';
+import { alarmInfoState } from '@/atom/alarminfo';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
 export default function TotalBabpoolPage() {
     const DEFAULT_FILTER_CATEGORY = FILTER_CATEGORY[0];
@@ -37,6 +39,7 @@ export default function TotalBabpoolPage() {
     const [profileCheckModalOpen, setProfileCheckModalOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [searchInfo, setSearchInfo] = useRecoilState(searchInfoState);
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const filterRef = useRef<SearchInfoType>(searchInfo);
@@ -234,6 +237,11 @@ export default function TotalBabpoolPage() {
                             </Overlay>
                         )}
                         {filterModalOpen && <Overlay />}
+                        {alarmInfo.requesterProfileId && (
+                            <AlarmModal
+                                messageType={alarmInfo.messageType}
+                            />
+                        )}
                     </>
                 ) : (
                     <Loading />

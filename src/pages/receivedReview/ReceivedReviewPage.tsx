@@ -12,6 +12,9 @@ import Txt from '@/components/common/text';
 import { colors } from '@/assets/styles/theme';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import LoadingGif from '@/assets/gif/loading.gif';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
 
 export default function ReceivedReviewPage() {
     const { userInfo } = useParams();
@@ -25,6 +28,7 @@ export default function ReceivedReviewPage() {
         queryFn: () => getReviewCounts(userId as string)
     })
 
+    const alarmInfo = useRecoilValue(alarmInfoState);
     console.log(reviewCounts)
 
     const { data, isSuccess, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -97,6 +101,11 @@ export default function ReceivedReviewPage() {
                         )}
                     </ReviewTextContainer>
                 </ReviewContainer>
+                {(alarmInfo.messageType) && (
+                    <AlarmModal
+                        messageType={alarmInfo.messageType}
+                    />
+                )}
             </ReceivedReviewPageContainer>
         )
     );

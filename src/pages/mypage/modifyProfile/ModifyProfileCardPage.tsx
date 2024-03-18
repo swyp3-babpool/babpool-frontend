@@ -46,6 +46,9 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
 import Popup from '@/components/common/popup';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
 
 export interface ModifyProfileInfo {
     division: string;
@@ -119,6 +122,7 @@ export default function ModifyProfileCardPage() {
     const profileImageInputRef = useRef<HTMLInputElement>(null);
     const [isInputVerified, setIsInputVerified] = useState(false);
     const [isContactInputVerified, setIsContactInputVerified] = useState(false);
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -480,6 +484,11 @@ export default function ModifyProfileCardPage() {
                         closePopup={() => setIsPopupOpen(false)}
                     />
                 </Overlay>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </ModifyProfilePageContainer>
     );

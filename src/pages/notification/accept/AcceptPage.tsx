@@ -18,6 +18,9 @@ import {
     QueryBox,
     ThickDevider,
 } from './AcceptPage.styles';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
 
 interface AcceptPageProps {
     appointmentId: number;
@@ -38,14 +41,17 @@ export default function AcceptPage() {
         requesterGrade,
         requesterIntro,
         date,
-        time,
+    time,
         requesterContactPhone,
         requesterContactChat,
         question,
     } = location.state as AcceptContentType;
+
+    const alarmInfo = useRecoilValue(alarmInfoState);
+
     return (
         <AcceptPageContainer>
-            <Header />
+            <Header destination='/'/>
             <Col gap="0" padding="35px 0 55px">
                 <Col gap="18" padding="0" alignItems="center">
                     <IconContainer>
@@ -114,6 +120,11 @@ export default function AcceptPage() {
                     }
                 />
             </ButtonContainer>
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
+            )}
         </AcceptPageContainer>
     );
 }

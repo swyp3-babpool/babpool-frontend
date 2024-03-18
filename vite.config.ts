@@ -16,5 +16,15 @@ export default defineConfig({
     },
     define: {
         global: {},
+        
     },
+    server: {
+        proxy: {
+            '/websocket': {
+                target: 'https://api.babpool.com',
+                ws: true,
+            }
+        }
+    }
+
 });

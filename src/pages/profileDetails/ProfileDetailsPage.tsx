@@ -15,6 +15,9 @@ import { ProfileDetailsType } from '@/interface/api/profileDetailsType';
 import { getDivisionName } from '@/utils/util';
 import { getUserProfile } from '@/api/profile/profileApi';
 import Loading from '@/components/common/loading/Loading';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
 
 export default function ProfileDetailsPage() {
     const { navigate } = useNavigation();
@@ -34,6 +37,8 @@ export default function ProfileDetailsPage() {
         profile.reviewCount.good,
         profile.reviewCount.bad,
     ];
+
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     return (
         <ProfileDetailsPageContainer>
@@ -111,6 +116,11 @@ export default function ProfileDetailsPage() {
                                 }
                             />
                         </ButtonBox>
+                    )}
+                    {(alarmInfo.messageType) && (
+                        <AlarmModal
+                            messageType={alarmInfo.messageType}
+                        />
                     )}
                 </ContentSection>
             ) : (

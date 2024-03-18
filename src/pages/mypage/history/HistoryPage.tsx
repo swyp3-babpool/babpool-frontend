@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import {
     GridContainer,
@@ -20,9 +20,16 @@ import { getDate, getDateTime } from '@/utils/util';
 import { it } from 'node:test';
 import Overlay from '@/components/common/overlay';
 import RejectPopup from '@/components/common/popup/RejectPopup';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
 export default function HistoryPage() {
     const navigate = useNavigate();
+
+    const location = useLocation();
+    console.log(location)
+    const { messageType } = location.state !== null && location.state;
 
     const {
         data: doneList,
@@ -42,9 +49,10 @@ export default function HistoryPage() {
         queryFn: () => getRejectHistory(),
     });
 
-    const [selected, setSelected] = useState('done');
+    const [selected, setSelected] = useState(messageType ? 'reject' : 'done');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [appointmentId, setAppointmentId] = useState(0);
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const handleSelectedToggle = (select: string) => {
         setSelected(select);
@@ -157,6 +165,11 @@ export default function HistoryPage() {
                         closePopup={() => setIsPopupOpen(false)}
                     />
                 </Overlay>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </NotificationPageContainer>
     );

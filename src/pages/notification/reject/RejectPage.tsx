@@ -11,6 +11,9 @@ import Overlay from '@/components/common/overlay';
 import Popup from '@/components/common/popup';
 import { getDivisionName } from '@/utils/util';
 import { appointmentReject } from '@/api/notification/notificationApi';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
 
 interface RejectPageProps {
     appointmentId: number;
@@ -28,6 +31,8 @@ export default function RejectPage() {
         location.state as RejectPageProps;
     const [inputValue, setInputValue] = useState('');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const handleRejectButtonClick = () => {
         const reqBody = {
@@ -79,6 +84,11 @@ export default function RejectPage() {
                         closePopup={() => setIsPopupOpen(false)}
                     />
                 </Overlay>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </RejectPageContainer>
     );
