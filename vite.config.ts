@@ -14,10 +14,6 @@ export default defineConfig({
             },
         ],
     },
-    define: {
-        global: {},
-        
-    },
     server: {
         proxy: {
             '/websocket': {
