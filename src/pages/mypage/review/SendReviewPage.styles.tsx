@@ -10,14 +10,14 @@ export const ReviewPageContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow: hidden;
+    overflow-y: scroll;
 `;
 
 export const ButtonContainer = styled.div`
     box-sizing: border-box;
     width: 100%;
     padding: 0px 30px 40px;
-    position: absolute;
+    position: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
