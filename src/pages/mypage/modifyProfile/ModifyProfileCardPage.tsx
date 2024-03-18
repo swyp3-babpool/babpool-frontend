@@ -66,7 +66,7 @@ export default function ModifyProfileCardPage() {
         isError: isError,
         isLoading: isLoading,
     } = useQuery<ModifyProfileType>({
-        queryKey: [`/api/appointment/list/receive`],
+        queryKey: [`/api/profile/default`, profileId],
         queryFn: () => getModifyProfile(),
     });
 
