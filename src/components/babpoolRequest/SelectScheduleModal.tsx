@@ -49,7 +49,7 @@ export default function SelectScheduleModal({
 
     return (
         !isLoading &&
-        userSchedule && (
+        isOpen && (
             <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
                 <TitleBox>
                     <EmptyDiv />
@@ -60,7 +60,7 @@ export default function SelectScheduleModal({
                 </TitleBox>
                 <CalendarContainer>
                     <ScheduleCalendar
-                        userSchedule={userSchedule}
+                        userSchedule={userSchedule ? userSchedule : []}
                         requestInfo={requestInfo}
                         handleSetPossibleSchedule={handleSetPossibleSchedule}
                     />
