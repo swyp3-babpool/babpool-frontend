@@ -11,6 +11,9 @@ import { useNavigation } from '@/hooks/useNavigation';
 import Overlay from '@/components/common/overlay';
 import Popup from '@/components/common/popup';
 import { deleteAccountRequest } from '@/api/auth/auth';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilValue } from 'recoil';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
 export default function DeleteAccountPage() {
     const reason = [
@@ -25,6 +28,8 @@ export default function DeleteAccountPage() {
     const [selectedReason, setSelectedReason] = useState<string[]>([]);
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const alarmInfo = useRecoilValue(alarmInfoState);
 
     const { goHome, navigate } = useNavigation();
 
@@ -44,18 +49,15 @@ export default function DeleteAccountPage() {
     const handleDeleteAccount = () => {
         const requestBody = {
             exitReason: selectedReason,
-        }
-        deleteAccountRequest(requestBody)
-        .then((res) => {
-            if(res.code === 200) {
+        };
+        deleteAccountRequest(requestBody).then((res) => {
+            if (res.code === 200) {
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('uuid');
                 goHome();
             }
-        })
-    }
-
-    
+        });
+    };
 
     return (
         <DeleteAccountPageContainer>
@@ -126,6 +128,11 @@ export default function DeleteAccountPage() {
                         closePopup={() => setIsPopupOpen(false)}
                     />
                 </Overlay>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </DeleteAccountPageContainer>
     );

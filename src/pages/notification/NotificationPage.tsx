@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
@@ -12,7 +12,7 @@ import {
     getSentBabAppointment,
 } from '@/api/notification/notificationApi';
 import { Col } from '@/components/common/flex/Flex';
-import { getDate, getDateTime } from '@/utils/util';
+import { getDateTime } from '@/utils/util';
 import {
     GridContainer,
     NotificationPageContainer,
@@ -21,6 +21,9 @@ import {
     TabBarTextContainer,
     TextButtonContainer,
 } from './NotificationPage.styles';
+import { alarmInfoState } from '@/atom/alarminfo';
+import { useRecoilState } from 'recoil';
+import AlarmModal from '@/components/common/alarm/AlarmModal';
 
 export default function NotificationPage() {
     const {
@@ -41,8 +44,12 @@ export default function NotificationPage() {
         queryFn: () => getReceivedBabAppointment(),
     });
 
+    const location = useLocation();
+    const { messageType } = location.state !== null && location.state;
+
     const navigate = useNavigate();
-    const [selected, setSelected] = useState('received');
+    const [selected, setSelected] = useState(messageType ? messageType :'received');
+    const [alarmInfo, setAlarmInfo] = useRecoilState(alarmInfoState);
 
     const handleSelectedToggle = (select: string) => {
         setSelected(select);
@@ -56,6 +63,11 @@ export default function NotificationPage() {
         console.log('sentList', sentList);
         console.log('receivedList', receivedList);
     });
+
+    useEffect(() => {
+        localStorage.setItem('isAlarm', '0')
+        setAlarmInfo((prev) => ({...prev, isAlarm: 0}))
+    }, [])
 
     return (
         <NotificationPageContainer>
@@ -138,6 +150,11 @@ export default function NotificationPage() {
                               />
                           ))}
                 </GridContainer>
+            )}
+            {(alarmInfo.messageType) && (
+                <AlarmModal
+                    messageType={alarmInfo.messageType}
+                />
             )}
         </NotificationPageContainer>
     );
