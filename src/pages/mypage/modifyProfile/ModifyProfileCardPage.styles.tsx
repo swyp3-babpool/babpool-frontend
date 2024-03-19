@@ -149,7 +149,7 @@ export const ContactInput = styled.input`
     flex-shrink: 0;
     width: 100%;
     height: 36px;
-    padding: 7px 8px;
+    padding: 7px 20px 7px 8px;
     background-color: ${colors.white};
     font-size: 14px;
     font-weight: 400;
