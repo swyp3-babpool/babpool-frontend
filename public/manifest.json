@@ -2,7 +2,7 @@
     "name": "BabpoolWebApp",
     "short_name": "밥풀",
     "start_url": "/",
-    "display": "browser",
+    "display": "standalone",
     "background_color": "#F8F7DA",
     "theme_color": "#8C383A",
     "description": "Bab-pool PWA-Test",
