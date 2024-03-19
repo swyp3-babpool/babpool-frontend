@@ -37,7 +37,7 @@ export default function RejectPage() {
     const handleRejectButtonClick = () => {
         const reqBody = {
             appointmentId: appointmentId,
-            refuseMessage: inputValue,
+            rejectMessage: inputValue,
         };
         appointmentReject(reqBody).then((res) => {
             if (res.code === 200) {

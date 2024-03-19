@@ -45,6 +45,18 @@ export default function MyPage() {
         queryFn: () => getMypageInfo(),
     });
 
+    const handleNotificationCardClick = (
+        review: boolean,
+        appointmentId: number,
+        userProfileId: number
+    ) => {
+        if (review) {
+            navigate('/mypage/review', {
+                state: { appointmentId: appointmentId, profileId: userProfileId },
+            });
+        }
+    };
+
     const handleModifyProfileButtonClick = () => {
         navigate('/mypage/profile-modify', { state: mypageInfo?.profileId });
     };
@@ -139,6 +151,13 @@ export default function MyPage() {
                                     history.reviewRequired === 'REVIEW_REQUIRED'
                                         ? '후기 보내기'
                                         : getDateTime(history.appointmentFixDateTime)
+                                }
+                                onClick={() =>
+                                    handleNotificationCardClick(
+                                        history.reviewRequired === 'REVIEW_REQUIRED',
+                                        history.appointmentId,
+                                        history.appointmentReceiverProfileId
+                                    )
                                 }
                             />
                         ))}

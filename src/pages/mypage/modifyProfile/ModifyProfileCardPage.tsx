@@ -485,11 +485,7 @@ export default function ModifyProfileCardPage() {
                     />
                 </Overlay>
             )}
-            {(alarmInfo.messageType) && (
-                <AlarmModal
-                    messageType={alarmInfo.messageType}
-                />
-            )}
+            {alarmInfo.messageType && <AlarmModal messageType={alarmInfo.messageType} />}
         </ModifyProfilePageContainer>
     );
 }
