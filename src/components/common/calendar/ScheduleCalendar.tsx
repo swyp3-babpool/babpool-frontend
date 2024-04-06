@@ -28,6 +28,7 @@ export default function ScheduleCalendar({
         ...new Set(userSchedule.map((schedule: UserScheduleType) => schedule.possibleDate)),
     ];
 
+
     // 선택한 날짜의 선택 가능한 스케줄 리스트
     const currentSeletedDateScheduleList = userSchedule.filter((schedule: UserScheduleType) => {
         return schedule.possibleDate === selectedDate;
@@ -64,6 +65,10 @@ export default function ScheduleCalendar({
     useEffect(() => {
         const today = moment().format('YYYY-MM-DD');
         const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        console.log(filterDate)
+        if(filterDate.length === 0) {
+            return;
+        }
         setSelectedDate(filterDate[0].possibleDate)
         setDate(new Date(filterDate[0].possibleDate))
     }, [])
@@ -71,6 +76,10 @@ export default function ScheduleCalendar({
     useEffect(() => {
         const today = moment().format('YYYY-MM-DD');
         const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        console.log(filterDate)
+        if(filterDate.length === 0) {
+            return;
+        }
         setSelectedDate(filterDate[0].possibleDate)
         setDate(new Date(filterDate[0].possibleDate))
     }, [requestInfo])
