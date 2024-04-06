@@ -154,7 +154,7 @@ const CalendarContainer = styled.div`
 
 const SelectScheduleContainer = styled.div`
     width: 100%;
-    height: 245px;
+    height: 230px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
