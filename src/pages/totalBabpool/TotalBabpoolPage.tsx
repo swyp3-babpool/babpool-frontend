@@ -1,6 +1,6 @@
 import { getProfiles, getisRegistrationProfile } from '@/api/profile/profileApi';
 import { colors } from '@/assets/styles/theme';
-import { SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
+import { INIT_SEARCH_INFO, SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
 import Header from '@/components/common/header';
 import Overlay from '@/components/common/overlay';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -69,8 +69,9 @@ export default function TotalBabpoolPage() {
     };
 
     const { data, isError, isLoading } = useQuery<ProfilesType>({
-        queryKey: ['profiles', groupName],
-        queryFn: fetchProfileList,
+        queryKey: ['profiles', searchInfo],
+        queryFn: fetchProfileList, 
+        staleTime: 1000 * 60 * 5,
     });
     const { navigate, authCheck } = useNavigation();
 
@@ -143,6 +144,10 @@ export default function TotalBabpoolPage() {
                       }
                     : INIT_INTEREST_KEYWORD,
         }));
+
+        return () => {
+            setSearchInfo(INIT_SEARCH_INFO);
+        }
     }, [groupName]);
 
     useEffect(() => {
