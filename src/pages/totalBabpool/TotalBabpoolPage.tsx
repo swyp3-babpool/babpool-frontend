@@ -47,6 +47,7 @@ export default function TotalBabpoolPage() {
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
 
+        // 프로필 리스트 요청
     const fetchProfileList = async () => {
         const { searchText, division, filterKeyword } = searchInfo;
         const requestDivision = division.map((item) => getDivisionId(item)).join(',');
@@ -68,7 +69,7 @@ export default function TotalBabpoolPage() {
     };
 
     const { data, isError, isLoading } = useQuery<ProfilesType>({
-        queryKey: ['profiles', searchInfo],
+        queryKey: ['profiles', groupName],
         queryFn: fetchProfileList,
     });
     const { navigate, authCheck } = useNavigation();
@@ -151,6 +152,7 @@ export default function TotalBabpoolPage() {
             });
         }
     }, []);
+
 
     return (
         <>
