@@ -23,7 +23,12 @@ export default function KakaoAuthenticationPage() {
         };
         signInRequest(requestBody).then((res) => {
             console.log(res);
-            const accessToken = res.data.accessToken;
+            if (res.code === 500) {
+                alert('서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                navigate('signin');
+                console.error(res.message);
+                return;
+            }
             if (res.status === 'UNAUTHORIZED' && res.code === 401) {
                 navigate(`/signup/${res.data.userUuid}`);
                 return;
@@ -31,7 +36,8 @@ export default function KakaoAuthenticationPage() {
             console.log(res.code);
             if (res.code === 200) {
                 console.log('로그인 성공.');
-                const grade = [getDivisionName(res.data.userGrade)] as string[]
+                const accessToken = res.data.accessToken;
+                const grade = [getDivisionName(res.data.userGrade)] as string[];
                 localStorage.setItem('accessToken', String(accessToken));
                 localStorage.setItem('uuid', res.data.userUuid);
                 setSearchInfoState((prev) => ({
