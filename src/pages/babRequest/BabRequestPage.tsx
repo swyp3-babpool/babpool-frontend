@@ -125,12 +125,12 @@ export default function BabRequestPage() {
                             <TextContainer>
                                 <Txt variant="h5">일정은 언제로 할까요?*</Txt>
                                 <Txt variant="caption2" color={colors.white_20}>
-                                    최소 1개 이상의 일정을 선택해주세요
+                                    원하는 일정을 선택해주세요
                                 </Txt>
                             </TextContainer>
                             <ScheduleBoxContainer>
                                 <ScheduleBox
-                                    defaultText="첫 번째 일정 선택하기*"
+                                    defaultText="일정 선택하기*"
                                     selectText={
                                         requestInfo.possibleTimeIdList.length >= 1
                                             ? `${getMonthFormatDate(
@@ -145,7 +145,7 @@ export default function BabRequestPage() {
                                     }
                                     onClick={() => handleOpenModal(0)}
                                 />
-                                {requestInfo.possibleTimeIdList.length >= 1 && (
+                                {/* {requestInfo.possibleTimeIdList.length >= 1 && (
                                     <ScheduleBox
                                         defaultText="두 번째 일정 선택하기"
                                         selectText={
@@ -180,7 +180,7 @@ export default function BabRequestPage() {
                                         }
                                         onClick={() => handleOpenModal(2)}
                                     />
-                                )}
+                                )} */}
                             </ScheduleBoxContainer>
                         </ScheduleContainer>
                         <QuestionContainer>
@@ -220,11 +220,7 @@ export default function BabRequestPage() {
                         />
                     </Overlay>
                 )}
-                {(alarmInfo.messageType) && (
-                    <AlarmModal
-                        messageType={alarmInfo.messageType}
-                    />
-                )}
+                {alarmInfo.messageType && <AlarmModal messageType={alarmInfo.messageType} />}
             </>
         )
     );

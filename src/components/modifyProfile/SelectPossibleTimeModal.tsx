@@ -39,10 +39,12 @@ export default function SelectPossibleTimeModal({
     };
 
     const handleSelectTime = (time: number) => {
+        console.log(`time은 ${time}`);
         if (!selectedDates) {
             setSelectedDates({ [selectedDate]: [time] });
             return;
         }
+
         const isExist = selectedDates?.[selectedDate]?.includes(time);
         if (isExist) {
             const filteredTimes = selectedDates[selectedDate].filter((t) => t !== time);
@@ -63,6 +65,15 @@ export default function SelectPossibleTimeModal({
         }
         console.log(selectedDates);
     };
+
+    const entries = Object.entries(SELECT_TIME_SCHEDULE);
+
+    // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
+    const rows = [];
+    for (let i = 0; i < entries.length; i += 4) {
+        const rowItems = entries.slice(i, i + 4);
+        rows.push(rowItems);
+    }
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
@@ -86,7 +97,29 @@ export default function SelectPossibleTimeModal({
             </CalendarContainer>
             <SelectScheduleContainer>
                 <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
-                <Col
+                <SelectTimeContainer>
+                    {rows.map((row, rowIndex) => (
+                        <div key={rowIndex} style={{ display: 'flex', width: '100%' }}>
+                            {row.map(([startTime, time], itemIndex) => (
+                                <SelectTimeItem
+                                    key={itemIndex}
+                                    isSelected={handleCheckIcon(Number(startTime))}
+                                    onClick={() => handleSelectTime(Number(startTime))}
+                                >
+                                    <div>{time}</div>
+                                </SelectTimeItem>
+                            ))}
+                            {/* 마지막 줄이 3개일  경우, 빈 아이템을 추가하여 4개의 크기를 유지합니다 */}
+                            {row.length < 4 && (
+                                <SelectTimeItem
+                                    isSelected={handleCheckIcon(Number(0))}
+                                    style={{ visibility: 'hidden' }}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </SelectTimeContainer>
+                {/* <Col
                     style={{ width: '100%', minWidth: 176, display: 'grid' }}
                     gap={12}
                     alignItems="center"
@@ -117,7 +150,7 @@ export default function SelectPossibleTimeModal({
                             </Txt>
                         </Row>
                     ))}
-                </Col>
+                </Col> */}
             </SelectScheduleContainer>
         </SelectScheduleModalModalContainer>
     );
@@ -174,4 +207,29 @@ const IconButton = styled.div`
     width: 16px;
     height: 16px;
     cursor: pointer;
+`;
+
+const SelectTimeContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    background-color: inherit;
+`;
+const SelectTimeItem = styled.div<{ isSelected: boolean }>`
+    flex: 1 0 calc(25% - 16px); /* 1/4 크기로 나누기 */
+    background-color: ${(props) =>
+        props.isSelected ? `${colors.purple_light_20}` : `${colors.white}`};
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    color: ${colors.white_40};
+    margin-right: 10px; /* 오른쪽 여백 설정 */
+
+    font-size: 13px;
+
+    /* 마지막 요소는 오른쪽 여백을 없애기 위해 margin-right를 0으로 설정합니다 */
+    &:last-child {
+        margin-right: 0;
+    }
 `;

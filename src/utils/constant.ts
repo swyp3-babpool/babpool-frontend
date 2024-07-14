@@ -10,23 +10,40 @@ import 손 from '../assets/images/손.webp';
 import 신분증 from '../assets/images/신분증.webp';
 
 export type FilterCategoryType = '구분' | '관심 키워드';
-export type DivisionType = '1학년' | '2학년' | '3학년' | '4학년' | '졸업생' | '대학원생'
+export type DivisionType = '1학년' | '2학년' | '3학년' | '4학년' | '졸업생' | '대학원생';
 
-export const DIVISION = ['1학년', '2학년', '3학년', '4학년', '졸업생', '대학원생'] as DivisionType[];
+export const DIVISION = [
+    '1학년',
+    '2학년',
+    '3학년',
+    '4학년',
+    '졸업생',
+    '대학원생',
+] as DivisionType[];
 
 export const INTEREST_KEYWORD = {
-    'university': ['전공', '편입생', '자취', '동아리', '대외활동', '스터디', '유학생', '네트워킹'],
-    'exam': ['공직', '기사', '스터디', '전문직'],
-    'employment': ['대기업', '스타트업', '진로탐색', '자기소개/이력서', '포트폴리오', '인턴', '해외취업', '면접', '창업'],
-    'graduateSchool': ['석사', '박사', '대학원 준비']
-}
+    university: ['전공', '편입생', '자취', '동아리', '대외활동', '스터디', '유학생', '네트워킹'],
+    exam: ['공직', '기사', '스터디', '전문직'],
+    employment: [
+        '대기업',
+        '스타트업',
+        '진로탐색',
+        '자기소개/이력서',
+        '포트폴리오',
+        '인턴',
+        '해외취업',
+        '면접',
+        '창업',
+    ],
+    graduateSchool: ['석사', '박사', '대학원 준비'],
+};
 
 export const INIT_INTEREST_KEYWORD = {
-    'university': [] as string[],
-    'exam': [] as string[],
-    'employment': [] as string[],
-    'graduateSchool': [] as string[]
-}
+    university: [] as string[],
+    exam: [] as string[],
+    employment: [] as string[],
+    graduateSchool: [] as string[],
+};
 
 export const WORTH_LIST = [
     {
@@ -69,44 +86,44 @@ export const WORTH_LIST = [
         sDesc: '나누는 여유도 가져봐요',
         imgSrc: 즐거움,
     },
-]
+];
 
 export const HOW_TO_USE_LIST = [
     {
         title: '01 회원가입하고 프로필카드 만들기',
         desc: '카카오 로그인을 통해 빠르게 회원가입하고 밥풀러 프로필카드를 작성하세요.',
-        imgSrc: 신분증
+        imgSrc: 신분증,
     },
     {
         title: '02 밥풀러 찾고 밥약 요청하기',
         desc: '원하는 밥풀러를 찾아 밥약을 보내세요. 밥약이 가능한 날짜와 시간을 선택하고, 궁금하신 내용을 함께 보내주세요. 밥약이 수락되면 연락 수단이 공개돼요.',
-        imgSrc: 밥
+        imgSrc: 밥,
     },
     {
         title: '03 밥풀러 후기 작성하기',
         desc: '밥약 이후 밥풀러에 대한 솔직한 후기를 작성하세요. 상대방의 대화 태도와 정보의 유용성을 평가하여 다른 이용자들과 경험을 공유할 수 있어요.',
-        imgSrc: 손
-    }
-]
+        imgSrc: 손,
+    },
+];
 
 export const FILTER_CATEGORY = ['구분', '관심 키워드'] as FilterCategoryType[];
 
 export const SELECT_TIME_SCHEDULE = {
-    8: '오전 8:00 ~ 오전 9:00',
-    9: '오전 9:00 ~ 오전 10:00',
-    10: '오전 10:00 ~ 오전 11:00',
-    11: '오전 11:00 ~ 오후 12:00',
-    12: '오후 12:00 ~ 오후 1:00',
-    13: '오후 1:00 ~ 오후 2:00',
-    14: '오후 2:00 ~ 오후 3:00',
-    15: '오후 3:00 ~ 오후 4:00',
-    16: '오후 4:00 ~ 오후 5:00',
-    17: '오후 5:00 ~ 오후 6:00',
-    18: '오후 6:00 ~ 오후 7:00',
-    19: '오후 7:00 ~ 오후 8:00',
-    20: '오후 8:00 ~ 오후 9:00',
-    21: '오후 9:00 ~ 오후 10:00',
-    22: '오후 10:00 ~ 오후 11:00',
-}
+    8: '오전 8:00',
+    9: '오전 9:00',
+    10: '오전 10:00',
+    11: '오전 11:00',
+    12: '오후 12:00',
+    13: '오후 1:00',
+    14: '오후 2:00',
+    15: '오후 3:00',
+    16: '오후 4:00',
+    17: '오후 5:00',
+    18: '오후 6:00',
+    19: '오후 7:00',
+    20: '오후 8:00',
+    21: '오후 9:00',
+    22: '오후 10:00',
+};
 
 export const WEEKS = ['일', '월', '화', '수', '목', '금', '토'];

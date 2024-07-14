@@ -8,17 +8,20 @@ import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 type SelectTimeBoxProps = {
     schedule: UserScheduleType;
     handleSelectSchedule: (selectedSchedule: UserScheduleType) => void;
-}
+};
 
-export default function SelectTimeBox({schedule, handleSelectSchedule}: SelectTimeBoxProps) {
+export default function SelectTimeBox({ schedule, handleSelectSchedule }: SelectTimeBoxProps) {
     return (
         <SelectTimeBoxContainer onClick={() => handleSelectSchedule(schedule)}>
-            <Txt variant='caption3'>{SELECT_TIME_SCHEDULE[schedule.possibleTime as keyof typeof SELECT_TIME_SCHEDULE]}</Txt>
+            <Txt variant="caption3">
+                {SELECT_TIME_SCHEDULE[schedule.possibleTime as keyof typeof SELECT_TIME_SCHEDULE]}
+            </Txt>
         </SelectTimeBoxContainer>
     );
 }
 
 const SelectTimeBoxContainer = styled.div`
+    flex: 0 1 calc(25% - 16px);
     width: 100%;
     height: 50px;
     padding: 15px 16px;
@@ -30,5 +33,4 @@ const SelectTimeBoxContainer = styled.div`
     &:hover {
         border: 2px solid ${colors.purple_light_40};
     }
-`
-
+`;
