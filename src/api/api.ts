@@ -43,6 +43,13 @@ client.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
+
+        // 로컬식별키 헤더에 추가
+        if (import.meta.env.VITE_HTTP_HEADER_X_BABPOOL_LOCAL_FRONT) {
+            config.headers['x-babpool-local-front'] =
+                import.meta.env.VITE_HTTP_HEADER_X_BABPOOL_LOCAL_FRONT;
+        }
+
         return config;
     },
     (error) => {
