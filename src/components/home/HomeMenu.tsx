@@ -26,7 +26,7 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
             console.log(res);
             if(res.code === 200) {
                 localStorage.removeItem('accessToken');
-                localStorage.removeItem('uuid');
+                localStorage.removeItem('userId');
                 setIsLogin(false);
                 setIsLogoutPopup(false);
                 handleMenu()

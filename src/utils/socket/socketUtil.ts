@@ -33,11 +33,11 @@ export class WebSocketService {
   }
 
   private subscribeToNotifications(): void {
-    const uuid = localStorage.getItem('uuid');
+    const userId = localStorage.getItem('userId');
     // const setAlarmInfo = useSetRecoilState(alarmInfoState)
-    if(!uuid) return
+    if(!userId) return
     console.log('연결')
-    this.client.subscribe(`/topic/appointment/${uuid}`, (message: any) => {
+    this.client.subscribe(`/topic/appointment/${userId}`, (message: any) => {
       
       // 알림, 채팅 데이터가 있을 경우 JSON 파싱
       if (message.body) {

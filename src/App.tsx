@@ -14,11 +14,11 @@ function App() {
     const client = useRef<Client | null>(null);
 
     const handleSubscribeToNotifications = () => {
-        const uuid = localStorage.getItem('uuid');
+        const userId = localStorage.getItem('userId');
         // const setAlarmInfo = useSetRecoilState(alarmInfoState)
-        if (uuid && client.current !== null) {
-            console.log(`${uuid} 연결`);
-            client.current.subscribe(`/topic/appointment/${uuid}`, (message: any) => {
+        if (userId && client.current !== null) {
+            console.log(`${userId} 연결`);
+            client.current.subscribe(`/topic/appointment/${userId}`, (message: any) => {
                 // 알림, 채팅 데이터가 있을 경우 JSON 파싱
                 if (message.body) {
                     const body = JSON.parse(message.body);

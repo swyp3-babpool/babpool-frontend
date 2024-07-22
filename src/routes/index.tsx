@@ -32,7 +32,7 @@ export default function RouteProvider() {
                 <Route index element={<HomePage />} />
                 <Route path="/auth/kakao/callback" element={<KakaoAuthenticationPage />} />
                 <Route path="signin" element={<SignInPage />} />
-                <Route path="signup/:uuid" element={<SignUpPage />} />
+                <Route path="signup/:userId" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userInfo/review" element={<AuthRoute><ReceivedReviewPage /></AuthRoute>} />
