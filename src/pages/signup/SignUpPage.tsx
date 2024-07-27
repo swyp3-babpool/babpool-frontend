@@ -22,7 +22,7 @@ export interface SignUpInfo {
 }
 
 export default function SignUpPage() {
-    const { uuid } = useParams();
+    const { userId } = useParams();
     const { handleNavigate } = useNavigation();
 
     const [signUpInfo, setSignUpInfo] = useState<SignUpInfo>({
@@ -39,12 +39,12 @@ export default function SignUpPage() {
     const [isSignUpError, setIsSignUpError] = useState(false);
 
     const handleSignUp = () => {
-        // uuid가 없을 때 에러 발생
-        if (!uuid) {
+        // userId 없을 때 에러 발생
+        if (!userId) {
             setIsSignUpError(true);
         }
         const signUpRequestBody = {
-            userUuid: uuid as string,
+            userId: userId as string,
             userGrade: getDivisionId(signUpInfo.division) as string,
             keywords: Object.values(signUpInfo.keywordGroups).flat().map((keyword) => getKeywordId(keyword)),
         };
@@ -54,7 +54,7 @@ export default function SignUpPage() {
                 console.log(res)
                 setCompletePopupOpen(true);
                 localStorage.setItem('accessToken', res.data.accessToken);
-                localStorage.setItem('uuid', res.data.userUuid);
+                localStorage.setItem('userId', res.data.userId);
             }
         }).catch(console.error)
     };
@@ -71,7 +71,7 @@ export default function SignUpPage() {
         return division && keywordTotalLength > 0 ? true : false;
     };
 
-    // uuid가 없을 경우 다시 로그인 페이지로 이동
+    // userId가 없을 경우 다시 로그인 페이지로 이동
     const handleErrorClose = () => {
         handleNavigate('/signin');
         setIsSignUpError(false);
