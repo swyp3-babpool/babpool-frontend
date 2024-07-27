@@ -1,12 +1,12 @@
 export interface AuthResponseType {
-    userUuid: string;
+    userId: string;
     userGrade: string;
     accessToken: string;
     isRegistered: boolean;
 }
 
 export type SignUpRequestDataType = {
-    userUuid: string;
+    userId: string;
     userGrade: string;
     keywords: number[];
 };
