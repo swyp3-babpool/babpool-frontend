@@ -44,7 +44,7 @@ import {
     modifyProfileRequest,
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
-import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
+import { getDate, getDivisionId, getDivisionName, getHour, getKeywordId, getMonthFormatDate } from '@/utils/util';
 import Popup from '@/components/common/popup';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
@@ -63,6 +63,7 @@ export interface ModifyProfileInfo {
 export default function ModifyProfileCardPage() {
     const location = useLocation();
     const profileId = location.state as number;
+
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const {
         data: defaultProfileInfo,
@@ -73,12 +74,16 @@ export default function ModifyProfileCardPage() {
         queryFn: () => getModifyProfile(),
     });
 
+
+
+    // const userId = defaultProfileInfo.userId;
+
     const {
         data: userSchedule,
         isError: isLoadingPossibleTime,
         isLoading: isErrorPossibleTime,
     } = useQuery<GetModifyProfilePossibleTimeType[]>({
-        queryKey: [`/api/appointment/${profileId}/datetime`, profileId],
+        queryKey: [`/api/possible/datetime/${profileId}`, profileId],
         queryFn: () => getModifyProfileAvailableSchedule(profileId),
         enabled: !!profileId,
     });
@@ -109,7 +114,7 @@ export default function ModifyProfileCardPage() {
         },
     });
 
-    const [possibleDate, setPossibleDate] = useState<TimeRange>({});
+    const [possibleDate, setPossibleDate] = useState<string[]>([]);
     const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clickedAlbumButton, setClickedAlbumButton] = useState(false);
@@ -148,9 +153,7 @@ export default function ModifyProfileCardPage() {
         if (!contactInput) {
             return false;
         }
-        if (Object.keys(possibleDate).length === 0) {
-            return false;
-        }
+
         if (
             !modifyProfileInfo ||
             Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
@@ -174,8 +177,10 @@ export default function ModifyProfileCardPage() {
             keywords: Object.values(modifyProfileInfo.keywordGroups)
                 .flat()
                 .map((keyword) => getKeywordId(keyword)),
-            possibleDate: possibleDate,
         };
+
+        console.log("requsetBody는", typeof reqBody.keywords[0])
+
         const formData = new FormData();
         if (file) {
             formData.append('profileImageFile', file);
@@ -280,20 +285,8 @@ export default function ModifyProfileCardPage() {
         }
     }, [contactInput]);
 
-    useEffect(() => {
-        if (userSchedule) {
-            const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
-                if (acc[schedule.possibleDate]) {
-                    acc[schedule.possibleDate].push(schedule.possibleTime);
-                } else {
-                    acc[schedule.possibleDate] = [schedule.possibleTime];
-                }
-                return acc;
-            }, {} as TimeRange);
-            setPossibleDate(dates);
-        }
-    }, [userSchedule]);
 
+    console.log("여기 콘솔있음🔥",userSchedule)
     return (
         <ModifyProfilePageContainer>
             <Header text="프로필카드 수정" destination="/mypage" />

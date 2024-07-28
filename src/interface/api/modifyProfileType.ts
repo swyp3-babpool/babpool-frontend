@@ -21,9 +21,7 @@ export interface ModifyProfileType {
 }
 
 export interface GetModifyProfilePossibleTimeType {
-    profileId: number;
-    possibleTimeId: number;
-    possibleDateId: number;
-    possibleDate: string;
-    possibleTime: number;
+    possibleDateTimeId: number;
+    possibleDateTime: string;
+    possibleDateTimeStatus: string;
 }

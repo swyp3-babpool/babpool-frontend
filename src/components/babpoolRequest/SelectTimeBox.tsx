@@ -4,6 +4,7 @@ import Txt from '../common/text';
 import { colors } from '@/assets/styles/theme';
 import { UserScheduleType } from '@/interface/api/babRequestType';
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
+import { getHour } from '@/utils/util.ts';
 
 type SelectTimeBoxProps = {
     schedule: UserScheduleType;
@@ -11,10 +12,13 @@ type SelectTimeBoxProps = {
 };
 
 export default function SelectTimeBox({ schedule, handleSelectSchedule }: SelectTimeBoxProps) {
+
+
+
     return (
         <SelectTimeBoxContainer onClick={() => handleSelectSchedule(schedule)}>
             <Txt variant="caption3">
-                {SELECT_TIME_SCHEDULE[schedule.possibleTime as keyof typeof SELECT_TIME_SCHEDULE]}
+                {SELECT_TIME_SCHEDULE[getHour(schedule.possibleDateTime) as keyof typeof SELECT_TIME_SCHEDULE]}
             </Txt>
         </SelectTimeBoxContainer>
     );
