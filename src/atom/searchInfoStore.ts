@@ -1,5 +1,5 @@
-import { INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from "@/utils/constant";
-import { atom } from "recoil";
+import { INIT_INTEREST_KEYWORD, INTEREST_KEYWORD } from '@/utils/constant';
+import { atom } from 'recoil';
 
 export type SearchInfoType = {
     searchText: string;
@@ -13,13 +13,15 @@ export type SearchInfoType = {
     page: number;
 };
 
+export const INIT_SEARCH_INFO = {
+    searchText: '',
+    division: [] as string[],
+    filterKeyword: INIT_INTEREST_KEYWORD,
+    prevFilterKeyword: INIT_INTEREST_KEYWORD,
+    page: 0,
+};
+
 export const searchInfoState = atom({
     key: 'searchInfoState',
-    default: {
-        searchText: '',
-        division: [] as string[],
-        filterKeyword: INIT_INTEREST_KEYWORD,
-        prevFilterKeyword: INIT_INTEREST_KEYWORD,
-        page: 0,
-    }
-})
+    default: INIT_SEARCH_INFO,
+});

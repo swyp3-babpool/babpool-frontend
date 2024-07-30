@@ -1,6 +1,6 @@
 import { getProfiles, getisRegistrationProfile } from '@/api/profile/profileApi';
 import { colors } from '@/assets/styles/theme';
-import { SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
+import { INIT_SEARCH_INFO, SearchInfoType, searchInfoState } from '@/atom/searchInfoStore';
 import Header from '@/components/common/header';
 import Overlay from '@/components/common/overlay';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -47,6 +47,7 @@ export default function TotalBabpoolPage() {
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
 
+        // 프로필 리스트 요청
     const fetchProfileList = async () => {
         const { searchText, division, filterKeyword } = searchInfo;
         const requestDivision = division.map((item) => getDivisionId(item)).join(',');
@@ -69,7 +70,8 @@ export default function TotalBabpoolPage() {
 
     const { data, isError, isLoading } = useQuery<ProfilesType>({
         queryKey: ['profiles', searchInfo],
-        queryFn: fetchProfileList,
+        queryFn: fetchProfileList, 
+        staleTime: 1000 * 60 * 5,
     });
     const { navigate, authCheck } = useNavigation();
 
@@ -143,6 +145,10 @@ export default function TotalBabpoolPage() {
                       }
                     : INIT_INTEREST_KEYWORD,
         }));
+
+        return () => {
+            setSearchInfo(INIT_SEARCH_INFO);
+        }
     }, [groupName]);
 
     useEffect(() => {
@@ -152,6 +158,7 @@ export default function TotalBabpoolPage() {
             });
         }
     }, []);
+
 
     return (
         <>
