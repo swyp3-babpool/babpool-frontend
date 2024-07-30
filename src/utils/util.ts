@@ -106,60 +106,66 @@ export const getDivisionName = (divisionId: string) => {
 export const getKeywordId = (keyword: string) => {
     switch (keyword) {
         case '전공':
-            return 1;
+            return '598340246278506499';
         case '편입생':
-            return 2;
+            return '598340246278506500';
         case '자취':
-            return 3;
+            return '598340246278506501';
         case '동아리':
-            return 4;
+            return '598340246278506502';
         case '스터디':
-            return 5;
+            return '598340246282702823';
         case '대외활동':
-            return 6;
+            return '598340246282702824';
         case '유학생':
-            return 7;
+            return '598340246282702825';
         case '네트워킹':
-            return 8;
+            return '598340246282702826';
         case '공직':
-            return 9;
+            return '598340246282702827';
         case '기사':
-            return 10;
+            return '598340246286893150';
         case '스터디':
-            return 11;
+            return '598340246286893151';
         case '전문직':
-            return 12;
+            return '598340246286893152';
         case '대기업':
-            return 13;
+            return '598340246286893153';
         case '스타트업':
-            return 14;
+            return '598340246291091010';
         case '진로탐색':
-            return 15;
+            return '598340246299478613';
         case '자기소개/이력서':
-            return 16;
+            return '598340246299478614';
         case '포트폴리오':
-            return 17;
+            return '598340246299478615';
         case '인턴':
-            return 18;
+            return '598340246303671397';
         case '해외취업':
-            return 19;
+            return '598340246307867864';
         case '면접':
-            return 20;
+            return '598340246312059814';
         case '창업':
-            return 21;
+            return '598340246312059815';
         case '석사':
-            return 22;
+            return '598340246316256184';
         case '박사':
-            return 23;
+            return '598340246320448759';
         case '대학원 준비':
-            return 24;
+            return '598340246320448760';
         default:
-            return 0;
+            return '0';
     }
-};
+}
+
 
 export const getMonthFormatDate = (date: Date | string) => {
     const day = new Date(date).getDay();
     const formatDate = moment(date).locale('ko').format('MM/DD');
     return `${formatDate} (${WEEKS[day]})`;
 };
+
+export function getHour(date: Date | string) {
+    const hour = new Date(date).getHours();
+    return hour;
+}

@@ -74,6 +74,7 @@ export default function TotalBabpoolPage() {
     const { navigate, authCheck } = useNavigation();
 
     const handleProfileSelect = (profile: ProfileType) => {
+        console.log("콘솔가동중", profile)
         if (!authCheck()) {
         }
         if (!isProfileRegister) {

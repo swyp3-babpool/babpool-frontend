@@ -12,7 +12,7 @@ export const getModifyProfile = async () => {
 };
 
 export const getModifyProfileAvailableSchedule = async (profileId: number) => {
-    const res = (await get(`/api/appointment/${profileId}/datetime`)) as CommonResponseType<
+    const res = (await get(`/api/possible/datetime/${profileId}`)) as CommonResponseType<
         GetModifyProfilePossibleTimeType[]
     >;
     console.log(res);
@@ -21,5 +21,10 @@ export const getModifyProfileAvailableSchedule = async (profileId: number) => {
 
 export const modifyProfileRequest = async (reqBody: any) => {
     const res = (await post(`/api/profile/update`, reqBody)) as CommonResponseType<any>;
+    return res;
+};
+
+export const modifyTimeSchedule = async (reqBody: any) => {
+    const res = (await post(`/api/possible/datetime`, reqBody)) as CommonResponseType<any>;
     return res;
 };
