@@ -8,7 +8,7 @@ export interface AuthResponseType {
 export type SignUpRequestDataType = {
     userId: string;
     userGrade: string;
-    keywords: number[];
+    keywords: string[];
 };
 
 export type SignInRequestDataType = {

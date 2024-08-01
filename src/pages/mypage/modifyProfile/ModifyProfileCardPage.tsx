@@ -44,7 +44,7 @@ import {
     modifyProfileRequest,
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
-import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
+import { getDivisionId, getDivisionName } from '@/utils/util';
 import Popup from '@/components/common/popup';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
@@ -170,7 +170,7 @@ export default function ModifyProfileCardPage() {
             profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : '',
             keywords: Object.values(modifyProfileInfo.keywordGroups)
                 .flat()
-                .map((keyword) => getKeywordId(keyword)),
+                .map((keyword) => keyword),
             // possibleDate: possibleDate,
         };
         const formData = new FormData();

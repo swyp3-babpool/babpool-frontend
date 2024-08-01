@@ -6,7 +6,7 @@ import Popup from '@/components/common/popup';
 import DivisionGroup from '@/components/signup/DivisionGroup';
 import KeywordGroup from '@/components/signup/KeywordGroup';
 import { useNavigation } from '@/hooks/useNavigation';
-import { getDivisionId, getKeywordId } from '@/utils/util';
+import { getDivisionId } from '@/utils/util';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -46,7 +46,7 @@ export default function SignUpPage() {
         const signUpRequestBody = {
             userId: userId as string,
             userGrade: getDivisionId(signUpInfo.division) as string,
-            keywords: Object.values(signUpInfo.keywordGroups).flat().map((keyword) => getKeywordId(keyword)),
+            keywords: Object.values(signUpInfo.keywordGroups).flat().map((keyword) => keyword),
         };
         signUpRequest(signUpRequestBody)
         .then((res) => {
