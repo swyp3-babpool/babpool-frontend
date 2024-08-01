@@ -44,7 +44,7 @@ import {
     modifyProfileRequest,
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
-import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
+import { getDivisionId, getDivisionName } from '@/utils/util';
 import Popup from '@/components/common/popup';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
@@ -73,15 +73,15 @@ export default function ModifyProfileCardPage() {
         queryFn: () => getModifyProfile(),
     });
 
-    const {
-        data: userSchedule,
-        isError: isLoadingPossibleTime,
-        isLoading: isErrorPossibleTime,
-    } = useQuery<GetModifyProfilePossibleTimeType[]>({
-        queryKey: [`/api/appointment/${profileId}/datetime`, profileId],
-        queryFn: () => getModifyProfileAvailableSchedule(profileId),
-        enabled: !!profileId,
-    });
+    // const {
+    //     data: userSchedule,
+    //     isError: isLoadingPossibleTime,
+    //     isLoading: isErrorPossibleTime,
+    // } = useQuery<GetModifyProfilePossibleTimeType[]>({
+    //     queryKey: [`/api/appointment/${profileId}/datetime`, profileId],
+    //     queryFn: () => getModifyProfileAvailableSchedule(profileId),
+    //     enabled: !!profileId,
+    // });
 
     const [file, setFile] = useState<File>();
 
@@ -109,7 +109,7 @@ export default function ModifyProfileCardPage() {
         },
     });
 
-    const [possibleDate, setPossibleDate] = useState<TimeRange>({});
+    // const [possibleDate, setPossibleDate] = useState<TimeRange>({});
     const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clickedAlbumButton, setClickedAlbumButton] = useState(false);
@@ -148,9 +148,6 @@ export default function ModifyProfileCardPage() {
         if (!contactInput) {
             return false;
         }
-        if (Object.keys(possibleDate).length === 0) {
-            return false;
-        }
         if (
             !modifyProfileInfo ||
             Object.values(modifyProfileInfo.keywordGroups).every((array) => array.length === 0)
@@ -173,8 +170,8 @@ export default function ModifyProfileCardPage() {
             profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : '',
             keywords: Object.values(modifyProfileInfo.keywordGroups)
                 .flat()
-                .map((keyword) => getKeywordId(keyword)),
-            possibleDate: possibleDate,
+                .map((keyword) => keyword),
+            // possibleDate: possibleDate,
         };
         const formData = new FormData();
         if (file) {
@@ -257,7 +254,6 @@ export default function ModifyProfileCardPage() {
         introduce,
         selectedContactType,
         contactInput,
-        possibleDate,
         modifyProfileInfo,
         isContactInputVerified,
     ]);
@@ -280,19 +276,19 @@ export default function ModifyProfileCardPage() {
         }
     }, [contactInput]);
 
-    useEffect(() => {
-        if (userSchedule) {
-            const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
-                if (acc[schedule.possibleDate]) {
-                    acc[schedule.possibleDate].push(schedule.possibleTime);
-                } else {
-                    acc[schedule.possibleDate] = [schedule.possibleTime];
-                }
-                return acc;
-            }, {} as TimeRange);
-            setPossibleDate(dates);
-        }
-    }, [userSchedule]);
+    // useEffect(() => {
+    //     if (userSchedule) {
+    //         const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
+    //             if (acc[schedule.possibleDate]) {
+    //                 acc[schedule.possibleDate].push(schedule.possibleTime);
+    //             } else {
+    //                 acc[schedule.possibleDate] = [schedule.possibleTime];
+    //             }
+    //             return acc;
+    //         }, {} as TimeRange);
+    //         setPossibleDate(dates);
+    //     }
+    // }, [userSchedule]);
 
     return (
         <ModifyProfilePageContainer>
@@ -421,30 +417,6 @@ export default function ModifyProfileCardPage() {
                     signUpInfo={modifyProfileInfo}
                     setSignUpInfo={setModifyProfileInfo}
                 />
-                <Col gap={16}>
-                    <Col gap={8}>
-                        <Txt variant="h5" color={colors.black}>
-                            밥약이 가능한 시간대*
-                        </Txt>
-                        <Txt variant="caption2" color={colors.white_30}>
-                            밥약이 가능한 시간대를 날짜별로 선택해주세요
-                            <br />
-                            선택하신 시간대로 밥약 요청이 접수돼요
-                        </Txt>
-                    </Col>
-                    <AddPossibleTimeButton
-                        isExist={Object.keys(possibleDate).length > 0}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        {Object.keys(possibleDate).length > 0 ? (
-                            <Txt variant="body" color={colors.purple_light_40}>
-                                확인/수정하기
-                            </Txt>
-                        ) : (
-                            <PlusIcon />
-                        )}
-                    </AddPossibleTimeButton>
-                </Col>
                 <ButtonContainer>
                     <Button
                         text="완료"
@@ -461,12 +433,12 @@ export default function ModifyProfileCardPage() {
                 accept="image/jpeg, image/png"
                 onChange={handleProfileImgFileChange}
             />
-            <SelectPossibleTimeModal
+            {/* <SelectPossibleTimeModal
                 selectedDates={possibleDate}
                 setSelectedDates={setPossibleDate}
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
-            />
+            /> */}
             {(isModalOpen || clickedAlbumButton) && (
                 <Overlay onClick={() => setClickedAlbumButton(false)} />
             )}
