@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
@@ -13,17 +13,21 @@ import { Value } from 'node_modules/react-calendar/dist/esm/shared/types';
 import moment from 'moment';
 import { TimeRange } from '@/interface/api/modifyProfileType';
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
+import Button from '@/components/common/button';
+import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
 
 type SelectPossibleTimeModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    selectedDates?: TimeRange;
-    setSelectedDates: (dates: TimeRange) => void;
+    initialDates: string[];
+    selectedDates: string[];
+    setSelectedDates: (dates: string[]) => void;
 };
 
 export default function SelectPossibleTimeModal({
     isOpen,
     onClose,
+    initialDates,
     selectedDates,
     setSelectedDates,
 }: SelectPossibleTimeModalProps) {
@@ -31,41 +35,64 @@ export default function SelectPossibleTimeModal({
     const [selectedDate, setSelectedDate] = useState<string>(
         moment(new Date()).format('YYYY-MM-DD')
     );
+    const [isSelectVerified, setIsSelectVerified] = useState(false);
 
-    const handleCheckIcon = (time: number) => {
+    console.log(selectedDates);
+
+    const checkSelected = (time: number) => {
         if (!selectedDates) return false;
-        const isExist = selectedDates[selectedDate]?.includes(time);
+        const isExist = selectedDates.some((date) => date.startsWith(`${selectedDate}T${time}`));
+        // console.log('isExist는', isExist, selectedDates);
+
         return isExist;
     };
 
     const handleSelectTime = (time: number) => {
-        console.log(`time은 ${time}`);
+        const dateTimeString = `${selectedDate}T${time}:00`;
+
         if (!selectedDates) {
-            setSelectedDates({ [selectedDate]: [time] });
+            setSelectedDates([dateTimeString]);
             return;
         }
 
-        const isExist = selectedDates?.[selectedDate]?.includes(time);
+        const isExist = selectedDates.some((date) => date.startsWith(`${selectedDate}T${time}`));
+        console.log('console2', isExist, dateTimeString);
+
         if (isExist) {
-            const filteredTimes = selectedDates[selectedDate].filter((t) => t !== time);
-            if (filteredTimes.length === 0) {
-                const { [selectedDate]: _, ...rest } = selectedDates;
-                setSelectedDates(rest);
-            } else {
-                setSelectedDates({
-                    ...(selectedDates || {}),
-                    [selectedDate]: filteredTimes,
-                });
-            }
+            const filteredTimes = selectedDates.filter(
+                (date) => !date.startsWith(`${selectedDate}T${time}`)
+            );
+            setSelectedDates(filteredTimes);
         } else {
-            setSelectedDates({
-                ...(selectedDates || {}),
-                [selectedDate]: [...((selectedDates && selectedDates[selectedDate]) || []), time],
-            });
+            setSelectedDates([...selectedDates, dateTimeString]);
         }
-        console.log(selectedDates);
     };
 
+    const handleTimeSubmit = () => {
+        // addList: selectedDates에 있지만 initialDates에 없는 항목
+        const addList = selectedDates.filter((date) => !initialDates.includes(`${date}`));
+
+        const currentDate = new Date();
+
+        // delList: initialDates에 있지만 selectedDates에 없는 항목
+        const delList = initialDates.filter(
+            (date) => currentDate < new Date(date) && !selectedDates.includes(date)
+        );
+
+        const reqBody = {
+            possibleDateTimeAddList: addList,
+            possibleDateTimeDelList: delList,
+        };
+
+        console.log('보내기전!!! ', initialDates, 'selected', selectedDates, reqBody);
+        modifyTimeSchedule(reqBody).then((res) => {
+            if (res.code === 200) {
+                window.alert('일정 업데이트가 완료되었습니다!');
+            } else if (res.code === 400) {
+                console.log('에러발생🚨', res.message);
+            }
+        });
+    };
     const entries = Object.entries(SELECT_TIME_SCHEDULE);
 
     // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
@@ -76,6 +103,11 @@ export default function SelectPossibleTimeModal({
     }
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
+
+    //선택된 날짜가 있으면 완료 버튼 활성화
+    useEffect(() => {
+        setIsSelectVerified(Object.keys(selectedDates || {}).length > 0);
+    }, [selectedDates]);
 
     return (
         <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
@@ -89,6 +121,7 @@ export default function SelectPossibleTimeModal({
             <CalendarContainer>
                 <PossibleTimeCalendar
                     onClose={onClose}
+                    initialDates={initialDates}
                     selectedDate={selectedDate}
                     setSelectedDate={setSelectedDate}
                     selectedDates={selectedDates}
@@ -103,7 +136,7 @@ export default function SelectPossibleTimeModal({
                             {row.map(([startTime, time], itemIndex) => (
                                 <SelectTimeItem
                                     key={itemIndex}
-                                    isSelected={handleCheckIcon(Number(startTime))}
+                                    isSelected={checkSelected(Number(startTime))}
                                     onClick={() => handleSelectTime(Number(startTime))}
                                 >
                                     <div>{time}</div>
@@ -112,45 +145,21 @@ export default function SelectPossibleTimeModal({
                             {/* 마지막 줄이 3개일  경우, 빈 아이템을 추가하여 4개의 크기를 유지합니다 */}
                             {row.length < 4 && (
                                 <SelectTimeItem
-                                    isSelected={handleCheckIcon(Number(0))}
+                                    isSelected={checkSelected(Number(0))}
                                     style={{ visibility: 'hidden' }}
                                 />
                             )}
                         </div>
                     ))}
                 </SelectTimeContainer>
-                {/* <Col
-                    style={{ width: '100%', minWidth: 176, display: 'grid' }}
-                    gap={12}
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    {Object.entries(SELECT_TIME_SCHEDULE).map(([startTime, timeRange]) => (
-                        <Row
-                            gap={10}
-                            alignItems="center"
-                            justifyContent="flex-start"
-                            key={startTime}
-                        >
-                            <IconButton onClick={() => handleSelectTime(Number(startTime))}>
-                                {handleCheckIcon(Number(startTime)) ? (
-                                    <ActiveCheckIcon />
-                                ) : (
-                                    <CheckIcon />
-                                )}
-                            </IconButton>
-
-                            <Txt
-                                style={{
-                                    paddingTop: '3px',
-                                }}
-                                variant="caption1"
-                            >
-                                {timeRange}
-                            </Txt>
-                        </Row>
-                    ))}
-                </Col> */}
+                <ButtonContainer>
+                    <Button
+                        text="완료"
+                        disabled={!isSelectVerified}
+                        type={isSelectVerified ? 'accept' : 'refuse'}
+                        onClick={handleTimeSubmit}
+                    />
+                </ButtonContainer>
             </SelectScheduleContainer>
         </SelectScheduleModalModalContainer>
     );
@@ -232,4 +241,8 @@ const SelectTimeItem = styled.div<{ isSelected: boolean }>`
     &:last-child {
         margin-right: 0;
     }
+`;
+const ButtonContainer = styled.div`
+    width: 100%;
+    height: 48px;
 `;

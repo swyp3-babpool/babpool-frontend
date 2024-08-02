@@ -10,6 +10,7 @@ import { ReactComponent as PrevIcon } from '@/assets/icons/ic_prev.svg';
 import { TimeRange } from '@/interface/api/modifyProfileType';
 type PossibleTimeCalendarProps = {
     onClose: () => void;
+    initialDates: string[];
     selectedDate?: string;
     setSelectedDate: (date: string) => void;
     selectedDates?: string[];
@@ -45,8 +46,12 @@ export default function PossibleTimeCalendar({
         setTileContent(() => {
             return ({ date, view }: { date: any; view: any }) => {
                 const formattedDate = moment(date).format('YYYY-MM-DD');
+                // console.log("콘솔 작동중!!!!🚨", "selectedDates는", selectedDates  )
                 const selected = selectedDate === formattedDate;
-                const dateOnlyArray = selectedDates?.map(dateTime => dateTime.split('T')[0]) || [];
+                const dateOnlyArray =
+                    selectedDates && Array.isArray(selectedDates)
+                        ? selectedDates.map((dateTime) => dateTime.split('T')[0])
+                        : [];
 
                 const existingDate = dateOnlyArray.includes(formattedDate);
                 if (view === 'month' && selected) {

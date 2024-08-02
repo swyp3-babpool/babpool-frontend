@@ -44,7 +44,14 @@ import {
     modifyProfileRequest,
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
-import { getDate, getDivisionId, getDivisionName, getHour, getKeywordId, getMonthFormatDate } from '@/utils/util';
+import {
+    getDate,
+    getDivisionId,
+    getDivisionName,
+    getHour,
+    getKeywordId,
+    getMonthFormatDate,
+} from '@/utils/util';
 import Popup from '@/components/common/popup';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
@@ -74,8 +81,6 @@ export default function ModifyProfileCardPage() {
         queryFn: () => getModifyProfile(),
     });
 
-
-
     // const userId = defaultProfileInfo.userId;
 
     const {
@@ -88,6 +93,7 @@ export default function ModifyProfileCardPage() {
         enabled: !!profileId,
     });
 
+    const initialTimes = userSchedule ? userSchedule.map((item) => item.possibleDateTime) : [];
     const [file, setFile] = useState<File>();
 
     const navigate = useNavigate();
@@ -114,7 +120,15 @@ export default function ModifyProfileCardPage() {
         },
     });
 
-    const [possibleDate, setPossibleDate] = useState<string[]>([]);
+    const [possibleDate, setPossibleDate] = useState<string[]>(
+        userSchedule ? userSchedule.map((item) => item.possibleDateTime) : []
+    );
+
+    // 필요시, useEffect를 사용하여 userSchedule의 변경을 감지하고 possibleDate를 업데이트할 수 있음
+    useEffect(() => {
+        setPossibleDate(userSchedule ? userSchedule.map((item) => item.possibleDateTime) : []);
+    }, [userSchedule]);
+
     const [profileImgUrl, setProfileImgUrl] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clickedAlbumButton, setClickedAlbumButton] = useState(false);
@@ -179,7 +193,7 @@ export default function ModifyProfileCardPage() {
                 .map((keyword) => getKeywordId(keyword)),
         };
 
-        console.log("requsetBody는", typeof reqBody.keywords[0])
+        console.log('requsetBody는', typeof reqBody.keywords[0]);
 
         const formData = new FormData();
         if (file) {
@@ -285,8 +299,6 @@ export default function ModifyProfileCardPage() {
         }
     }, [contactInput]);
 
-
-    console.log("여기 콘솔있음🔥",userSchedule)
     return (
         <ModifyProfilePageContainer>
             <Header text="프로필카드 수정" destination="/mypage" />
@@ -455,6 +467,7 @@ export default function ModifyProfileCardPage() {
                 onChange={handleProfileImgFileChange}
             />
             <SelectPossibleTimeModal
+                initialDates={initialTimes}
                 selectedDates={possibleDate}
                 setSelectedDates={setPossibleDate}
                 isOpen={isModalOpen}

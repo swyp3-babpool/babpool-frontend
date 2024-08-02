@@ -165,6 +165,12 @@ export const getMonthFormatDate = (date: Date | string) => {
     return `${formatDate} (${WEEKS[day]})`;
 };
 
+export const getMonthFormatMonth = (date: Date | string) => {
+     const month = new Date(date).getMonth() + 1;
+   
+    return month;
+};
+
 export function getHour(date: Date | string) {
     const hour = new Date(date).getHours();
     return hour;
