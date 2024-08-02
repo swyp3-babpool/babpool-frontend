@@ -17,7 +17,7 @@ import {
     INIT_INTEREST_KEYWORD,
     INTEREST_KEYWORD,
 } from '@/utils/constant';
-import { getDivisionId, getDivisionName, getKeywordId } from '@/utils/util';
+import { getDivisionId, getDivisionName } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -49,11 +49,12 @@ export default function TotalBabpoolPage() {
 
         // 프로필 리스트 요청
     const fetchProfileList = async () => {
+        console.log(searchInfo);
         const { searchText, division, filterKeyword } = searchInfo;
         const requestDivision = division.map((item) => getDivisionId(item)).join(',');
         const requestKeyword = Object.values(filterKeyword)
             .flat()
-            .map((item) => getKeywordId(item))
+            .map((item) => item)
             .join(',');
         const params = {
             searchTerm: searchText,
@@ -177,7 +178,7 @@ export default function TotalBabpoolPage() {
                     {FILTER_CATEGORY.map((category) => {
                         const keywordLength = Object.values(searchInfo.filterKeyword)
                             .flat()
-                            .map((item) => getKeywordId(item)).length;
+                            .map((item) => item).length;
                         return (
                             <FilterBox
                                 key={category}

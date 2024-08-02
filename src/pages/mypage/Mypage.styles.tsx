@@ -52,6 +52,22 @@ export const ProfileModifyButton = styled.button`
     gap: 7px;
 `;
 
+export const ScheduleRegButton = styled.button`
+    position: absolute;
+    bottom: 20px;
+    right: 160px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: ${colors.purple_light_10};
+    z-index: 1;
+    cursor: pointer;
+    padding: 8px;
+    gap: 7px;
+`;
+
 export const IconContainer = styled.div`
     width: 20px;
     height: 20px;

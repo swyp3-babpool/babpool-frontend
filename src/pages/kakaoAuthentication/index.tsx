@@ -30,7 +30,7 @@ export default function KakaoAuthenticationPage() {
                 return;
             }
             if (res.status === 'UNAUTHORIZED' && res.code === 401) {
-                navigate(`/signup/${res.data.userUuid}`);
+                navigate(`/signup/${res.data.userId}`);
                 return;
             }
             console.log(res.code);
@@ -39,7 +39,7 @@ export default function KakaoAuthenticationPage() {
                 const accessToken = res.data.accessToken;
                 const grade = [getDivisionName(res.data.userGrade)] as string[];
                 localStorage.setItem('accessToken', String(accessToken));
-                localStorage.setItem('uuid', res.data.userUuid);
+                localStorage.setItem('userId', res.data.userId);
                 setSearchInfoState((prev) => ({
                     ...prev,
                     division: grade,

@@ -40,9 +40,9 @@ export default function SendReviewPage() {
 
     const handleSendReview = () => {
         const reqBody = {
-            targetAppointmentId: appointmentId,
-            rateType: getReviewTypeToServer(selectedButton || ''),
-            reviewContent: inputValue,
+            appointmentId: appointmentId,
+            reviewRate: getReviewTypeToServer(selectedButton || ''),
+            reviewComment: inputValue,
         };
         sendReview(reqBody).then((res) => {
             if (res.code === 200) {

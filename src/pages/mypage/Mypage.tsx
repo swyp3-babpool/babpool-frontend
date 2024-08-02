@@ -14,6 +14,7 @@ import {
     RightIconContainer,
     DeleteAccountButton,
     GridContainer,
+    ScheduleRegButton,
 } from './Mypage.styles';
 import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
@@ -61,6 +62,10 @@ export default function MyPage() {
         navigate('/mypage/profile-modify', { state: mypageInfo?.profileId });
     };
 
+    const handleScheduleRegButtonClick = () => {
+        navigate('/mypage/schedule-reg');
+    };
+
     const handleDeleteAccountButtonClick = () => {
         navigate('/deleteAccount');
     };
@@ -88,6 +93,14 @@ export default function MyPage() {
                     color={colors.white}
                     padding="0px 30px"
                 />
+                <ScheduleRegButton onClick={handleScheduleRegButtonClick}>
+                    <IconContainer>
+                        <ProfileModifyIcon />
+                    </IconContainer>
+                    <Txt variant="caption2" color={colors.black}>
+                        일정 등록
+                    </Txt>
+                </ScheduleRegButton>
                 <ProfileModifyButton onClick={handleModifyProfileButtonClick}>
                     <IconContainer>
                         <ProfileModifyIcon />

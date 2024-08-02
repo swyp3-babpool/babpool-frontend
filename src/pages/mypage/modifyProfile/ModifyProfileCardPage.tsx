@@ -44,14 +44,7 @@ import {
     modifyProfileRequest,
 } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
-import {
-    getDate,
-    getDivisionId,
-    getDivisionName,
-    getHour,
-    getKeywordId,
-    getMonthFormatDate,
-} from '@/utils/util';
+import { getDivisionId, getDivisionName } from '@/utils/util';
 import Popup from '@/components/common/popup';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
@@ -190,7 +183,8 @@ export default function ModifyProfileCardPage() {
             profileContactChat: selectedContactType === '오픈채팅방' ? contactInput : '',
             keywords: Object.values(modifyProfileInfo.keywordGroups)
                 .flat()
-                .map((keyword) => getKeywordId(keyword)),
+                .map((keyword) => keyword),
+            // possibleDate: possibleDate,
         };
 
         console.log('requsetBody는', typeof reqBody.keywords[0]);
@@ -276,7 +270,6 @@ export default function ModifyProfileCardPage() {
         introduce,
         selectedContactType,
         contactInput,
-        possibleDate,
         modifyProfileInfo,
         isContactInputVerified,
     ]);
@@ -298,6 +291,20 @@ export default function ModifyProfileCardPage() {
             }
         }
     }, [contactInput]);
+
+    // useEffect(() => {
+    //     if (userSchedule) {
+    //         const dates = userSchedule.reduce((acc: TimeRange, schedule) => {
+    //             if (acc[schedule.possibleDate]) {
+    //                 acc[schedule.possibleDate].push(schedule.possibleTime);
+    //             } else {
+    //                 acc[schedule.possibleDate] = [schedule.possibleTime];
+    //             }
+    //             return acc;
+    //         }, {} as TimeRange);
+    //         setPossibleDate(dates);
+    //     }
+    // }, [userSchedule]);
 
     return (
         <ModifyProfilePageContainer>
@@ -426,30 +433,6 @@ export default function ModifyProfileCardPage() {
                     signUpInfo={modifyProfileInfo}
                     setSignUpInfo={setModifyProfileInfo}
                 />
-                <Col gap={16}>
-                    <Col gap={8}>
-                        <Txt variant="h5" color={colors.black}>
-                            밥약이 가능한 시간대*
-                        </Txt>
-                        <Txt variant="caption2" color={colors.white_30}>
-                            밥약이 가능한 시간대를 날짜별로 선택해주세요
-                            <br />
-                            선택하신 시간대로 밥약 요청이 접수돼요
-                        </Txt>
-                    </Col>
-                    <AddPossibleTimeButton
-                        isExist={Object.keys(possibleDate).length > 0}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        {Object.keys(possibleDate).length > 0 ? (
-                            <Txt variant="body" color={colors.purple_light_40}>
-                                확인/수정하기
-                            </Txt>
-                        ) : (
-                            <PlusIcon />
-                        )}
-                    </AddPossibleTimeButton>
-                </Col>
                 <ButtonContainer>
                     <Button
                         text="완료"
@@ -466,13 +449,13 @@ export default function ModifyProfileCardPage() {
                 accept="image/jpeg, image/png"
                 onChange={handleProfileImgFileChange}
             />
-            <SelectPossibleTimeModal
-                initialDates={initialTimes}
+            {/* <SelectPossibleTimeModal
+                   initialDates={initialTimes}
                 selectedDates={possibleDate}
                 setSelectedDates={setPossibleDate}
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
-            />
+            /> */}
             {(isModalOpen || clickedAlbumButton) && (
                 <Overlay onClick={() => setClickedAlbumButton(false)} />
             )}

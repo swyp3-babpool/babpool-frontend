@@ -3,7 +3,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { CheckboxContainer, CheckboxLabel, HiddenCheckBox } from '../checkbox/Checkbox';
 import Txt from '../text';
-import { INTEREST_KEYWORD } from '@/utils/constant';
+import { INTEREST_KEYWORD, INTEREST_KEYWORD_VALUE } from '@/utils/constant';
 
 type KeywordProps = {
     name: string;
@@ -38,7 +38,7 @@ export default function Keyword({
                         variant={'caption2'}
                         color={ischecked ? colors.purple_light_40 : colors.purple_light_20}
                     >
-                        {name}
+                        {INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]}
                     </Txt>
                 </KeywordBox>
             </CheckboxLabel>

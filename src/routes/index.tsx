@@ -24,6 +24,7 @@ import NotificationPage from '@/pages/notification/NotificationPage';
 import NotificationDetailPage from '@/pages/notification/detail/NotificationDetailPage';
 import AcceptPage from '@/pages/notification/accept/AcceptPage';
 import RejectPage from '@/pages/notification/reject/RejectPage';
+import ScheduleRegPage from '@/pages/mypage/scheduleReg/ScheduleRegPage';
 
 export default function RouteProvider() {
     const router = createBrowserRouter(
@@ -32,7 +33,7 @@ export default function RouteProvider() {
                 <Route index element={<HomePage />} />
                 <Route path="/auth/kakao/callback" element={<KakaoAuthenticationPage />} />
                 <Route path="signin" element={<SignInPage />} />
-                <Route path="signup/:uuid" element={<SignUpPage />} />
+                <Route path="signup/:userId" element={<SignUpPage />} />
                 <Route path="explanation" element={<ExplanationPage />} />
                 <Route path="total" element={<TotalBabpoolPage />} />
                 <Route path="total/profile/:userInfo/review" element={<AuthRoute><ReceivedReviewPage /></AuthRoute>} />
@@ -47,6 +48,7 @@ export default function RouteProvider() {
                 <Route path="reject" element={<AuthRoute><RejectPage /></AuthRoute>} />
                 <Route path="mypage" element={<AuthRoute><MyPage /></AuthRoute>} />
                 <Route path="mypage/profile-modify" element={<AuthRoute><ModifyProfileCardPage /></AuthRoute>} />
+                <Route path="mypage/schedule-reg" element={<AuthRoute><ScheduleRegPage /></AuthRoute>} />
                 <Route
                     path="total/profile/:targetProfileIdAndName/request"
                     element={<BabRequestPage />}
