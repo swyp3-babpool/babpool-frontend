@@ -63,7 +63,7 @@ export default function MyPage() {
     };
 
     const handleScheduleRegButtonClick = () => {
-        navigate('/mypage/schedule-reg');
+        navigate('/mypage/schedule-reg',{ state: mypageInfo?.profileId });
     };
 
     const handleDeleteAccountButtonClick = () => {

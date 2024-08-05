@@ -23,7 +23,6 @@ export default function KeywordList({ handleCheck, handleChange, margin }: Keywo
                     <S_KeywordList>
                         {INTEREST_KEYWORD[keywordGroup].map((keyword) => {
                             const ischecked = handleCheck(keywordGroup, keyword);
-
                             return (
                                 <Keyword
                                     key={keyword}

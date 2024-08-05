@@ -37,7 +37,7 @@ export default function SelectPossibleTimeModal({
     );
     const [isSelectVerified, setIsSelectVerified] = useState(false);
 
-    console.log(selectedDates);
+    console.log(initialDates);
 
     const checkSelected = (time: number) => {
         if (!selectedDates) return false;
@@ -55,29 +55,33 @@ export default function SelectPossibleTimeModal({
             return;
         }
 
-        const isExist = selectedDates.some((date) => date.startsWith(`${selectedDate}T${time}`));
+        const isExist = selectedDates.some((date) => date.startsWith(dateTimeString));
         console.log('console2', isExist, dateTimeString);
 
         if (isExist) {
             const filteredTimes = selectedDates.filter(
-                (date) => !date.startsWith(`${selectedDate}T${time}`)
+                (date) => !date.startsWith(dateTimeString)
             );
             setSelectedDates(filteredTimes);
         } else {
             setSelectedDates([...selectedDates, dateTimeString]);
         }
     };
+    
 
     const handleTimeSubmit = () => {
         // addList: selectedDates에 있지만 initialDates에 없는 항목
-        const addList = selectedDates.filter((date) => !initialDates.includes(`${date}`));
+        const addList = selectedDates.filter((date) => {
+            const formattedDate = `${date.substring(0, 13)}`; // "2024-08-01T10" 형식으로 자르기
+    return !initialDates.some(initialDate => `${initialDate.substring(0, 13)}` === formattedDate);});
 
         const currentDate = new Date();
 
         // delList: initialDates에 있지만 selectedDates에 없는 항목
-        const delList = initialDates.filter(
-            (date) => currentDate < new Date(date) && !selectedDates.includes(date)
-        );
+        const delList = initialDates.filter((date) => {
+    const formattedDate = date.substring(0, 13); // "YYYY-MM-DDTHH" 형식으로 자르기
+    return !selectedDates.some(selectedDate => selectedDate.substring(0, 13) === formattedDate);
+});
 
         const reqBody = {
             possibleDateTimeAddList: addList,

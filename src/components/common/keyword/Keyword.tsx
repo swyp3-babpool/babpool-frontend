@@ -38,7 +38,7 @@ export default function Keyword({
                         variant={'caption2'}
                         color={ischecked ? colors.purple_light_40 : colors.purple_light_20}
                     >
-                        {INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]}
+                        {name}
                     </Txt>
                 </KeywordBox>
             </CheckboxLabel>
