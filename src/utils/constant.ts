@@ -125,7 +125,7 @@ export const HOW_TO_USE_LIST = [
 
 export const FILTER_CATEGORY = ['구분', '관심 키워드'] as FilterCategoryType[];
 
-export const SELECT_TIME_SCHEDULE = {
+export const SELECT_TIME_SCHEDULE: { [key: string]: string }= {
     8: '오전 8:00',
     9: '오전 9:00',
     10: '오전 10:00',

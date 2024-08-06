@@ -17,7 +17,7 @@ import Button from '@/components/common/button';
 import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
 
 type SelectPossibleTimeModalProps = {
-   
+    page: 'mypage' | 'appointment'
     isOpen: boolean;
     onClose: () => void;
     initialDates?: string[];
@@ -26,21 +26,57 @@ type SelectPossibleTimeModalProps = {
 };
 
 export default function SelectPossibleTimeModal({
-
+    page,
     isOpen,
     onClose,
     initialDates = [],
     selectedDates,
     setSelectedDates,
 }: SelectPossibleTimeModalProps) {
+
+    // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
-    const [selectedDate, setSelectedDate] = useState<string>(
+     const [selectedDate, setSelectedDate] = useState<string>(
         moment(new Date()).format('YYYY-MM-DD')
     );
     const [isSelectVerified, setIsSelectVerified] = useState(false);
 
+    useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
+    
 
-    const checkSelected = (time: number) => {
+const entries = page === 'mypage'
+  ? Object.entries(SELECT_TIME_SCHEDULE)
+  : initialDates.map(dateTime => {
+      // 시간 부분만 추출 (HH)
+      let hour = dateTime.substring(11, 13);
+      // 앞에 0이 있으면 제거
+      if (hour.startsWith('0')) {
+        hour = hour.substring(1);
+      }
+      // SELECT_TIME_SCHEDULE에서 해당하는 시간의 값을 가져옴
+      return SELECT_TIME_SCHEDULE[hour];
+    }).filter(entry => entry !== undefined); // undefined 값 제거
+
+
+    // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
+    const rows = [];
+    for (let i = 0; i < entries.length; i += 4) {
+    const rowItems = entries.slice(i, i + 4).map(item => {
+        if (typeof item === 'number' && item < 10) {
+            return '0' + item;
+        }
+        return item;
+    });
+    rows.push(rowItems);
+    }
+
+    //선택된 날짜가 있으면 완료 버튼 활성화
+    useEffect(() => {
+        setIsSelectVerified(Object.keys(selectedDates || {}).length > 0);
+    }, [selectedDates]);
+
+
+ const checkSelected = (time: number) => {
 
         if (!selectedDates) return false;
        const isExist = selectedDates.some(
@@ -85,6 +121,10 @@ export default function SelectPossibleTimeModal({
            
         }
     };
+
+
+    //사용자 일정 수정 페이지 
+   
     
 
     const handleTimeSubmit = () => {
@@ -106,7 +146,6 @@ export default function SelectPossibleTimeModal({
             possibleDateTimeDelList: delList,
         };
 
-        console.log('보내기전!!! ', initialDates, 'selected', selectedDates, reqBody);
         modifyTimeSchedule(reqBody).then((res) => {
             if (res.code === 200) {
                 window.alert('일정 업데이트가 완료되었습니다!');
@@ -115,26 +154,41 @@ export default function SelectPossibleTimeModal({
             }
         });
     };
-    const entries = Object.entries(SELECT_TIME_SCHEDULE);
 
-    // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
-    const rows = [];
-    for (let i = 0; i < entries.length; i += 4) {
-    const rowItems = entries.slice(i, i + 4).map(item => {
-        if (typeof item === 'number' && item < 10) {
-            return '0' + item;
-        }
-        return item;
-    });
-    rows.push(rowItems);
-    }
 
-    useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
-    //선택된 날짜가 있으면 완료 버튼 활성화
-    useEffect(() => {
-        setIsSelectVerified(Object.keys(selectedDates || {}).length > 0);
-    }, [selectedDates]);
+    //밥약 신청 페이지 
+
+     const handleAppointmentSubmit = () => {
+        // addList: selectedDates에 있지만 initialDates에 없는 항목
+        const addList = selectedDates.filter((date) => {
+            const formattedDate = `${date.substring(0, 13)}`; // "2024-08-01T10" 형식으로 자르기
+    return !initialDates.some(initialDate => `${initialDate.substring(0, 13)}` === formattedDate);});
+
+        const currentDate = new Date();
+
+        // delList: initialDates에 있지만 selectedDates에 없는 항목
+        const delList = initialDates.filter((date) => {
+    const formattedDate = date.substring(0, 13); // "YYYY-MM-DDTHH" 형식으로 자르기
+    return !selectedDates.some(selectedDate => selectedDate.substring(0, 13) === formattedDate);
+});
+
+        const reqBody = {
+            possibleDateTimeAddList: addList,
+            possibleDateTimeDelList: delList,
+        };
+
+        modifyTimeSchedule(reqBody).then((res) => {
+            if (res.code === 200) {
+                window.alert('일정 업데이트가 완료되었습니다!');
+            } else if (res.code === 400) {
+                console.log('에러발생🚨', res.message);
+            }
+        });
+    };
+     
+
+
 
     return (
         <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>

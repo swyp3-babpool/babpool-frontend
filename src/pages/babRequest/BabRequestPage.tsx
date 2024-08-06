@@ -1,4 +1,5 @@
 import { appointmentRequest, getAvailableSchedule } from '@/api/babRequest/babRequestApi';
+import { getModifyProfileAvailableSchedule } from '@/api/profile/modifyProfileApi';
 import { colors } from '@/assets/styles/theme';
 import { alarmInfoState } from '@/atom/alarminfo';
 import SelectScheduleModal from '@/components/babpoolRequest/SelectScheduleModal';
@@ -11,10 +12,12 @@ import Popup from '@/components/common/popup';
 import ScheduleBox from '@/components/common/schedule/ScheduleBox';
 import Txt from '@/components/common/text';
 import Textarea from '@/components/common/textarea/Textarea';
+import SelectPossibleTimeModal from '@/components/modifyProfile/SelectPossibleTimeModal';
 import { useNavigation } from '@/hooks/useNavigation';
 import { UserScheduleType } from '@/interface/api/babRequestType';
+import { GetModifyProfilePossibleTimeType } from '@/interface/api/modifyProfileType';
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
-import { getMonthFormatDate } from '@/utils/util';
+import { getMonthFormatDate, getMonthFormatMonth } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -23,24 +26,43 @@ import { styled } from 'styled-components';
 
 export type RequestInfoType = {
     targetProfileId: number;
-    possibleTimeIdList: UserScheduleType[];
-    questionContents: string;
+    possibleDateTime: string;
+    appointmentContent: string;
 };
 
 export default function BabRequestPage() {
     const { targetProfileIdAndName } = useParams();
+    console.log(targetProfileIdAndName);
     const targetProfileId = targetProfileIdAndName?.split('-')[0];
     const targetProfileName = targetProfileIdAndName?.split('-')[1];
-
     const [isScheduleSelected, setIsScheduleSelected] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const [isRequestValidate, setIsRequestValidate] = useState(false);
     const [selectScheduleBoxKey, setSelectScheduleBoxKey] = useState<number | null>(null);
     const [requestInfo, setRequestInfo] = useState<RequestInfoType>({
         targetProfileId: Number(targetProfileId),
-        possibleTimeIdList: [],
-        questionContents: '',
+        possibleDateTime: '',
+        appointmentContent: '',
     });
+    const {
+            data: userSchedule,
+            isError: isLoadingPossibleTime,
+            isLoading: isErrorPossibleTime,
+        } = useQuery<GetModifyProfilePossibleTimeType[]>({
+            queryKey: [`/api/possible/datetime/${Number(targetProfileId)}`, targetProfileId],
+            queryFn: () => getModifyProfileAvailableSchedule(Number(targetProfileId)),
+            enabled: !!targetProfileId,
+        });
+
+    const possibleAppointmentTime = userSchedule
+        ? userSchedule
+            .filter((item) => item.possibleDateTimeStatus === 'Available')
+            .map((item) => item.possibleDateTime)
+        : [];
+
+
+    const [possibleDate, setPossibleDate] = useState<string[]>([]);
+
     const alarmInfo = useRecoilValue(alarmInfoState);
 
     const { navigate } = useNavigation();
@@ -55,34 +77,32 @@ export default function BabRequestPage() {
     };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setRequestInfo({ ...requestInfo, questionContents: e.target.value });
+        setRequestInfo({ ...requestInfo, appointmentContent: e.target.value });
     };
 
-    const handleSelectSchedule = (selectedSchedule: UserScheduleType) => {
+    const handleSelectSchedule = (selectedSchedule: string[]) => {
         setRequestInfo((prev) => {
-            const newPossibleTimeList = [...prev.possibleTimeIdList];
-            newPossibleTimeList[selectScheduleBoxKey as number] = selectedSchedule;
             return {
                 ...prev,
-                possibleTimeIdList: newPossibleTimeList,
+                possibleTimeIdList: selectedSchedule[0],
             };
         });
         handleCloseModal();
+        
     };
 
     const handleSubmit = () => {
         const reqBody = {
-            ...requestInfo,
-            possibleTimeIdList: requestInfo.possibleTimeIdList.map((item) => item.possibleTimeId),
+            ...requestInfo, ...possibleDate
         };
         console.log(reqBody);
-        appointmentRequest(reqBody).then((res) => {
-            console.log(res);
-            if (res.code === 200) {
-                console.log('밥약 요청 완료');
-                setIsOpenPopup(true);
-            }
-        });
+        // appointmentRequest(reqBody).then((res) => {
+        //     console.log(res);
+        //     if (res.code === 200) {
+        //         console.log('밥약 요청 완료');
+        //         setIsOpenPopup(true);
+        //     }
+        // });
     };
 
     const handleClosePopup = () => {
@@ -90,15 +110,15 @@ export default function BabRequestPage() {
     };
 
     useEffect(() => {
-        const validateStr = requestInfo.questionContents.trim();
+        const validateStr = requestInfo.appointmentContent.trim();
         if (validateStr.length > 200) {
             setRequestInfo((prev) => ({
                 ...prev,
-                questionContents: prev.questionContents.slice(0, 200),
+                questionContents: prev.appointmentContent.slice(0, 200),
             }));
         }
         if (
-            requestInfo.possibleTimeIdList.length > 0 &&
+            requestInfo.possibleDateTime.length > 0 &&
             validateStr.length >= 20 &&
             validateStr.length <= 200
         ) {
@@ -107,6 +127,9 @@ export default function BabRequestPage() {
             setIsRequestValidate(false);
         }
     }, [requestInfo]);
+
+ 
+
 
     return (
         targetProfileId &&
@@ -131,62 +154,27 @@ export default function BabRequestPage() {
                             <ScheduleBoxContainer>
                                 <ScheduleBox
                                     defaultText="일정 선택하기*"
-                                    selectText={
-                                        requestInfo.possibleTimeIdList.length >= 1
-                                            ? `${getMonthFormatDate(
-                                                  requestInfo.possibleTimeIdList[0].possibleDate
-                                              )} ${String(
-                                                  SELECT_TIME_SCHEDULE[
-                                                      requestInfo.possibleTimeIdList[0]
-                                                          .possibleTime as keyof typeof SELECT_TIME_SCHEDULE
-                                                  ]
-                                              )}`
-                                            : ''
-                                    }
+                                    // selectText={
+                                    //     requestInfo.possibleDateTime.length >= 1
+                                    //         ? `${getMonthFormatDate(
+                                    //               requestInfo.possibleDateTime
+                                    //           )} ${String(
+                                    //               SELECT_TIME_SCHEDULE[
+                                    //                   getMonthFormatMonth(
+                                    //                       requestInfo.possibleDateTime
+                                    //                   ) as keyof typeof SELECT_TIME_SCHEDULE
+                                    //               ]
+                                    //           )}`
+                                    //         : ''
+                                    // }
                                     onClick={() => handleOpenModal(0)}
                                 />
-                                {/* {requestInfo.possibleTimeIdList.length >= 1 && (
-                                    <ScheduleBox
-                                        defaultText="두 번째 일정 선택하기"
-                                        selectText={
-                                            requestInfo.possibleTimeIdList.length >= 2
-                                                ? `${getMonthFormatDate(
-                                                      requestInfo.possibleTimeIdList[1].possibleDate
-                                                  )} ${String(
-                                                      SELECT_TIME_SCHEDULE[
-                                                          requestInfo.possibleTimeIdList[1]
-                                                              .possibleTime as keyof typeof SELECT_TIME_SCHEDULE
-                                                      ]
-                                                  )}`
-                                                : ''
-                                        }
-                                        onClick={() => handleOpenModal(1)}
-                                    />
-                                )}
-                                {requestInfo.possibleTimeIdList.length >= 2 && (
-                                    <ScheduleBox
-                                        defaultText="세 번째 일정 선택하기"
-                                        selectText={
-                                            requestInfo.possibleTimeIdList.length >= 3
-                                                ? `${getMonthFormatDate(
-                                                      requestInfo.possibleTimeIdList[2].possibleDate
-                                                  )} ${String(
-                                                      SELECT_TIME_SCHEDULE[
-                                                          requestInfo.possibleTimeIdList[2]
-                                                              .possibleTime as keyof typeof SELECT_TIME_SCHEDULE
-                                                      ]
-                                                  )}`
-                                                : ''
-                                        }
-                                        onClick={() => handleOpenModal(2)}
-                                    />
-                                )} */}
                             </ScheduleBoxContainer>
                         </ScheduleContainer>
                         <QuestionContainer>
                             <Txt variant="h5">무엇이 궁금한가요?*</Txt>
                             <Textarea
-                                value={requestInfo.questionContents}
+                                value={requestInfo.appointmentContent}
                                 placeholder="20자-200자 이내로 작성해주세요"
                                 onChange={handleTextChange}
                             />
@@ -200,13 +188,21 @@ export default function BabRequestPage() {
                             />
                         </ButtonContainer>
                     </RequestContainer>
-                    <SelectScheduleModal
+                    <SelectPossibleTimeModal
+                        page={'appointment'}
+                        initialDates={possibleAppointmentTime}
+                        selectedDates={possibleDate}
+                        setSelectedDates={setPossibleDate}
+                        isOpen={isScheduleSelected}
+                        onClose={handleCloseModal}
+                    />
+                    {/* <SelectScheduleModal
                         isOpen={isScheduleSelected}
                         userId={Number(targetProfileId)}
                         requestInfo={requestInfo}
-                        handleSelectSchedule={handleSelectSchedule}
+                        handleSelectSchedule={handleSubmit}
                         onClose={handleCloseModal}
-                    />
+                    /> */}
                     {isScheduleSelected && <Overlay />}
                 </BabRequestPageContainer>
                 {isOpenPopup && (

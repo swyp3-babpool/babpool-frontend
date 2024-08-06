@@ -67,6 +67,7 @@ export default function ScheduleRegPage() {
                 </AddPossibleTimeButton>
             </Col>
             <SelectPossibleTimeModal
+                page={'mypage'}
                 initialDates={initialTimes}
                 selectedDates={possibleDate}
                 setSelectedDates={setPossibleDate}
