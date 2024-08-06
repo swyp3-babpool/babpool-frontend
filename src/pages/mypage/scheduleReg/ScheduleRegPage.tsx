@@ -15,7 +15,6 @@ import { useLocation } from 'react-router-dom';
 export default function ScheduleRegPage() {
     const location = useLocation();
     const profileId = location.state as number;
-    console.log(location.state);
 
     const {
         data: userSchedule,
@@ -29,7 +28,7 @@ export default function ScheduleRegPage() {
 
     const initialTimes = userSchedule ? userSchedule.map((item) => item.possibleDateTime) : [];
     const [possibleDate, setPossibleDate] = useState<string[]>(
-        userSchedule ? initialTimes: []
+        userSchedule ? [...initialTimes]: []
     );
 
    

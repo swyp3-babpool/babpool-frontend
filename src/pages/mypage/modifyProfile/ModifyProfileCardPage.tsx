@@ -451,13 +451,6 @@ export default function ModifyProfileCardPage() {
                 accept="image/jpeg, image/png"
                 onChange={handleProfileImgFileChange}
             />
-            {/* <SelectPossibleTimeModal
-                   initialDates={initialTimes}
-                selectedDates={possibleDate}
-                setSelectedDates={setPossibleDate}
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-            /> */}
             {(isModalOpen || clickedAlbumButton) && (
                 <Overlay onClick={() => setClickedAlbumButton(false)} />
             )}

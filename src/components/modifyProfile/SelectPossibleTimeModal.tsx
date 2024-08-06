@@ -17,17 +17,19 @@ import Button from '@/components/common/button';
 import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
 
 type SelectPossibleTimeModalProps = {
+   
     isOpen: boolean;
     onClose: () => void;
-    initialDates: string[];
+    initialDates?: string[];
     selectedDates: string[];
-    setSelectedDates: (dates: string[]) => void;
+    setSelectedDates: (dates: string[] ) => void;
 };
 
 export default function SelectPossibleTimeModal({
+
     isOpen,
     onClose,
-    initialDates,
+    initialDates = [],
     selectedDates,
     setSelectedDates,
 }: SelectPossibleTimeModalProps) {
@@ -37,17 +39,23 @@ export default function SelectPossibleTimeModal({
     );
     const [isSelectVerified, setIsSelectVerified] = useState(false);
 
-    console.log(initialDates);
 
     const checkSelected = (time: number) => {
+
         if (!selectedDates) return false;
-        const isExist = selectedDates.some((date) => date.startsWith(`${selectedDate}T${time}`));
-        // console.log('isExist는', isExist, selectedDates);
+       const isExist = selectedDates.some(
+            (date) =>
+                date.startsWith(`${selectedDate}T${time}`) ||
+                date.startsWith(`${selectedDate}T0${time}`)
+            );
+
 
         return isExist;
     };
 
     const handleSelectTime = (time: number) => {
+       
+        
         const dateTimeString = `${selectedDate}T${time}:00`;
 
         if (!selectedDates) {
@@ -55,16 +63,26 @@ export default function SelectPossibleTimeModal({
             return;
         }
 
-        const isExist = selectedDates.some((date) => date.startsWith(dateTimeString));
-        console.log('console2', isExist, dateTimeString);
+        const isExist = selectedDates.some(
+            (date) =>
+                date.startsWith(`${selectedDate}T${time}`) ||
+                date.startsWith(`${selectedDate}T0${time}`)
+            );
 
         if (isExist) {
             const filteredTimes = selectedDates.filter(
-                (date) => !date.startsWith(dateTimeString)
+                (date) =>
+                date.startsWith(`${selectedDate}T${time}`) ||
+                !date.startsWith(`${selectedDate}T0${time}`)
             );
             setSelectedDates(filteredTimes);
         } else {
-            setSelectedDates([...selectedDates, dateTimeString]);
+            if (time.toString.length === 1) {
+                setSelectedDates([...selectedDates, `${selectedDate}T0${time}:00`]);
+            } else {
+                setSelectedDates([...selectedDates, dateTimeString]);
+            }
+           
         }
     };
     
@@ -102,8 +120,13 @@ export default function SelectPossibleTimeModal({
     // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
     const rows = [];
     for (let i = 0; i < entries.length; i += 4) {
-        const rowItems = entries.slice(i, i + 4);
-        rows.push(rowItems);
+    const rowItems = entries.slice(i, i + 4).map(item => {
+        if (typeof item === 'number' && item < 10) {
+            return '0' + item;
+        }
+        return item;
+    });
+    rows.push(rowItems);
     }
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
@@ -138,6 +161,7 @@ export default function SelectPossibleTimeModal({
                     {rows.map((row, rowIndex) => (
                         <div key={rowIndex} style={{ display: 'flex', width: '100%' }}>
                             {row.map(([startTime, time], itemIndex) => (
+                                
                                 <SelectTimeItem
                                     key={itemIndex}
                                     isSelected={checkSelected(Number(startTime))}
