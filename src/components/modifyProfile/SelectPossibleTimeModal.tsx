@@ -57,18 +57,14 @@ const entries = page === 'mypage'
       return SELECT_TIME_SCHEDULE[hour];
     }).filter(entry => entry !== undefined); // undefined 값 제거
 
-
+    console.log
     // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
-    const rows = [];
+     const rows = [];
     for (let i = 0; i < entries.length; i += 4) {
-    const rowItems = entries.slice(i, i + 4).map(item => {
-        if (typeof item === 'number' && item < 10) {
-            return '0' + item;
-        }
-        return item;
-    });
-    rows.push(rowItems);
+        const rowItems = entries.slice(i, i + 4);
+        rows.push(rowItems);
     }
+
 
     //선택된 날짜가 있으면 완료 버튼 활성화
     useEffect(() => {
@@ -108,12 +104,14 @@ const entries = page === 'mypage'
         if (isExist) {
             const filteredTimes = selectedDates.filter(
                 (date) =>
-                date.startsWith(`${selectedDate}T${time}`) ||
-                !date.startsWith(`${selectedDate}T0${time}`)
+                !date.startsWith(`${selectedDate}T${time}`) ||
+                date.startsWith(`${selectedDate}T0${time}`)
             );
+
             setSelectedDates(filteredTimes);
         } else {
-            if (time.toString.length === 1) {
+            if (time < 10) {
+             
                 setSelectedDates([...selectedDates, `${selectedDate}T0${time}:00`]);
             } else {
                 setSelectedDates([...selectedDates, dateTimeString]);
