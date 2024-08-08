@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
 import { ReactComponent as CloseIcon } from '@/assets/icons/ic_close.svg';
@@ -11,12 +11,14 @@ import { useQuery } from '@tanstack/react-query';
 import { getAvailableSchedule } from '@/api/babRequest/babRequestApi';
 import { UserScheduleType } from '@/interface/api/babRequestType';
 import { RequestInfoType } from '@/pages/babRequest/BabRequestPage';
+import SelectPossibleTimeModal from '@/components/modifyProfile/SelectPossibleTimeModal';
+import { useNavigation } from '@/hooks/useNavigation';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
     userId: number;
     requestInfo: RequestInfoType;
-    handleSelectSchedule: (selectedSchedule: UserScheduleType) => void;
+    handleSelectSchedule: (selectedSchedule: string[]) => void;
     onClose: () => void;
 };
 
@@ -27,65 +29,51 @@ export default function SelectScheduleModal({
     handleSelectSchedule,
     onClose,
 }: SelectScheduleModalProps) {
-    const [possibleScheduleList, setPossibleScheduleList] = useState<UserScheduleType[]>([]);
+    const [possibleScheduleList, setPossibleScheduleList] = useState<string[]>([]);
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
+     const alertShownRef = useRef(false); // alert 표시 여부를 추적하는 ref
 
     const {
         data: userSchedule,
         isLoading,
         isError,
     } = useQuery<UserScheduleType[]>({
-        queryKey: [`/api/appointment/${userId}/datetime`, userId],
+        queryKey: [`/api/possible/datetime/${userId}`, userId],
         queryFn: () => getAvailableSchedule(Number(userId)),
     });
+      const { goBack } = useNavigation();
 
+    
     const handleSetPossibleSchedule = (scheduleList: UserScheduleType[]) => {
+
         const filterScheduleList = scheduleList.filter((schedule: UserScheduleType) => {
-            return !requestInfo.possibleTimeIdList.includes(schedule);
+            console.log(schedule)
+            return schedule.possibleDateTimeStatus === 'Available';
         });
-        setPossibleScheduleList(filterScheduleList);
+        setPossibleScheduleList(filterScheduleList ? filterScheduleList.map((item) => item.possibleDateTime) : []);
+       if (filterScheduleList.length === 0 && !alertShownRef.current) {
+        // alert("가능한 시간이 없습니다!");
+        // alertShownRef.current = true; // alert이 표시되었음을 기록
+        // goBack(); 
+    }
     };
+
+    useEffect(() => {
+    handleSetPossibleSchedule(userSchedule ? userSchedule : []);
+  }, [userSchedule]);
+   
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     return (
         !isLoading &&
         isOpen && (
-            <SelectScheduleModalModalContainer open={isOpen} ref={selectScheduleModalRef}>
-                <TitleBox>
-                    <EmptyDiv />
-                    <Txt variant="body">일정 선택</Txt>
-                    <IconBox onClick={onClose}>
-                        <CloseIcon />
-                    </IconBox>
-                </TitleBox>
-                <CalendarContainer>
-                    <ScheduleCalendar
-                        userSchedule={userSchedule ? userSchedule : []}
-                        requestInfo={requestInfo}
-                        handleSetPossibleSchedule={handleSetPossibleSchedule}
-                    />
-                </CalendarContainer>
-                <SelectScheduleContainer>
-                    <Txt variant="caption1">선호하는 시간대 1개를 선택해주세요</Txt>
-                    <SelectTimeContainer>
-                        {possibleScheduleList.length === 0 ? (
-                            <NoTimeBox>
-                                <Txt variant="caption1" color={colors.white_20}>
-                                    선택 가능한 시간이 없습니다.
-                                </Txt>
-                            </NoTimeBox>
-                        ) : (
-                            possibleScheduleList.map((schedule) => (
-                                <SelectTimeBox
-                                    key={schedule.possibleTimeId}
-                                    schedule={schedule}
-                                    handleSelectSchedule={handleSelectSchedule}
-                                />
-                            ))
-                        )}
-                    </SelectTimeContainer>
-                </SelectScheduleContainer>
-            </SelectScheduleModalModalContainer>
+             <SelectPossibleTimeModal
+                                page={'appointment'}
+                                selectedDates={possibleScheduleList}
+                                setSelectedDates={handleSelectSchedule}
+                                isOpen={isOpen}
+                                onClose={onClose}
+                          />        
         )
     );
 }
