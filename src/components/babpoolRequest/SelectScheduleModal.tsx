@@ -16,7 +16,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 
 type SelectScheduleModalProps = {
     isOpen: boolean;
-    userId: number;
+    userId: string;
     requestInfo: RequestInfoType;
     handleSelectSchedule: (selectedSchedule: string[]) => void;
     onClose: () => void;
@@ -39,7 +39,7 @@ export default function SelectScheduleModal({
         isError,
     } = useQuery<UserScheduleType[]>({
         queryKey: [`/api/possible/datetime/${userId}`, userId],
-        queryFn: () => getAvailableSchedule(Number(userId)),
+        queryFn: () => getAvailableSchedule(userId),
     });
       const { goBack } = useNavigation();
 

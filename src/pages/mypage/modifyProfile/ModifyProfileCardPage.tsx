@@ -62,7 +62,7 @@ export interface ModifyProfileInfo {
 
 export default function ModifyProfileCardPage() {
     const location = useLocation();
-    const profileId = location.state as number;
+    const profileId = location.state as string;
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const {
