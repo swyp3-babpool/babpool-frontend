@@ -25,13 +25,13 @@ export default function ScheduleCalendar({
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     // 선택 가능한 날짜(일)
     const possibleDate = [
-        ...new Set(userSchedule.map((schedule: UserScheduleType) => schedule.possibleDate)),
+        ...new Set(userSchedule.map((schedule: UserScheduleType) => schedule.possibleDateTime)),
     ];
 
 
     // 선택한 날짜의 선택 가능한 스케줄 리스트
     const currentSeletedDateScheduleList = userSchedule.filter((schedule: UserScheduleType) => {
-        return schedule.possibleDate === selectedDate;
+        return schedule.possibleDateTime === selectedDate;
     });
 
 
@@ -54,7 +54,7 @@ export default function ScheduleCalendar({
         const today = moment().format('YYYY-MM-DD');
         if(formatDate < today) return; 
         const userScheduleDates = userSchedule.map(
-            (schedule: UserScheduleType) => schedule.possibleDate
+            (schedule: UserScheduleType) => schedule.possibleDateTime
         );
         const validateDate = userScheduleDates.includes(formatDate);
         if (validateDate) {
@@ -64,24 +64,24 @@ export default function ScheduleCalendar({
 
     useEffect(() => {
         const today = moment().format('YYYY-MM-DD');
-        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDateTime >= today )
         console.log(filterDate)
         if(filterDate.length === 0) {
             return;
         }
-        setSelectedDate(filterDate[0].possibleDate)
-        setDate(new Date(filterDate[0].possibleDate))
+        setSelectedDate(filterDate[0].possibleDateTime)
+        setDate(new Date(filterDate[0].possibleDateTime))
     }, [])
 
     useEffect(() => {
         const today = moment().format('YYYY-MM-DD');
-        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDate >= today )
+        const filterDate = userSchedule.filter((schedule: UserScheduleType) => schedule?.possibleDateTime >= today )
         console.log(filterDate)
         if(filterDate.length === 0) {
             return;
         }
-        setSelectedDate(filterDate[0].possibleDate)
-        setDate(new Date(filterDate[0].possibleDate))
+        setSelectedDate(filterDate[0].possibleDateTime)
+        setDate(new Date(filterDate[0].possibleDateTime))
     }, [requestInfo])
 
     useEffect(() => {
