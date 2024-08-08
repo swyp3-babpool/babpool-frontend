@@ -25,7 +25,7 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 export type RequestInfoType = {
-    targetProfileId: number;
+    targetProfileId: string;
     possibleDateTime: string;
     appointmentContent: string;
 };
@@ -40,7 +40,7 @@ export default function BabRequestPage() {
     const [isRequestValidate, setIsRequestValidate] = useState(false);
     const [selectScheduleBoxKey, setSelectScheduleBoxKey] = useState<number | null>(null);
     const [requestInfo, setRequestInfo] = useState<RequestInfoType>({
-        targetProfileId: Number(targetProfileId),
+        targetProfileId: targetProfileId as string,
         possibleDateTime: '',
         appointmentContent: '',
     });
@@ -50,7 +50,7 @@ export default function BabRequestPage() {
             isLoading: isErrorPossibleTime,
         } = useQuery<GetModifyProfilePossibleTimeType[]>({
             queryKey: [`/api/possible/datetime/${Number(targetProfileId)}`, targetProfileId],
-            queryFn: () => getModifyProfileAvailableSchedule(Number(targetProfileId)),
+            queryFn: () => getModifyProfileAvailableSchedule(targetProfileId as string),
             enabled: !!targetProfileId,
         });
 

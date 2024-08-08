@@ -14,7 +14,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function ScheduleRegPage() {
     const location = useLocation();
-    const profileId = location.state as number;
+    const profileId = location.state as string;
 
     const {
         data: userSchedule,

@@ -2,7 +2,7 @@ import { CommonResponseType } from '@/interface/api/commonType';
 import { get, post } from '../api';
 import { UserScheduleType } from '@/interface/api/babRequestType';
 
-export const getAvailableSchedule = async (profileId: number) => {
+export const getAvailableSchedule = async (profileId: string) => {
     const res = (await get(`/api/possible/datetime/${profileId}`)) as CommonResponseType<
         UserScheduleType[]
     >;

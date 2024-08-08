@@ -17,7 +17,7 @@ export interface ReviewType {
 
 export type HistoryType = {
     appointmentId: number;
-    appointmentReceiverProfileId: number;
+    appointmentReceiverProfileId: string;
     appointmentReceiverUserNickname: string;
     appointmentReceiverProfileImageUrl: string;
     appointmentStatus: string;

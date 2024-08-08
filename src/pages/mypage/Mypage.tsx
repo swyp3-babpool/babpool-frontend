@@ -49,7 +49,7 @@ export default function MyPage() {
     const handleNotificationCardClick = (
         review: boolean,
         appointmentId: number,
-        userProfileId: number
+        userProfileId: string
     ) => {
         if (review) {
             navigate('/mypage/review', {

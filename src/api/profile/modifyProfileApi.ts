@@ -11,7 +11,7 @@ export const getModifyProfile = async () => {
     return res.data;
 };
 
-export const getModifyProfileAvailableSchedule = async (profileId: number) => {
+export const getModifyProfileAvailableSchedule = async (profileId: string) => {
     const res = (await get(`/api/possible/datetime/${profileId}`)) as CommonResponseType<
         GetModifyProfilePossibleTimeType[]
     >;

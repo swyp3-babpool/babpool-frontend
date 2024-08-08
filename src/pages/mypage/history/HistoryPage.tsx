@@ -61,7 +61,7 @@ export default function HistoryPage() {
     const handleNotificationCardClick = (
         review: boolean,
         appointmentId: number,
-        userProfileId: number
+        userProfileId: string
     ) => {
         if (review) {
             navigate('/mypage/review', {
@@ -133,7 +133,7 @@ export default function HistoryPage() {
                                       handleNotificationCardClick(
                                           item.reviewRequired === 'REVIEW_REQUIRED',
                                           item.appointmentId,
-                                          item.appointmentReceiverProfileId
+                                          item.appointmentReceiverProfileId as string
                                       )
                                   }
                               />
