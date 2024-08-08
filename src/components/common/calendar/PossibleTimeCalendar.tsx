@@ -46,7 +46,7 @@ export default function PossibleTimeCalendar({
         setTileContent(() => {
             return ({ date, view }: { date: any; view: any }) => {
                 const formattedDate = moment(date).format('YYYY-MM-DD');
-                // console.log("콘솔 작동중!!!!🚨", "selectedDates는", selectedDates  )
+
                 const selected = selectedDate === formattedDate;
                 const dateOnlyArray =
                     selectedDates && Array.isArray(selectedDates)

@@ -23,7 +23,7 @@ type SelectPossibleTimeModalProps = {
     initialDates?: string[];
     selectedDates: string[];
     setSelectedDates: (dates: string[]) => void;
- refetchUserSchedule:any
+    refetchUserSchedule:any
 };
 
 export default function SelectPossibleTimeModal({
@@ -38,7 +38,7 @@ export default function SelectPossibleTimeModal({
 }: SelectPossibleTimeModalProps) {
 
 
-
+  
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
      const [selectedDate, setSelectedDate] = useState<string>(
@@ -49,22 +49,29 @@ export default function SelectPossibleTimeModal({
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
     
 
-    const entries = page === 'mypage'
-    ? Object.entries(SELECT_TIME_SCHEDULE)
-    : initialDates.map(dateTime => {
-        // 시간 부분만 추출 (HH)
-        let hour = dateTime.substring(11, 13);
-        // 앞에 0이 있으면 제거
-        if (hour.startsWith('0')) {
-            hour = hour.substring(1);
-        }
-        // SELECT_TIME_SCHEDULE에서 해당하는 시간의 값을 가져옴
-        return SELECT_TIME_SCHEDULE[hour];
-        }).filter(entry => entry !== undefined); // undefined 값 제거
+  
+    const [entries, setEntries] = useState<[string, string][]>([]);
 
 
-    // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
-    const rows = [];
+    useEffect(() => {
+        const entries: [string, string][] = page === 'mypage'
+            ? Object.entries(SELECT_TIME_SCHEDULE)
+            : initialDates.filter(dateTime => dateTime.startsWith(selectedDate))
+                .map(dateTime => {
+                    let hour = dateTime.substring(11, 13);
+                    if (hour.startsWith('0')) {
+                        hour = hour.substring(1);
+                    }
+                    const time = SELECT_TIME_SCHEDULE[hour];
+                    return [hour, time];
+                })
+                .filter((entry): entry is [string, string] => entry[1] !== undefined)
+                .sort((a, b) => Number(a[0]) - Number(b[0])); 
+
+        setEntries(entries);
+    }, [page, selectedDate, initialDates]);
+
+    const rows: [string, string][][] = [];
     for (let i = 0; i < entries.length; i += 4) {
         const rowItems = entries.slice(i, i + 4);
         rows.push(rowItems);
@@ -86,7 +93,7 @@ export default function SelectPossibleTimeModal({
                 date.startsWith(`${selectedDate}T0${time}`)
             );
 
-        console.log(selectedDates, '여기 콘솔!!')
+    
 
         return isExist;
         };
@@ -164,31 +171,8 @@ export default function SelectPossibleTimeModal({
     //밥약 신청 페이지 
 
      const handleAppointmentSubmit = () => {
-        // addList: selectedDates에 있지만 initialDates에 없는 항목
-        const addList = selectedDates.filter((date) => {
-            const formattedDate = `${date.substring(0, 13)}`; // "2024-08-01T10" 형식으로 자르기
-    return !initialDates.some(initialDate => `${initialDate.substring(0, 13)}` === formattedDate);});
-
-        const currentDate = new Date();
-
-        // delList: initialDates에 있지만 selectedDates에 없는 항목
-        const delList = initialDates.filter((date) => {
-    const formattedDate = date.substring(0, 13); // "YYYY-MM-DDTHH" 형식으로 자르기
-    return !selectedDates.some(selectedDate => selectedDate.substring(0, 13) === formattedDate);
-});
-
-        const reqBody = {
-            possibleDateTimeAddList: addList,
-            possibleDateTimeDelList: delList,
-        };
-
-        modifyTimeSchedule(reqBody).then((res) => {
-            if (res.code === 200) {
-                window.alert('일정 업데이트가 완료되었습니다!');
-            } else if (res.code === 400) {
-                console.log('에러발생🚨', res.message);
-            }
-        });
+         setSelectedDates(selectedDates)
+         onClose();
     };
      
 
@@ -214,7 +198,7 @@ export default function SelectPossibleTimeModal({
                 />
             </CalendarContainer>
             <SelectScheduleContainer>
-                <Txt variant="caption1">선호하는 시간대를 모두 선택해주세요</Txt>
+                <Txt variant="caption1">{`선호하는 시간대를 ${page === 'mypage' ? '모두' : '하나'} 선택해주세요`}</Txt>
                 <SelectTimeContainer>
                     {rows.map((row, rowIndex) => (
                         <div key={rowIndex} style={{ display: 'flex', width: '100%' }}>
@@ -239,12 +223,12 @@ export default function SelectPossibleTimeModal({
                     ))}
                 </SelectTimeContainer>
                 <ButtonContainer>
-                    <Button
+                    {page ==='mypage' && <Button
                         text="완료"
                         disabled={!isSelectVerified}
                         type={isSelectVerified ? 'accept' : 'refuse'}
-                        onClick={ page === 'mypage' ? handleTimeSubmit : onClose}
-                    />
+                        onClick={ handleTimeSubmit }
+                    />}
                 </ButtonContainer>
             </SelectScheduleContainer>
         </SelectScheduleModalModalContainer>

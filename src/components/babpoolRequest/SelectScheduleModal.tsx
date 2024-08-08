@@ -48,6 +48,7 @@ export default function SelectScheduleModal({
     const handleSetPossibleSchedule = (scheduleList: UserScheduleType[]) => {
 
         const filterScheduleList = scheduleList.filter((schedule: UserScheduleType) => {
+         
             return schedule.possibleDateTimeStatus === 'Available';
         });
         setPossibleScheduleList(filterScheduleList ? filterScheduleList.map((item) => item.possibleDateTime) : []);

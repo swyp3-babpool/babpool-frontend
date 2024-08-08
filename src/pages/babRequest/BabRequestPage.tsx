@@ -17,7 +17,7 @@ import { useNavigation } from '@/hooks/useNavigation';
 import { UserScheduleType } from '@/interface/api/babRequestType';
 import { GetModifyProfilePossibleTimeType } from '@/interface/api/modifyProfileType';
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
-import { getMonthFormatDate, getMonthFormatMonth } from '@/utils/util';
+import { getHour, getMonthFormatDate, getMonthFormatMonth } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -32,7 +32,6 @@ export type RequestInfoType = {
 
 export default function BabRequestPage() {
     const { targetProfileIdAndName } = useParams();
-    console.log(targetProfileIdAndName);
     const targetProfileId = targetProfileIdAndName?.split('-')[0];
     const targetProfileName = targetProfileIdAndName?.split('-')[1];
     const [isScheduleSelected, setIsScheduleSelected] = useState(false);
@@ -48,6 +47,7 @@ export default function BabRequestPage() {
             data: userSchedule,
             isError: isLoadingPossibleTime,
             isLoading: isErrorPossibleTime,
+            refetch:refetchUserSchedule
         } = useQuery<GetModifyProfilePossibleTimeType[]>({
             queryKey: [`/api/possible/datetime/${Number(targetProfileId)}`, targetProfileId],
             queryFn: () => getModifyProfileAvailableSchedule(targetProfileId as string),
@@ -59,9 +59,7 @@ export default function BabRequestPage() {
             .filter((item) => item.possibleDateTimeStatus === "AVAILABLE")
             .map((item) => item.possibleDateTime)
         : [];
-
-
-    const [possibleDate, setPossibleDate] = useState<string[]>([]);
+   
 
     const alarmInfo = useRecoilValue(alarmInfoState);
 
@@ -82,27 +80,32 @@ export default function BabRequestPage() {
 
     const handleSelectSchedule = (selectedSchedule: string[]) => {
         setRequestInfo((prev) => {
+            console.log({
+                ...prev,
+                possibleDateTime: selectedSchedule[0]})
             return {
                 ...prev,
-                possibleTimeIdList: selectedSchedule[0],
+                possibleDateTime: selectedSchedule[0],
             };
         });
         handleCloseModal();
+    
         
     };
 
+
     const handleSubmit = () => {
         const reqBody = {
-            ...requestInfo, ...possibleDate
+            ...requestInfo
         };
         console.log(reqBody);
-        // appointmentRequest(reqBody).then((res) => {
-        //     console.log(res);
-        //     if (res.code === 200) {
-        //         console.log('밥약 요청 완료');
-        //         setIsOpenPopup(true);
-        //     }
-        // });
+        appointmentRequest(reqBody).then((res) => {
+            console.log(res);
+            if (res.code === 200) {
+                console.log('밥약 요청 완료');
+                setIsOpenPopup(true);
+            }
+        });
     };
 
     const handleClosePopup = () => {
@@ -128,7 +131,7 @@ export default function BabRequestPage() {
         }
     }, [requestInfo]);
 
- 
+
 
 
     return (
@@ -154,19 +157,14 @@ export default function BabRequestPage() {
                             <ScheduleBoxContainer>
                                 <ScheduleBox
                                     defaultText="일정 선택하기*"
-                                    // selectText={
-                                    //     requestInfo.possibleDateTime.length >= 1
-                                    //         ? `${getMonthFormatDate(
-                                    //               requestInfo.possibleDateTime
-                                    //           )} ${String(
-                                    //               SELECT_TIME_SCHEDULE[
-                                    //                   getMonthFormatMonth(
-                                    //                       requestInfo.possibleDateTime
-                                    //                   ) as keyof typeof SELECT_TIME_SCHEDULE
-                                    //               ]
-                                    //           )}`
-                                    //         : ''
-                                    // }
+                                    selectText={
+                                        requestInfo.possibleDateTime.length >= 1
+                                            ? `${getMonthFormatDate(
+                                                requestInfo.possibleDateTime
+                                            )} ${SELECT_TIME_SCHEDULE[
+                                            getHour(requestInfo.possibleDateTime)]}`
+                                            : ''
+                                    }
                                     onClick={() => handleOpenModal(0)}
                                 />
                             </ScheduleBoxContainer>
@@ -191,18 +189,11 @@ export default function BabRequestPage() {
                     <SelectPossibleTimeModal
                         page={'appointment'}
                         initialDates={possibleAppointmentTime}
-                        selectedDates={possibleDate}
-                        setSelectedDates={setPossibleDate}
+                        selectedDates={[]}
+                        setSelectedDates={handleSelectSchedule}
                         isOpen={isScheduleSelected}
                         onClose={handleCloseModal}
-                    />
-                    {/* <SelectScheduleModal
-                        isOpen={isScheduleSelected}
-                        userId={Number(targetProfileId)}
-                        requestInfo={requestInfo}
-                        handleSelectSchedule={handleSubmit}
-                        onClose={handleCloseModal}
-                    /> */}
+                        refetchUserSchedule={refetchUserSchedule} />
                     {isScheduleSelected && <Overlay />}
                 </BabRequestPageContainer>
                 {isOpenPopup && (
