@@ -37,6 +37,7 @@ export default function SelectScheduleModal({
         data: userSchedule,
         isLoading,
         isError,
+        refetch: refetchUserSchedule
     } = useQuery<UserScheduleType[]>({
         queryKey: [`/api/possible/datetime/${userId}`, userId],
         queryFn: () => getAvailableSchedule(userId),
@@ -47,7 +48,6 @@ export default function SelectScheduleModal({
     const handleSetPossibleSchedule = (scheduleList: UserScheduleType[]) => {
 
         const filterScheduleList = scheduleList.filter((schedule: UserScheduleType) => {
-            console.log(schedule)
             return schedule.possibleDateTimeStatus === 'Available';
         });
         setPossibleScheduleList(filterScheduleList ? filterScheduleList.map((item) => item.possibleDateTime) : []);
@@ -72,7 +72,8 @@ export default function SelectScheduleModal({
                                 selectedDates={possibleScheduleList}
                                 setSelectedDates={handleSelectSchedule}
                                 isOpen={isOpen}
-                                onClose={onClose}
+                onClose={onClose}
+            refetchUserSchedule={refetchUserSchedule} 
                           />        
         )
     );

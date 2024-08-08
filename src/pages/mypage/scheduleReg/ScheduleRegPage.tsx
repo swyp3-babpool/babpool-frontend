@@ -20,6 +20,7 @@ export default function ScheduleRegPage() {
         data: userSchedule,
         isError: isLoadingPossibleTime,
         isLoading: isErrorPossibleTime,
+         refetch: refetchUserSchedule,
     } = useQuery<GetModifyProfilePossibleTimeType[]>({
         queryKey: [`/api/possible/datetime/${profileId}`, profileId],
         queryFn: () => getModifyProfileAvailableSchedule(profileId),
@@ -37,7 +38,6 @@ export default function ScheduleRegPage() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-    console.log(initialTimes, '여기 콘솔!!');
 
     return (
         <ScheduleRegPageContainer>
@@ -73,6 +73,7 @@ export default function ScheduleRegPage() {
                 setSelectedDates={setPossibleDate}
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
+                refetchUserSchedule={refetchUserSchedule} 
             />
             {isModalOpen && <Overlay />}
         </ScheduleRegPageContainer>

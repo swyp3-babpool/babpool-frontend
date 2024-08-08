@@ -22,7 +22,8 @@ type SelectPossibleTimeModalProps = {
     onClose: () => void;
     initialDates?: string[];
     selectedDates: string[];
-    setSelectedDates: (dates: string[] ) => void;
+    setSelectedDates: (dates: string[]) => void;
+ refetchUserSchedule:any
 };
 
 export default function SelectPossibleTimeModal({
@@ -32,7 +33,11 @@ export default function SelectPossibleTimeModal({
     initialDates = [],
     selectedDates,
     setSelectedDates,
+    refetchUserSchedule
+ 
 }: SelectPossibleTimeModalProps) {
+
+
 
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
@@ -81,6 +86,7 @@ export default function SelectPossibleTimeModal({
                 date.startsWith(`${selectedDate}T0${time}`)
             );
 
+        console.log(selectedDates, '여기 콘솔!!')
 
         return isExist;
         };
@@ -144,9 +150,10 @@ export default function SelectPossibleTimeModal({
             possibleDateTimeDelList: delList,
         };
 
-        modifyTimeSchedule(reqBody).then((res) => {
+        modifyTimeSchedule(reqBody).then(async (res) => {
             if (res.code === 200) {
                 window.alert('일정 업데이트가 완료되었습니다!');
+                await refetchUserSchedule()
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
             }
