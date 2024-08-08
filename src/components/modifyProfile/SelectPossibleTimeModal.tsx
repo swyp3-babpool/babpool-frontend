@@ -44,22 +44,22 @@ export default function SelectPossibleTimeModal({
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
     
 
-const entries = page === 'mypage'
-  ? Object.entries(SELECT_TIME_SCHEDULE)
-  : initialDates.map(dateTime => {
-      // 시간 부분만 추출 (HH)
-      let hour = dateTime.substring(11, 13);
-      // 앞에 0이 있으면 제거
-      if (hour.startsWith('0')) {
-        hour = hour.substring(1);
-      }
-      // SELECT_TIME_SCHEDULE에서 해당하는 시간의 값을 가져옴
-      return SELECT_TIME_SCHEDULE[hour];
-    }).filter(entry => entry !== undefined); // undefined 값 제거
+    const entries = page === 'mypage'
+    ? Object.entries(SELECT_TIME_SCHEDULE)
+    : initialDates.map(dateTime => {
+        // 시간 부분만 추출 (HH)
+        let hour = dateTime.substring(11, 13);
+        // 앞에 0이 있으면 제거
+        if (hour.startsWith('0')) {
+            hour = hour.substring(1);
+        }
+        // SELECT_TIME_SCHEDULE에서 해당하는 시간의 값을 가져옴
+        return SELECT_TIME_SCHEDULE[hour];
+        }).filter(entry => entry !== undefined); // undefined 값 제거
 
-    console.log
+
     // entries 배열을 4개씩 나누어 rows 배열에 저장합니다.
-     const rows = [];
+    const rows = [];
     for (let i = 0; i < entries.length; i += 4) {
         const rowItems = entries.slice(i, i + 4);
         rows.push(rowItems);
@@ -72,10 +72,10 @@ const entries = page === 'mypage'
     }, [selectedDates]);
 
 
- const checkSelected = (time: number) => {
+    const checkSelected = (time: number) => {
 
         if (!selectedDates) return false;
-       const isExist = selectedDates.some(
+        const isExist = selectedDates.some(
             (date) =>
                 date.startsWith(`${selectedDate}T${time}`) ||
                 date.startsWith(`${selectedDate}T0${time}`)
@@ -83,7 +83,7 @@ const entries = page === 'mypage'
 
 
         return isExist;
-    };
+        };
 
     const handleSelectTime = (time: number) => {
        
@@ -152,7 +152,6 @@ const entries = page === 'mypage'
             }
         });
     };
-
 
 
     //밥약 신청 페이지 
@@ -237,7 +236,7 @@ const entries = page === 'mypage'
                         text="완료"
                         disabled={!isSelectVerified}
                         type={isSelectVerified ? 'accept' : 'refuse'}
-                        onClick={handleTimeSubmit}
+                        onClick={ page === 'mypage' ? handleTimeSubmit : onClose}
                     />
                 </ButtonContainer>
             </SelectScheduleContainer>

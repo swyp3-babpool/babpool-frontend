@@ -56,7 +56,7 @@ export default function BabRequestPage() {
 
     const possibleAppointmentTime = userSchedule
         ? userSchedule
-            .filter((item) => item.possibleDateTimeStatus === 'Available')
+            .filter((item) => item.possibleDateTimeStatus === "AVAILABLE")
             .map((item) => item.possibleDateTime)
         : [];
 
