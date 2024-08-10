@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from 'styled-components';
 import Keyword from './Keyword';
-import { INTEREST_KEYWORD } from '@/utils/constant';
+import { INTEREST_KEYWORD, INTEREST_KEYWORD_VALUE } from '@/utils/constant';
 import { KeywordType } from '@/components/signup/KeywordGroup';
 import Txt from '../text';
 import { getKeywordGroupTitle } from '@/utils/util';
@@ -26,7 +26,7 @@ export default function KeywordList({ handleCheck, handleChange, margin }: Keywo
                             return (
                                 <Keyword
                                     key={keyword}
-                                    name={keyword}
+                                    name={INTEREST_KEYWORD_VALUE[keyword as keyof typeof INTEREST_KEYWORD_VALUE]}
                                     keywordGroup={keywordGroup}
                                     ischecked={ischecked}
                                     onChange={handleChange}

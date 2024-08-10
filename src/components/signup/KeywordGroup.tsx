@@ -26,7 +26,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
     ) => {
        
         const { name } = e.target;
-        const isSelected = signUpInfo.keywordGroups[keywordGroup].includes(INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]);
+        const isSelected = signUpInfo.keywordGroups[keywordGroup].includes(name);
         console.log('data',signUpInfo.keywordGroups[keywordGroup])
         if (isSelected) {
             setSignUpInfo((prev) => ({
@@ -34,7 +34,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
                 keywordGroups: {
                     ...prev.keywordGroups,
                     [keywordGroup]: prev.keywordGroups[keywordGroup].filter(
-                        (keyword) => keyword !== INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]
+                        (keyword) => keyword !== name
                     ),
                 },
             }));
@@ -44,7 +44,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
                     ...prev,
                     keywordGroups: {
                         ...prev.keywordGroups,
-                        [keywordGroup]: [...prev.keywordGroups[keywordGroup], INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]],
+                        [keywordGroup]: [...prev.keywordGroups[keywordGroup], name],
                     },
                 }));
             }
