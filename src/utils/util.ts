@@ -1,4 +1,3 @@
-import { get } from './../api/api';
 import { KeywordType } from '@/components/signup/KeywordGroup';
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -27,6 +26,40 @@ export const getDate = (date: string, hour: number) => {
     const hour2by12 = hour2 % 12 === 0 ? 12 : hour2 % 12;
     return `${month}/${day}(${dayOfWeek}) ${period1} ${hour1by12}:00 ~ ${period2} ${hour2by12}:00`;
 };
+
+// 날짜와 시간을 포맷팅하는 함수
+export function formatDateTime(dateTimeString: string) {
+    // 입력된 ISO 형식의 날짜를 moment 객체로 변환
+    const date = moment(dateTimeString);
+
+    // 1. 날짜 포맷 설정 - 월/일(요일)
+    const englishDay = date.format('ddd'); // 요일을 영어 약어로 추출
+    const koreanDay = getKoreanDay(englishDay); // 영어 요일을 한국어로 변환
+    const formattedDate = date.format(`M/D(${koreanDay})`); // 월/일(요일) 포맷
+
+    // 2. 시간 포맷 설정 - 오전/오후 시:분
+    const formattedTime = date.format('A hh:mm');
+    const finalFormattedTime = formattedTime.replace('AM', '오전').replace('PM', '오후');
+
+    // 3. 최종 포맷 조합
+    return `${formattedDate} ${finalFormattedTime}`;
+}
+
+function getKoreanDay(englishDay: string) {
+    // 영어 요일 약어와 한국어 요일 약어 매핑
+    const daysMap: { [key: string]: string } = {
+        'Sun': '일',
+        'Mon': '월',
+        'Tue': '화',
+        'Wed': '수',
+        'Thu': '목',
+        'Fri': '금',
+        'Sat': '토'
+    };
+
+    // 매핑된 한국어 요일 반환
+    return daysMap[englishDay] || undefined;
+}
 
 export const getReviewType = (reviewType: string) => {
     switch (reviewType) {

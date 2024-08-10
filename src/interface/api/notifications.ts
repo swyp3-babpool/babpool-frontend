@@ -25,8 +25,8 @@ export interface DetailBabAppointmentType {
     profileImgUrl: string;
     keywords: string[];
     lastingTime: LastingTime;
-    possibleDateTimes: PossibleTime[];
-    question: string;
+    possibleDateTime: string;
+    appointmentContent: string;
     fixedDateTimeId: number;
     contactChat: string;
     contactPhone: string;
@@ -50,9 +50,8 @@ export interface AcceptContentType {
     requesterProfileImageUrl: string;
     requesterGrade: string;
     requesterIntro: string;
-    date: string;
-    time: number;
+    possibleDateTime: string;
     requesterContactPhone: string;
     requesterContactChat: string;
-    question: string;
+    appointmentContent: string;
 }

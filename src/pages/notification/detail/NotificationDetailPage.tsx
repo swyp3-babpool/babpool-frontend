@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { colors } from '@/assets/styles/theme';
 
 import Txt from '@/components/common/text';
@@ -10,9 +10,8 @@ import {
     QueryBox,
     ButtonContainer,
     Devider,
-    PossibleTimeRadioButton,
 } from './NotificationDetailPage.styles';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import ProfileBox from '@/components/profile/ProfileBox';
 import ProfileKeywords from '@/components/profile/ProfileKeywords';
@@ -29,7 +28,7 @@ import {
 } from '@/api/notification/notificationApi';
 
 import { useQuery } from '@tanstack/react-query';
-import { getDate, getDivisionName } from '@/utils/util';
+import { formatDateTime, getDate, getDivisionName } from '@/utils/util';
 import { alarmInfoState } from '@/atom/alarminfo';
 import { useRecoilValue } from 'recoil';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
@@ -43,7 +42,6 @@ export default function NotificationDetailPage() {
     const { type } = useParams();
     const location = useLocation();
     const { state, appointmentId } = location.state as NotificationDetailPageProps;
-    console.log(location);
     const {
         data: detailAppointment,
         isError: isError,
@@ -53,7 +51,6 @@ export default function NotificationDetailPage() {
         queryFn: () => getDetailBabAppointment(appointmentId),
     });
     const navigate = useNavigate();
-    const [selectedTime, setSelectedTime] = useState(-1);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isPopupSecondButton, setIsPopupSecondButton] = useState(false);
     const [isPopupSecondText, setIsPopupSecondText] = useState(false);
@@ -65,7 +62,6 @@ export default function NotificationDetailPage() {
     const handleAppointmentAccept = () => {
         const reqBody = {
             appointmentId: appointmentId,
-            possibleTimeId: selectedTime,
         };
         appointmentAccept(reqBody).then((res) => {
             if (res.code === 200) {
@@ -89,13 +85,7 @@ export default function NotificationDetailPage() {
     const handlePopupOpen = () => {
         if (type === 'received') {
             if (state === 'WAITING') {
-                if (selectedTime === -1) {
-                    setIsPopupOpen(true);
-                    setIsPopupSecondText(true);
-                    setModalTitle('가능하신 시간대 1개를');
-                } else {
                     handleAppointmentAccept();
-                }
             }
         } else {
             setIsPopupOpen(true);
@@ -112,24 +102,14 @@ export default function NotificationDetailPage() {
         setIsPopupOpen(false);
         if (type === 'received') {
             if (state === 'WAITING') {
-                if (selectedTime === -1) {
-                    setIsPopupOpen(false);
-                    return;
-                } else {
+
                     navigate(`/accept`, { state: acceptContent });
-                }
             }
         } else {
             handleAppointmentCacel();
         }
         setIsPopupSecondText(false);
     };
-
-    useEffect(() => {
-        if (detailAppointment?.fixedDateTimeId) {
-            setSelectedTime(detailAppointment?.fixedDateTimeId);
-        }
-    }, [detailAppointment]);
 
     return (
         <NotificationDetailPageContainer>
@@ -193,43 +173,22 @@ export default function NotificationDetailPage() {
                             <Txt variant="h5" color={colors.black}>
                                 이때 가능해요
                             </Txt>
-                            {state === 'WAITING' && type === 'received' && (
-                                <Txt variant="caption2" color={colors.white_20}>
-                                    밥약 수락을 위해 가능한 시간대 1개를 선택해주세요
-                                </Txt>
-                            )}
                         </Col>
-                        <Col gap="16">
-                            {detailAppointment?.possibleDateTimes.map((time, idx) => (
-                                <Row gap="14" key={idx} alignItems="center">
-                                    {!(state === 'WAITING' && type === 'sent') && (
-                                        <PossibleTimeRadioButton
-                                            selected={
-                                                selectedTime !== -1 &&
-                                                selectedTime === time.possibleTimeId
-                                            }
-                                            disabled={!(type === 'received' && state === 'WAITING')}
-                                            cursor={
-                                                type === 'received' && state === 'WAITING'
-                                                    ? 'pointer'
-                                                    : 'default'
-                                            }
-                                            onClick={() => setSelectedTime(time.possibleTimeId)}
-                                        />
-                                    )}
+                        <Col gap="16"> 
+                                <Row gap="14" alignItems="center">
                                     <PossibleTimeBox
                                         selected={
-                                            state === 'ACCEPT'
-                                                ? selectedTime === time.possibleTimeId
-                                                : true
+                                            // state === 'ACCEPT'
+                                            //     ? selectedTime === time.possibleTimeId
+                                            //     : true
+                                            true
                                         }
                                     >
                                         <Txt variant="caption1" color={colors.black}>
-                                            {getDate(time.possibleDate, time.possibleTimeStart)}
+                                            {formatDateTime(detailAppointment?.possibleDateTime as string)}
                                         </Txt>
                                     </PossibleTimeBox>
                                 </Row>
-                            ))}
                         </Col>
                     </Col>
                     <Devider />
@@ -239,7 +198,7 @@ export default function NotificationDetailPage() {
                         </Txt>
                         <QueryBox>
                             <Txt variant="caption1" color={colors.black}>
-                                {detailAppointment?.question}
+                                {detailAppointment?.appointmentContent}
                             </Txt>
                         </QueryBox>
                     </Col>
@@ -283,9 +242,9 @@ export default function NotificationDetailPage() {
                 <Overlay>
                     <Popup
                         text={modalTitle}
-                        secondText={
-                            selectedTime === -1 && isPopupSecondText ? '선택해주세요!' : undefined
-                        }
+                        // secondText={
+                        //     selectedTime === -1 && isPopupSecondText ? '선택해주세요!' : undefined
+                        // }
                         button={
                             <Button
                                 text={isPopupSecondButton ? '네' : '확인'}

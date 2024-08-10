@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '@/assets/styles/theme';
 import Txt from '@/components/common/text';
@@ -9,7 +8,7 @@ import { Col, Row } from '@/components/common/flex/Flex';
 import ProfileBox from '@/components/profile/ProfileBox';
 import Button from '@/components/common/button';
 import { AcceptContentType } from '@/interface/api/notifications';
-import { getDate, getDateTime, getDivisionName } from '@/utils/util';
+import { formatDateTime, getDivisionName } from '@/utils/util';
 import {
     AcceptPageContainer,
     ButtonContainer,
@@ -22,15 +21,6 @@ import AlarmModal from '@/components/common/alarm/AlarmModal';
 import { alarmInfoState } from '@/atom/alarminfo';
 import { useRecoilValue } from 'recoil';
 
-interface AcceptPageProps {
-    appointmentId: number;
-    userNickName: string;
-    userGrade: string;
-    profileIntro: string;
-    profileImgUrl: string;
-    keywords: string[];
-}
-
 export default function AcceptPage() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -40,11 +30,10 @@ export default function AcceptPage() {
         requesterProfileImageUrl,
         requesterGrade,
         requesterIntro,
-        date,
-    time,
+        possibleDateTime,
         requesterContactPhone,
         requesterContactChat,
-        question,
+        appointmentContent,
     } = location.state as AcceptContentType;
 
     const alarmInfo = useRecoilValue(alarmInfoState);
@@ -86,7 +75,7 @@ export default function AcceptPage() {
                             밥약시간
                         </Txt>
                         <Txt variant="caption1" color={colors.black}>
-                            {getDate(date, time)}
+                            {formatDateTime(possibleDateTime)}
                         </Txt>
                     </Row>
                     <Row gap="20">
@@ -105,7 +94,7 @@ export default function AcceptPage() {
                     </Txt>
                     <QueryBox>
                         <Txt variant="caption1" color={colors.black}>
-                            {question}
+                            {appointmentContent}
                         </Txt>
                     </QueryBox>
                 </Col>
