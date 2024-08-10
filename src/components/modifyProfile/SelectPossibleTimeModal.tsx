@@ -38,6 +38,9 @@ export default function SelectPossibleTimeModal({
 }: SelectPossibleTimeModalProps) {
 
 
+    console.log(initialDates)
+
+    
   
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
@@ -69,6 +72,7 @@ export default function SelectPossibleTimeModal({
                 .sort((a, b) => Number(a[0]) - Number(b[0])); 
 
         setEntries(entries);
+        checkSelected
     }, [page, selectedDate, initialDates]);
 
     const rows: [string, string][][] = [];
@@ -212,13 +216,6 @@ export default function SelectPossibleTimeModal({
                                     <div>{time}</div>
                                 </SelectTimeItem>
                             ))}
-                            {/* 마지막 줄이 3개일  경우, 빈 아이템을 추가하여 4개의 크기를 유지합니다 */}
-                            {row.length < 4 && (
-                                <SelectTimeItem
-                                    isSelected={checkSelected(Number(0))}
-                                    style={{ visibility: 'hidden' }}
-                                />
-                            )}
                         </div>
                     ))}
                 </SelectTimeContainer>
@@ -295,19 +292,18 @@ const SelectTimeContainer = styled.div`
     background-color: inherit;
 `;
 const SelectTimeItem = styled.div<{ isSelected: boolean }>`
-    flex: 1 0 calc(25% - 16px); /* 1/4 크기로 나누기 */
+    flex: 0 0 calc(25% - 7.5px);
+    margin-right: 10px;
     background-color: ${(props) =>
         props.isSelected ? `${colors.purple_light_20}` : `${colors.white}`};
     border-radius: 5px;
     padding: 10px;
     text-align: center;
     color: ${colors.white_40};
-    margin-right: 10px; /* 오른쪽 여백 설정 */
-
     font-size: 13px;
 
     /* 마지막 요소는 오른쪽 여백을 없애기 위해 margin-right를 0으로 설정합니다 */
-    &:last-child {
+    &:nth-child(4n) {
         margin-right: 0;
     }
 `;

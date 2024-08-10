@@ -1,5 +1,5 @@
 import Header from '@/components/common/header';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AddPossibleTimeButton, ScheduleRegPageContainer } from './ScheduleRegPage.styles';
 import { Col } from '@/components/common/flex/Flex';
 import Txt from '@/components/common/text';
@@ -18,19 +18,22 @@ export default function ScheduleRegPage() {
 
     const {
         data: userSchedule,
-        isError: isLoadingPossibleTime,
-        isLoading: isErrorPossibleTime,
+        isError: isErrorPossibleTime,
+        isLoading: isLoadingPossibleTime,
          refetch: refetchUserSchedule,
     } = useQuery<GetModifyProfilePossibleTimeType[]>({
         queryKey: [`/api/possible/datetime/${profileId}`, profileId],
         queryFn: () => getModifyProfileAvailableSchedule(profileId),
         enabled: !!profileId,
+        refetchOnReconnect: true
     });
+ 
 
     const initialTimes = userSchedule ? userSchedule.map((item) => item.possibleDateTime) : [];
     const [possibleDate, setPossibleDate] = useState<string[]>(
         userSchedule ? [...initialTimes]: []
     );
+
 
    
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,8 +42,16 @@ export default function ScheduleRegPage() {
         setIsModalOpen(false);
     };
 
+    useEffect(() => {
+    if (userSchedule) {
+        setPossibleDate(initialTimes);
+    }
+}, [userSchedule]);
+
+    
+
     return (
-        <ScheduleRegPageContainer>
+     <ScheduleRegPageContainer>
             <Header text="일정 등록" destination="/mypage" />
             <Col gap={16} padding="25px 30px 45px">
                 <Col gap={8}>
@@ -53,28 +64,32 @@ export default function ScheduleRegPage() {
                         선택하신 시간대로 밥약 요청이 접수돼요
                     </Txt>
                 </Col>
-                <AddPossibleTimeButton
-                    isExist={Object.keys(possibleDate).length > 0}
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    {Object.keys(possibleDate).length > 0 ? (
-                        <Txt variant="body" color={colors.purple_light_40}>
-                            확인/수정하기
-                        </Txt>
-                    ) : (
-                        <PlusIcon />
+                {!isLoadingPossibleTime && (
+                        <AddPossibleTimeButton
+                            isExist={Object.keys(possibleDate).length > 0}
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            {Object.keys(possibleDate).length > 0 ? (
+                                <Txt variant="body" color={colors.purple_light_40}>
+                                    확인/수정하기
+                                </Txt>
+                            ) : (
+                                <PlusIcon />
+                            )}
+                        </AddPossibleTimeButton>
                     )}
-                </AddPossibleTimeButton>
             </Col>
-            <SelectPossibleTimeModal
-                page={'mypage'}
-                initialDates={initialTimes}
-                selectedDates={possibleDate}
-                setSelectedDates={setPossibleDate}
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                refetchUserSchedule={refetchUserSchedule} 
-            />
+           {!isLoadingPossibleTime && (
+                <SelectPossibleTimeModal
+                    page={'mypage'}
+                    initialDates={initialTimes}
+                    selectedDates={possibleDate}
+                    setSelectedDates={setPossibleDate}
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    refetchUserSchedule={refetchUserSchedule}
+                />
+            )}
             {isModalOpen && <Overlay />}
         </ScheduleRegPageContainer>
     );
