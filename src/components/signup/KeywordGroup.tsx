@@ -2,7 +2,7 @@ import { colors } from '@/assets/styles/theme';
 import React from 'react';
 import { styled } from 'styled-components';
 import Txt from '../common/text';
-import { INTEREST_KEYWORD } from '@/utils/constant';
+import { INTEREST_KEYWORD, INTEREST_KEYWORD_VALUE } from '@/utils/constant';
 import { SignUpInfo } from '@/pages/signup/SignUpPage';
 import KeywordList from '../common/keyword/KeywordList';
 
@@ -26,14 +26,15 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
     ) => {
        
         const { name } = e.target;
-        const isSelected = signUpInfo.keywordGroups[keywordGroup].includes(name);
+        const isSelected = signUpInfo.keywordGroups[keywordGroup].includes(INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]);
+        console.log('data',signUpInfo.keywordGroups[keywordGroup])
         if (isSelected) {
             setSignUpInfo((prev) => ({
                 ...prev,
                 keywordGroups: {
                     ...prev.keywordGroups,
                     [keywordGroup]: prev.keywordGroups[keywordGroup].filter(
-                        (keyword) => keyword !== name
+                        (keyword) => keyword !== INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]
                     ),
                 },
             }));
@@ -43,7 +44,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
                     ...prev,
                     keywordGroups: {
                         ...prev.keywordGroups,
-                        [keywordGroup]: [...prev.keywordGroups[keywordGroup], name],
+                        [keywordGroup]: [...prev.keywordGroups[keywordGroup], INTEREST_KEYWORD_VALUE[name as keyof typeof INTEREST_KEYWORD_VALUE]],
                     },
                 }));
             }
@@ -56,7 +57,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
     };
 
     const handleCheck = (keywordGroup: KeywordType, keyword: string) => {
-        return signUpInfo.keywordGroups[keywordGroup].includes(keyword);
+        return signUpInfo.keywordGroups[keywordGroup].includes(INTEREST_KEYWORD_VALUE[keyword as keyof typeof INTEREST_KEYWORD_VALUE]);
     };
 
     return (
