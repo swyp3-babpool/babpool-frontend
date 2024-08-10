@@ -15,8 +15,6 @@ type KeywordGroupProps = {
 export type KeywordType = keyof typeof INTEREST_KEYWORD;
 
 export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: KeywordGroupProps) {
-  
-    
     const keywordArrays = Object.values(signUpInfo.keywordGroups);
     const keywordTotalLength = keywordArrays.reduce((acc, curr) => acc + curr.length, 0);
 
@@ -24,7 +22,6 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
         e: React.ChangeEvent<HTMLInputElement>,
         keywordGroup: keyof typeof INTEREST_KEYWORD
     ) => {
-       
         const { name } = e.target;
         const isSelected = signUpInfo.keywordGroups[keywordGroup].includes(name);
         if (isSelected) {
@@ -51,7 +48,7 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
     };
 
     const validateCheck = () => {
-        // console.log(keywordTotalLength); // 총 길이 출력
+        console.log(keywordTotalLength); // 총 길이 출력
         return keywordTotalLength < 10;
     };
 

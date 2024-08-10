@@ -25,7 +25,7 @@ export interface DetailBabAppointmentType {
     profileImgUrl: string;
     keywords: string[];
     lastingTime: LastingTime;
-    possibleDateTimes: PossibleTime[];
+    possibleDateTime: string;
     question: string;
     fixedDateTimeId: number;
     contactChat: string;

@@ -192,7 +192,7 @@ export default function TotalBabpoolPage() {
                     })}
                 </FilterBoxContainer>
 
-                {!isLoading && data ? (
+                {data ? (
                     <>
                         {/* 유저 프로필 */}
                         <UserProfileContainer>
