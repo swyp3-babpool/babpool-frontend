@@ -13,17 +13,13 @@ export const ReviewPageContainer = styled.div`
     overflow-y: scroll;
 `;
 
-export const ButtonContainer = styled.div`
-    box-sizing: border-box;
+export const ButtonContainer = styled.div` 
     width: 100%;
-    padding: 0px 30px 40px;
-    position: fixed;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
+    height: 100%;
+    padding: 0px 20px 30px 20px;
 `;
 
 export const ReviewButton = styled.button<{ selected: boolean }>`

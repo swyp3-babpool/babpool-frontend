@@ -1,7 +1,8 @@
+import { setupInterceptor } from '@/api/api';
 import { appointmentRequest, getAvailableSchedule } from '@/api/babRequest/babRequestApi';
 import { getModifyProfileAvailableSchedule } from '@/api/profile/modifyProfileApi';
 import { colors } from '@/assets/styles/theme';
-import { alarmInfoState } from '@/atom/alarminfo';
+import { alarmInfoState, noPossibleDateAlarm } from '@/atom/alarminfo';
 import SelectScheduleModal from '@/components/babpoolRequest/SelectScheduleModal';
 import AlarmModal from '@/components/common/alarm/AlarmModal';
 import Button from '@/components/common/button';
@@ -19,10 +20,12 @@ import { GetModifyProfilePossibleTimeType } from '@/interface/api/modifyProfileT
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 import { getHour, getMonthFormatDate, getMonthFormatMonth } from '@/utils/util';
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
+
+
 
 export type RequestInfoType = {
     targetProfileId: string;
@@ -37,7 +40,10 @@ export default function BabRequestPage() {
     const [isScheduleSelected, setIsScheduleSelected] = useState(false);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const [isRequestValidate, setIsRequestValidate] = useState(false);
+    const [possibleAppointmentTime, setPossibleAppointmentTime] = useState(['']);
+    const alertShownRef = useRef(false); // useRef로 alert 중복 방지
     const [selectScheduleBoxKey, setSelectScheduleBoxKey] = useState<number | null>(null);
+    const { goHome } = useNavigation()
     const [requestInfo, setRequestInfo] = useState<RequestInfoType>({
         targetProfileId: targetProfileId as string,
         possibleDateTime: '',
@@ -45,8 +51,7 @@ export default function BabRequestPage() {
     });
     const {
             data: userSchedule,
-            isError: isLoadingPossibleTime,
-            isLoading: isErrorPossibleTime,
+            isLoading: isLoadingPossibleTime,
             refetch:refetchUserSchedule
         } = useQuery<GetModifyProfilePossibleTimeType[]>({
             queryKey: [`/api/possible/datetime/${Number(targetProfileId)}`, targetProfileId],
@@ -54,16 +59,14 @@ export default function BabRequestPage() {
             enabled: !!targetProfileId,
         });
 
-    const possibleAppointmentTime = userSchedule
-        ? userSchedule
-            .filter((item) => item.possibleDateTimeStatus === "AVAILABLE")
-            .map((item) => item.possibleDateTime)
-        : [];
-   
+
 
     const alarmInfo = useRecoilValue(alarmInfoState);
-
+    const noPossibleDate = useRecoilValue(noPossibleDateAlarm);
+    console.log(noPossibleDate)
     const { navigate } = useNavigation();
+    const setNoPossibleDateAlarm = useSetRecoilState(noPossibleDateAlarm);
+
 
     const handleOpenModal = (key: number) => {
         setIsScheduleSelected(true);
@@ -98,7 +101,15 @@ export default function BabRequestPage() {
         const reqBody = {
             ...requestInfo
         };
-        console.log(reqBody);
+         if (noPossibleDate) {
+            alert("이미 마감된 시간입니다. 시간을 다시 선택해주세요")
+             refetchUserSchedule
+             // 2초 후에 상태를 false로 되돌림
+            setTimeout(() => {
+                setNoPossibleDateAlarm(false); // 상태를 다시 false로 설정
+                alertShownRef.current = false; // alertShownRef 상태 초기화
+            }, 2000); // 원하는 시간 조정 가능 (2초 정도)
+        } 
         appointmentRequest(reqBody).then((res) => {
             console.log(res);
             if (res.code === 200) {
@@ -131,12 +142,35 @@ export default function BabRequestPage() {
         }
     }, [requestInfo]);
 
+    useEffect(() => {
+    const currentTime = new Date();
+    const availableTimes = userSchedule
+      ? userSchedule
+          .filter((item) => item.possibleDateTimeStatus === "AVAILABLE" && new Date(item.possibleDateTime) > currentTime)
+          .map((item) => item.possibleDateTime)
+      : [];
+
+    if (noPossibleDate && !alertShownRef.current) {
+      // 상태가 true일 때 alert 표시
+      alert("가능한 시간이 없습니다!");
+      alertShownRef.current = true; // alert가 한 번만 표시되도록 설정
+      goHome();
+
+      // 2초 후에 상태를 false로 되돌림
+      setTimeout(() => {
+        setNoPossibleDateAlarm(false); // 상태를 다시 false로 설정
+        alertShownRef.current = false; // alertShownRef 상태 초기화
+      }, 2000); // 원하는 시간 조정 가능 (2초 정도)
+    } else if (availableTimes.length > 0) {
+      setPossibleAppointmentTime(availableTimes); // 가능한 시간을 상태로 업데이트
+    }
+  }, [userSchedule, noPossibleDate]);
 
 
 
     return (
         targetProfileId &&
-        targetProfileName && (
+        targetProfileName &&(
             <>
                 <BabRequestPageContainer>
                     <Header />
@@ -158,7 +192,7 @@ export default function BabRequestPage() {
                                 <ScheduleBox
                                     defaultText="일정 선택하기*"
                                     selectText={
-                                        requestInfo.possibleDateTime.length >= 1
+                                        requestInfo.possibleDateTime.length >= 1 && !noPossibleDateAlarm
                                             ? `${getMonthFormatDate(
                                                 requestInfo.possibleDateTime
                                             )} ${SELECT_TIME_SCHEDULE[

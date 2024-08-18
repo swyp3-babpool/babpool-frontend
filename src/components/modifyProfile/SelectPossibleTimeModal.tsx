@@ -16,6 +16,7 @@ import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 import Button from '@/components/common/button';
 import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
 
+
 type SelectPossibleTimeModalProps = {
     page: 'mypage' | 'appointment'
     isOpen: boolean;
@@ -35,12 +36,7 @@ export default function SelectPossibleTimeModal({
     setSelectedDates,
     refetchUserSchedule
  
-}: SelectPossibleTimeModalProps) {
-
-
-    console.log(initialDates)
-
-    
+}: SelectPossibleTimeModalProps) {    
   
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
@@ -139,7 +135,6 @@ export default function SelectPossibleTimeModal({
 
 
     //사용자 일정 수정 페이지 
-   
     
 
     const handleTimeSubmit = () => {
@@ -165,6 +160,8 @@ export default function SelectPossibleTimeModal({
             if (res.code === 200) {
                 window.alert('일정 업데이트가 완료되었습니다!');
                 await refetchUserSchedule()
+                onClose()
+                
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
             }
@@ -199,6 +196,7 @@ export default function SelectPossibleTimeModal({
                     setSelectedDate={setSelectedDate}
                     selectedDates={selectedDates}
                     setSelectedDates={setSelectedDates}
+                    page={page}
                 />
             </CalendarContainer>
             <SelectScheduleContainer>

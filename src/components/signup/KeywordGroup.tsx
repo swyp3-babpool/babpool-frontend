@@ -65,10 +65,10 @@ export default function KeywordGroup({ signUpInfo, setSignUpInfo, margin }: Keyw
             <Txt variant="h5">관심 키워드*</Txt>
             <Txt
                 variant="caption2"
-                color={colors.white_30}
+                color={ keywordTotalLength === 10 ? colors.red_light_30 : colors.white_30 }
                 style={{ marginTop: '8px', marginBottom: '1rem' }}
             >
-                관심 키워드를 최대 10개까지 선택해주세요 ({keywordTotalLength}/10개)
+                {keywordTotalLength === 10 ? `최대 10개의 키워드만 선택 가능합니다.` :`관심 키워드를 최대 10개까지 선택해주세요 (${keywordTotalLength}/10개)`}
             </Txt>
             <KeywordList
                 margin={margin}

@@ -20,3 +20,8 @@ export const alarmInfoState = atom<AlarmInfotype>({
         isAlarm: localStorage.getItem('isAlarm') ? Number(localStorage.getItem('isAlarm')) : 0,
     }
 })
+
+export const noPossibleDateAlarm  = atom<boolean>({
+  key: 'noPossibleDateAlarm',  // Recoil에서 고유한 key
+  default: false,  // 초기값
+});

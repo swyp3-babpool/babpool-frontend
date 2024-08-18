@@ -7,11 +7,13 @@ import { Client } from '@stomp/stompjs';
 import { BASE_URL } from './utils/config';
 import { useSetRecoilState } from 'recoil';
 import { INIT_ALARM_INFO, alarmInfoState } from './atom/alarminfo';
+import { setupInterceptor } from './api/api';
 
 function App() {
     const token = localStorage.getItem('accessToken');
     const setAlarmInfo = useSetRecoilState(alarmInfoState);
     const client = useRef<Client | null>(null);
+    setupInterceptor();
 
     const handleSubscribeToNotifications = () => {
         const userId = localStorage.getItem('userId');

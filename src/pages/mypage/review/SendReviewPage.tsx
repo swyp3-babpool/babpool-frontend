@@ -98,7 +98,7 @@ export default function SendReviewPage() {
                     }}
                 />
             </Col>
-            <ButtonContainer>
+             <ButtonContainer>
                 <Button
                     text="완료"
                     disabled={inputValue.length < 5}
@@ -106,8 +106,8 @@ export default function SendReviewPage() {
                     onClick={() => {
                         handleSendReview();
                     }}
-                />
-            </ButtonContainer>
+                    />
+                </ButtonContainer>
         </ReviewPageContainer>
     );
 }

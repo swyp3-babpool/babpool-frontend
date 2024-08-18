@@ -112,7 +112,7 @@ export default function ProfileDetailsPage() {
                             <Button
                                 text="밥약 요청"
                                 onClick={() =>
-                                    navigate(`/total/profile/${userId}-${profile.name}/request`)
+                                   navigate(`/total/profile/${userId}-${profile.name}/request`)
                                 }
                             />
                         </ButtonBox>

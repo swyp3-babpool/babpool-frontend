@@ -25,3 +25,8 @@ export const searchInfoState = atom({
     key: 'searchInfoState',
     default: INIT_SEARCH_INFO,
 });
+
+export const noPossibleDateAlarm  = atom<boolean>({
+  key: 'noPossibleDateAlarm',  // Recoil에서 고유한 key
+  default: false,  // 초기값
+});

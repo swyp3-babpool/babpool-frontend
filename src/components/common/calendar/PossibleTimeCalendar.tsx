@@ -15,13 +15,16 @@ type PossibleTimeCalendarProps = {
     setSelectedDate: (date: string) => void;
     selectedDates?: string[];
     setSelectedDates: (dates: string[]) => void;
+    page: string;
 };
 export default function PossibleTimeCalendar({
     onClose,
     selectedDate,
     setSelectedDate,
     selectedDates,
+    initialDates,
     setSelectedDates,
+    page
 }: PossibleTimeCalendarProps) {
     const [date, setDate] = useState<Value>(new Date());
     const [tileContent, setTileContent] = useState<TileContentFunc | undefined>(undefined);
@@ -41,18 +44,21 @@ export default function PossibleTimeCalendar({
             return null;
         }
     };
+    
 
     useEffect(() => {
+
         setTileContent(() => {
             return ({ date, view }: { date: any; view: any }) => {
                 const formattedDate = moment(date).format('YYYY-MM-DD');
 
                 const selected = selectedDate === formattedDate;
-                const dateOnlyArray =
-                    selectedDates && Array.isArray(selectedDates)
-                        ? selectedDates.map((dateTime) => dateTime.split('T')[0])
-                        : [];
+                const dates = page === 'myPage' ? selectedDates : initialDates;
 
+               const dateOnlyArray =  Array.isArray(dates)
+                    ? dates.map((dateTime) => dateTime.split('T')[0])
+                    : [];
+               
                 const existingDate = dateOnlyArray.includes(formattedDate);
                 if (view === 'month' && selected) {
                     return <div className="circle">{`${date.getDate()}`}</div>;
@@ -61,7 +67,10 @@ export default function PossibleTimeCalendar({
                 } else {
                     return null;
                 }
+
             };
+
+            
         });
     }, [selectedDates, selectedDate]);
 
