@@ -10,7 +10,6 @@ import { logoutRequest, regenerateAccessTokenRequest } from './auth/auth';
 import { noPossibleDateAlarm } from '@/atom/alarminfo';
 import { useSetRecoilState } from 'recoil';
 
-
 interface CustomInstance extends AxiosInstance {
     interceptors: {
         request: AxiosInterceptorManager<InternalAxiosRequestConfig<any>>;
@@ -26,13 +25,12 @@ interface CustomInstance extends AxiosInstance {
     put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
     patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
 }
-const client: CustomInstance = axios.create({
+export const client: CustomInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     withCredentials: true, // cors origin 에러 방지
     timeout: 10000,
     headers: {},
 });
-
 
 client.interceptors.request.use(
     (config) => {
@@ -61,7 +59,6 @@ client.interceptors.request.use(
     }
 );
 
-
 client.interceptors.response.use(
     (res) => {
         if (res.data.code === 401 && res.data.message === '기간이 만료된 토큰') {
@@ -89,32 +86,20 @@ client.interceptors.response.use(
     }
 );
 
-client.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 404 && error.response.data?.message === '밥약 가능한 일정이 존재하지 않습니다.') {
-
-    }
-    return Promise.reject(error);  // 에러를 다시 던짐
-  }
-);
-
-
-
-export const setupInterceptor = () => {
-  const setNoPossibleDateAlarm = useSetRecoilState(noPossibleDateAlarm); // Recoil 상태 변경 함수
-
-  client.interceptors.response.use(
-    response => response,
-    error => {
-      if (error.response?.status === 404 && error.response.data?.message === '밥약 가능한 일정이 존재하지 않습니다.') {
-          setNoPossibleDateAlarm(true);  // 상태를 true로 변경
-      }
-      return Promise.reject(error);
-    }
-  );
-  
-};
+export function setupResponseInterceptor(setNoPossibleDateAlarm: (arg0: boolean) => void) {
+    client.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (
+                error.response?.status === 404 &&
+                error.response.data?.message === '밥약 가능한 일정이 존재하지 않습니다.'
+            ) {
+                setNoPossibleDateAlarm(true); // 가능한 일정이 없을 경우 상태를 true로 변경
+            }
+            return Promise.reject(error);
+        }
+    );
+}
 
 export const get = async (url: string, params?: any) => {
     const res: AxiosResponse<any> = await client.get(url, params);
@@ -124,5 +109,3 @@ export const post = async (url: string, data: any, config?: any) => {
     const res: AxiosResponse<any> = await client.post(url, data, config);
     return res.data;
 };
-
-

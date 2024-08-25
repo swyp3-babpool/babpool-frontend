@@ -6,14 +6,18 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { BASE_URL } from './utils/config';
 import { useSetRecoilState } from 'recoil';
-import { INIT_ALARM_INFO, alarmInfoState } from './atom/alarminfo';
-import { setupInterceptor } from './api/api';
+import { INIT_ALARM_INFO, alarmInfoState, noPossibleDateAlarm } from './atom/alarminfo';
+import { setupResponseInterceptor } from './api/api';
 
 function App() {
     const token = localStorage.getItem('accessToken');
     const setAlarmInfo = useSetRecoilState(alarmInfoState);
     const client = useRef<Client | null>(null);
-    setupInterceptor();
+    const setNoPossibleDateAlarm = useSetRecoilState(noPossibleDateAlarm);
+
+    useEffect(() => {
+        setupResponseInterceptor(setNoPossibleDateAlarm);
+    }, []);
 
     const handleSubscribeToNotifications = () => {
         const userId = localStorage.getItem('userId');
@@ -25,13 +29,17 @@ function App() {
                 if (message.body) {
                     const body = JSON.parse(message.body);
                     console.log(body);
-                    setAlarmInfo((prev) => ({...prev, requesterProfileId: 1, messageType: body.messageType}));
+                    setAlarmInfo((prev) => ({
+                        ...prev,
+                        requesterProfileId: 1,
+                        messageType: body.messageType,
+                    }));
                     if (
                         body.messageType === 'APPOINTMENT_REQUESTED' ||
                         body.messageType === 'APPOINTMENT_ACCEPTED'
                     ) {
                         localStorage.setItem('isAlarm', '1');
-                        setAlarmInfo((prev) => ({...prev, isAlarm: 1}));
+                        setAlarmInfo((prev) => ({ ...prev, isAlarm: 1 }));
                     }
                 }
                 return;
