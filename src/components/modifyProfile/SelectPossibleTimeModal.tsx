@@ -15,6 +15,9 @@ import { GetModifyProfilePossibleTimeType, TimeRange } from '@/interface/api/mod
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 import Button from '@/components/common/button';
 import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
+import Overlay from '../common/overlay';
+import Popup from '../common/popup';
+import { useNavigation } from '@/hooks/useNavigation';
 
 type SelectPossibleTimeModalProps = {
     page: 'mypage' | 'appointment';
@@ -45,7 +48,7 @@ export default function SelectPossibleTimeModal({
         moment(new Date()).format('YYYY-MM-DD')
     );
     const [isSelectVerified, setIsSelectVerified] = useState(false);
-    console.log(appointmentDates);
+    const [isOpenPopup, setIsOpenPopup] = useState(false);
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     const [entries, setEntries] = useState<rows[]>([]);
@@ -53,6 +56,7 @@ export default function SelectPossibleTimeModal({
         (item: GetModifyProfilePossibleTimeType) => item.possibleDateTime
     );
 
+    const { goBack } = useNavigation();
     useEffect(() => {
         const entries: rows[] =
             page === 'mypage'
@@ -163,13 +167,15 @@ export default function SelectPossibleTimeModal({
 
         modifyTimeSchedule(reqBody).then(async (res) => {
             if (res.code === 200) {
-                window.alert('일정 업데이트가 완료되었습니다!');
+                setIsOpenPopup(true);
                 await refetchUserSchedule();
-                onClose();
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
             }
         });
+    };
+    const handleClosePopup = () => {
+        setIsOpenPopup(false);
     };
 
     //밥약 신청 페이지
@@ -230,6 +236,15 @@ export default function SelectPossibleTimeModal({
                     )}
                 </ButtonContainer>
             </SelectScheduleContainer>
+            {isOpenPopup && (
+                <Overlay>
+                    <Popup
+                        text="일정 업데이트가 완료되었습니다"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={goBack} />}
+                    />
+                </Overlay>
+            )}
         </SelectScheduleModalModalContainer>
     );
 }
