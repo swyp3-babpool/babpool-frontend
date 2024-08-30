@@ -39,7 +39,9 @@ export default function BabRequestPage() {
     const [isNotificationPopupOpen, setNotificationPopupOpen] = useState(false);
     const [isAlreadyFinished, setIsAlreadyFinished] = useState(false);
     const [isRequestValidate, setIsRequestValidate] = useState(false);
-    const [possibleAppointmentTime, setPossibleAppointmentTime] = useState(['']);
+    const [possibleAppointmentTime, setPossibleAppointmentTime] = useState<
+        GetModifyProfilePossibleTimeType[]
+    >([]);
     const alertShownRef = useRef(false); // useRef로 alert 중복 방지
     const [selectScheduleBoxKey, setSelectScheduleBoxKey] = useState<number | null>(null);
     const { goHome } = useNavigation();
@@ -60,7 +62,7 @@ export default function BabRequestPage() {
 
     const alarmInfo = useRecoilValue(alarmInfoState);
     const noPossibleDate = useRecoilValue(noPossibleDateAlarm);
-    console.log(noPossibleDate);
+
     const { navigate } = useNavigation();
     const setNoPossibleDateAlarm = useSetRecoilState(noPossibleDateAlarm);
 
@@ -137,16 +139,12 @@ export default function BabRequestPage() {
 
     useEffect(() => {
         const currentTime = new Date();
+
         const availableTimes = userSchedule
-            ? userSchedule
-                  .filter(
-                      (item) =>
-                          item.possibleDateTimeStatus === 'AVAILABLE' &&
-                          new Date(item.possibleDateTime) > currentTime
-                  )
-                  .map((item) => item.possibleDateTime)
+            ? userSchedule.filter((item) => new Date(item.possibleDateTime) > currentTime)
             : [];
 
+        console.log('여기서 콘솔찍어보는중', availableTimes);
         if (noPossibleDate) {
             setNotificationPopupOpen(true);
 
@@ -183,8 +181,7 @@ export default function BabRequestPage() {
                                 <ScheduleBox
                                     defaultText="일정 선택하기*"
                                     selectText={
-                                        requestInfo.possibleDateTime.length >= 1 &&
-                                        !noPossibleDateAlarm
+                                        requestInfo.possibleDateTime.length >= 1 && !noPossibleDate
                                             ? `${getMonthFormatDate(
                                                   requestInfo.possibleDateTime
                                               )} ${
@@ -217,7 +214,7 @@ export default function BabRequestPage() {
                     </RequestContainer>
                     <SelectPossibleTimeModal
                         page={'appointment'}
-                        initialDates={possibleAppointmentTime}
+                        appointmentDates={possibleAppointmentTime}
                         selectedDates={[]}
                         setSelectedDates={handleSelectSchedule}
                         isOpen={isScheduleSelected}
@@ -246,16 +243,6 @@ export default function BabRequestPage() {
                         />
                     </Overlay>
                 )}
-                {isOpenPopup && (
-                    <Overlay>
-                        <Popup
-                            text="가능한 시간이 없습니다!"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={goHome} />}
-                        />
-                    </Overlay>
-                )}
-
                 {isAlreadyFinished && (
                     <Overlay>
                         <Popup
