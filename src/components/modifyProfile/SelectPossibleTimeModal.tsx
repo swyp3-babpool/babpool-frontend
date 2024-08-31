@@ -28,6 +28,7 @@ type SelectPossibleTimeModalProps = {
     selectedDates: string[];
     setSelectedDates: (dates: string[]) => void;
     refetchUserSchedule: any;
+    isAlarmModalOpen?: () => void;
 };
 
 type rows = { hour: string; time: string; status: string };
@@ -41,6 +42,7 @@ export default function SelectPossibleTimeModal({
     selectedDates,
     setSelectedDates,
     refetchUserSchedule,
+    isAlarmModalOpen,
 }: SelectPossibleTimeModalProps) {
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ export default function SelectPossibleTimeModal({
         moment(new Date()).format('YYYY-MM-DD')
     );
     const [isSelectVerified, setIsSelectVerified] = useState(false);
-    const [isOpenPopup, setIsOpenPopup] = useState(false);
+
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
     const [entries, setEntries] = useState<rows[]>([]);
@@ -56,7 +58,6 @@ export default function SelectPossibleTimeModal({
         (item: GetModifyProfilePossibleTimeType) => item.possibleDateTime
     );
 
-    const { goBack } = useNavigation();
     useEffect(() => {
         const entries: rows[] =
             page === 'mypage'
@@ -167,15 +168,17 @@ export default function SelectPossibleTimeModal({
 
         modifyTimeSchedule(reqBody).then(async (res) => {
             if (res.code === 200) {
-                setIsOpenPopup(true);
                 await refetchUserSchedule();
+                await onClose();
+                if (isAlarmModalOpen) {
+                    await isAlarmModalOpen(); // 함수가 정의되어 있는지 확인한 후 호출
+                } else {
+                    console.error('isAlarmModalOpen이 정의되지 않았습니다.');
+                }
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
             }
         });
-    };
-    const handleClosePopup = () => {
-        setIsOpenPopup(false);
     };
 
     //밥약 신청 페이지
@@ -236,15 +239,6 @@ export default function SelectPossibleTimeModal({
                     )}
                 </ButtonContainer>
             </SelectScheduleContainer>
-            {isOpenPopup && (
-                <Overlay>
-                    <Popup
-                        text="일정 업데이트가 완료되었습니다"
-                        closePopup={handleClosePopup}
-                        button={<Button text="확인" onClick={goBack} />}
-                    />
-                </Overlay>
-            )}
         </SelectScheduleModalModalContainer>
     );
 }

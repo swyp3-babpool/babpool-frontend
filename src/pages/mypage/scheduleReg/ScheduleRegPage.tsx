@@ -11,31 +11,32 @@ import Overlay from '@/components/common/overlay';
 import { getModifyProfileAvailableSchedule } from '@/api/profile/modifyProfileApi';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
+import { useNavigation } from '@/hooks/useNavigation';
+import Popup from '@/components/common/popup';
+import Button from '@/components/common/button';
 
 export default function ScheduleRegPage() {
     const location = useLocation();
     const profileId = location.state as string;
+    const [isOpenPopup, setIsOpenPopup] = useState(false);
 
     const {
         data: userSchedule,
         isError: isErrorPossibleTime,
         isLoading: isLoadingPossibleTime,
-         refetch: refetchUserSchedule,
+        refetch: refetchUserSchedule,
     } = useQuery<GetModifyProfilePossibleTimeType[]>({
         queryKey: [`/api/possible/datetime/${profileId}`, profileId],
         queryFn: () => getModifyProfileAvailableSchedule(profileId),
         enabled: !!profileId,
-        refetchOnReconnect: true
+        refetchOnReconnect: true,
     });
- 
 
     const initialTimes = userSchedule ? userSchedule.map((item) => item.possibleDateTime) : [];
     const [possibleDate, setPossibleDate] = useState<string[]>(
-        userSchedule ? [...initialTimes]: []
+        userSchedule ? [...initialTimes] : []
     );
 
-
-   
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleCloseModal = () => {
@@ -43,15 +44,22 @@ export default function ScheduleRegPage() {
     };
 
     useEffect(() => {
-    if (userSchedule) {
-        setPossibleDate(initialTimes);
-    }
-}, [userSchedule]);
+        if (userSchedule) {
+            setPossibleDate(initialTimes);
+        }
+    }, [userSchedule]);
 
-    
+    const handleClosePopup = () => {
+        setIsOpenPopup(false);
+    };
 
+    const handleOpenPopup = () => {
+        setIsOpenPopup(true);
+    };
+
+    const { goBack } = useNavigation();
     return (
-     <ScheduleRegPageContainer>
+        <ScheduleRegPageContainer>
             <Header text="일정 등록" destination="/mypage" />
             <Col gap={16} padding="25px 30px 45px">
                 <Col gap={8}>
@@ -65,21 +73,21 @@ export default function ScheduleRegPage() {
                     </Txt>
                 </Col>
                 {!isLoadingPossibleTime && (
-                        <AddPossibleTimeButton
-                            isExist={Object.keys(possibleDate).length > 0}
-                            onClick={() => setIsModalOpen(true)}
-                        >
-                            {Object.keys(possibleDate).length > 0 ? (
-                                <Txt variant="body" color={colors.purple_light_40}>
-                                    확인/수정하기
-                                </Txt>
-                            ) : (
-                                <PlusIcon />
-                            )}
-                        </AddPossibleTimeButton>
-                    )}
+                    <AddPossibleTimeButton
+                        isExist={Object.keys(possibleDate).length > 0}
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        {Object.keys(possibleDate).length > 0 ? (
+                            <Txt variant="body" color={colors.purple_light_40}>
+                                확인/수정하기
+                            </Txt>
+                        ) : (
+                            <PlusIcon />
+                        )}
+                    </AddPossibleTimeButton>
+                )}
             </Col>
-           {!isLoadingPossibleTime && (
+            {!isLoadingPossibleTime && (
                 <SelectPossibleTimeModal
                     page={'mypage'}
                     initialDates={initialTimes}
@@ -87,10 +95,20 @@ export default function ScheduleRegPage() {
                     setSelectedDates={setPossibleDate}
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
+                    isAlarmModalOpen={handleOpenPopup}
                     refetchUserSchedule={refetchUserSchedule}
                 />
             )}
             {isModalOpen && <Overlay />}
+            {isOpenPopup && (
+                <Overlay>
+                    <Popup
+                        text="일정 업데이트가 완료되었습니다"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={goBack} />}
+                    />
+                </Overlay>
+            )}
         </ScheduleRegPageContainer>
     );
 }

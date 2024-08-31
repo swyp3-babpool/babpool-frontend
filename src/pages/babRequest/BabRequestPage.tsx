@@ -118,6 +118,51 @@ export default function BabRequestPage() {
         setIsOpenPopup(false);
     };
 
+    const renderRequestPopup = () => {
+        if (isOpenPopup) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="밥약을 요청했어요!"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={() => navigate('/notification')} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
+    const renderNotificationPopup = () => {
+        if (isNotificationPopupOpen) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="가능한 시간이 없습니다!"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={goHome} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
+    const renderAlreadyFinishedPopup = () => {
+        if (isAlreadyFinished) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="이미 마감된 시간입니다. 시간을 다시 선택해주세요"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={refetchUserSchedule} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
     useEffect(() => {
         const validateStr = requestInfo.appointmentContent.trim();
         if (validateStr.length > 200) {
@@ -144,7 +189,6 @@ export default function BabRequestPage() {
             ? userSchedule.filter((item) => new Date(item.possibleDateTime) > currentTime)
             : [];
 
-        console.log('여기서 콘솔찍어보는중', availableTimes);
         if (noPossibleDate) {
             setNotificationPopupOpen(true);
 
@@ -223,35 +267,9 @@ export default function BabRequestPage() {
                     />
                     {isScheduleSelected && <Overlay />}
                 </BabRequestPageContainer>
-                {isOpenPopup && (
-                    <Overlay>
-                        <Popup
-                            text="밥약을 요청했어요!"
-                            closePopup={handleClosePopup}
-                            button={
-                                <Button text="확인" onClick={() => navigate('/notification')} />
-                            }
-                        />
-                    </Overlay>
-                )}
-                {isNotificationPopupOpen && (
-                    <Overlay>
-                        <Popup
-                            text="가능한 시간이 없습니다!"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={goHome} />}
-                        />
-                    </Overlay>
-                )}
-                {isAlreadyFinished && (
-                    <Overlay>
-                        <Popup
-                            text="이미 마감된 시간입니다. 시간을 다시 선택해주세요"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={refetchUserSchedule} />}
-                        />
-                    </Overlay>
-                )}
+                {renderRequestPopup()}
+                {renderNotificationPopup()}
+                {renderAlreadyFinishedPopup()}
                 {alarmInfo.messageType && <AlarmModal messageType={alarmInfo.messageType} />}
             </>
         )
