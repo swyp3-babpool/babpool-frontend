@@ -130,7 +130,7 @@ export default function SelectPossibleTimeModal({
                     !date.startsWith(`${selectedDate}T${time}`) &&
                     !date.startsWith(`${selectedDate}T${String(time).padStart(2, '0')}`)
             );
-            console.log(`${selectedDate}T${time}`);
+
             setSelectedDates(filteredTimes);
         } else {
             if (time < 10) {
@@ -172,9 +172,7 @@ export default function SelectPossibleTimeModal({
                 await refetchUserSchedule();
                 await onClose();
                 if (isAlarmModalOpen) {
-                    await isAlarmModalOpen(); // 함수가 정의되어 있는지 확인한 후 호출
-                } else {
-                    console.error('isAlarmModalOpen이 정의되지 않았습니다.');
+                    await isAlarmModalOpen();
                 }
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
