@@ -114,17 +114,15 @@ export default function BabRequestPage() {
         });
     };
 
-    const handleClosePopup = () => {
-        setIsOpenPopup(false);
-    };
-
     const renderRequestPopup = () => {
         if (isOpenPopup) {
             return (
                 <Overlay>
                     <Popup
                         text="밥약을 요청했어요!"
-                        closePopup={handleClosePopup}
+                        closePopup={() => {
+                            setIsOpenPopup(false);
+                        }}
                         button={<Button text="확인" onClick={() => navigate('/notification')} />}
                     />
                 </Overlay>
@@ -139,7 +137,9 @@ export default function BabRequestPage() {
                 <Overlay>
                     <Popup
                         text="가능한 시간이 없습니다!"
-                        closePopup={handleClosePopup}
+                        closePopup={() => {
+                            setNotificationPopupOpen(false);
+                        }}
                         button={<Button text="확인" onClick={goHome} />}
                     />
                 </Overlay>
@@ -154,7 +154,9 @@ export default function BabRequestPage() {
                 <Overlay>
                     <Popup
                         text="이미 마감된 시간입니다. 시간을 다시 선택해주세요"
-                        closePopup={handleClosePopup}
+                        closePopup={() => {
+                            setIsAlreadyFinished(false);
+                        }}
                         button={<Button text="확인" onClick={refetchUserSchedule} />}
                     />
                 </Overlay>
