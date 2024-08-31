@@ -58,6 +58,7 @@ export default function SelectPossibleTimeModal({
         (item: GetModifyProfilePossibleTimeType) => item.possibleDateTime
     );
 
+    const renderState = page === 'mypage' ? initialDates : appointmentDates;
     useEffect(() => {
         const entries: rows[] =
             page === 'mypage'
@@ -85,7 +86,7 @@ export default function SelectPossibleTimeModal({
 
         setEntries(entries);
         checkSelected;
-    }, [page, selectedDate, , appointmentDates]);
+    }, [page, selectedDate, renderState]);
 
     const rows: rows[][] = [];
     for (let i = 0; i < entries.length; i += 4) {
@@ -126,10 +127,10 @@ export default function SelectPossibleTimeModal({
         if (isExist) {
             const filteredTimes = selectedDates.filter(
                 (date) =>
-                    !date.startsWith(`${selectedDate}T${time}`) ||
-                    date.startsWith(`${selectedDate}T0${time}`)
+                    !date.startsWith(`${selectedDate}T${time}`) &&
+                    !date.startsWith(`${selectedDate}T${String(time).padStart(2, '0')}`)
             );
-
+            console.log(`${selectedDate}T${time}`);
             setSelectedDates(filteredTimes);
         } else {
             if (time < 10) {
