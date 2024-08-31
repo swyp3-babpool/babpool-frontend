@@ -39,7 +39,9 @@ export default function BabRequestPage() {
     const [isNotificationPopupOpen, setNotificationPopupOpen] = useState(false);
     const [isAlreadyFinished, setIsAlreadyFinished] = useState(false);
     const [isRequestValidate, setIsRequestValidate] = useState(false);
-    const [possibleAppointmentTime, setPossibleAppointmentTime] = useState(['']);
+    const [possibleAppointmentTime, setPossibleAppointmentTime] = useState<
+        GetModifyProfilePossibleTimeType[]
+    >([]);
     const alertShownRef = useRef(false); // useRef로 alert 중복 방지
     const [selectScheduleBoxKey, setSelectScheduleBoxKey] = useState<number | null>(null);
     const { goHome } = useNavigation();
@@ -60,7 +62,7 @@ export default function BabRequestPage() {
 
     const alarmInfo = useRecoilValue(alarmInfoState);
     const noPossibleDate = useRecoilValue(noPossibleDateAlarm);
-    console.log(noPossibleDate);
+
     const { navigate } = useNavigation();
     const setNoPossibleDateAlarm = useSetRecoilState(noPossibleDateAlarm);
 
@@ -116,6 +118,51 @@ export default function BabRequestPage() {
         setIsOpenPopup(false);
     };
 
+    const renderRequestPopup = () => {
+        if (isOpenPopup) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="밥약을 요청했어요!"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={() => navigate('/notification')} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
+    const renderNotificationPopup = () => {
+        if (isNotificationPopupOpen) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="가능한 시간이 없습니다!"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={goHome} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
+    const renderAlreadyFinishedPopup = () => {
+        if (isAlreadyFinished) {
+            return (
+                <Overlay>
+                    <Popup
+                        text="이미 마감된 시간입니다. 시간을 다시 선택해주세요"
+                        closePopup={handleClosePopup}
+                        button={<Button text="확인" onClick={refetchUserSchedule} />}
+                    />
+                </Overlay>
+            );
+        }
+        return null;
+    };
+
     useEffect(() => {
         const validateStr = requestInfo.appointmentContent.trim();
         if (validateStr.length > 200) {
@@ -137,14 +184,9 @@ export default function BabRequestPage() {
 
     useEffect(() => {
         const currentTime = new Date();
+
         const availableTimes = userSchedule
-            ? userSchedule
-                  .filter(
-                      (item) =>
-                          item.possibleDateTimeStatus === 'AVAILABLE' &&
-                          new Date(item.possibleDateTime) > currentTime
-                  )
-                  .map((item) => item.possibleDateTime)
+            ? userSchedule.filter((item) => new Date(item.possibleDateTime) > currentTime)
             : [];
 
         if (noPossibleDate) {
@@ -183,8 +225,7 @@ export default function BabRequestPage() {
                                 <ScheduleBox
                                     defaultText="일정 선택하기*"
                                     selectText={
-                                        requestInfo.possibleDateTime.length >= 1 &&
-                                        !noPossibleDateAlarm
+                                        requestInfo.possibleDateTime.length >= 1 && !noPossibleDate
                                             ? `${getMonthFormatDate(
                                                   requestInfo.possibleDateTime
                                               )} ${
@@ -217,7 +258,7 @@ export default function BabRequestPage() {
                     </RequestContainer>
                     <SelectPossibleTimeModal
                         page={'appointment'}
-                        initialDates={possibleAppointmentTime}
+                        appointmentDates={possibleAppointmentTime}
                         selectedDates={[]}
                         setSelectedDates={handleSelectSchedule}
                         isOpen={isScheduleSelected}
@@ -226,45 +267,9 @@ export default function BabRequestPage() {
                     />
                     {isScheduleSelected && <Overlay />}
                 </BabRequestPageContainer>
-                {isOpenPopup && (
-                    <Overlay>
-                        <Popup
-                            text="밥약을 요청했어요!"
-                            closePopup={handleClosePopup}
-                            button={
-                                <Button text="확인" onClick={() => navigate('/notification')} />
-                            }
-                        />
-                    </Overlay>
-                )}
-                {isNotificationPopupOpen && (
-                    <Overlay>
-                        <Popup
-                            text="가능한 시간이 없습니다!"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={goHome} />}
-                        />
-                    </Overlay>
-                )}
-                {isOpenPopup && (
-                    <Overlay>
-                        <Popup
-                            text="가능한 시간이 없습니다!"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={goHome} />}
-                        />
-                    </Overlay>
-                )}
-
-                {isAlreadyFinished && (
-                    <Overlay>
-                        <Popup
-                            text="이미 마감된 시간입니다. 시간을 다시 선택해주세요"
-                            closePopup={handleClosePopup}
-                            button={<Button text="확인" onClick={refetchUserSchedule} />}
-                        />
-                    </Overlay>
-                )}
+                {renderRequestPopup()}
+                {renderNotificationPopup()}
+                {renderAlreadyFinishedPopup()}
                 {alarmInfo.messageType && <AlarmModal messageType={alarmInfo.messageType} />}
             </>
         )

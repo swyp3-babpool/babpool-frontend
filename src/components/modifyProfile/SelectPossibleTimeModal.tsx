@@ -11,29 +11,38 @@ import { Col, Row } from '../common/flex/Flex';
 import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { Value } from 'node_modules/react-calendar/dist/esm/shared/types';
 import moment from 'moment';
-import { TimeRange } from '@/interface/api/modifyProfileType';
+import { GetModifyProfilePossibleTimeType, TimeRange } from '@/interface/api/modifyProfileType';
 import { SELECT_TIME_SCHEDULE } from '@/utils/constant';
 import Button from '@/components/common/button';
 import { modifyProfileRequest, modifyTimeSchedule } from '@/api/profile/modifyProfileApi.ts';
+import Overlay from '../common/overlay';
+import Popup from '../common/popup';
+import { useNavigation } from '@/hooks/useNavigation';
 
 type SelectPossibleTimeModalProps = {
     page: 'mypage' | 'appointment';
     isOpen: boolean;
     onClose: () => void;
     initialDates?: string[];
+    appointmentDates?: GetModifyProfilePossibleTimeType[];
     selectedDates: string[];
     setSelectedDates: (dates: string[]) => void;
     refetchUserSchedule: any;
+    isAlarmModalOpen?: () => void;
 };
+
+type rows = { hour: string; time: string; status: string };
 
 export default function SelectPossibleTimeModal({
     page,
     isOpen,
     onClose,
     initialDates = [],
+    appointmentDates = [],
     selectedDates,
     setSelectedDates,
     refetchUserSchedule,
+    isAlarmModalOpen,
 }: SelectPossibleTimeModalProps) {
     // 공통 사용
     const selectScheduleModalRef = useRef<HTMLDivElement>(null);
@@ -44,30 +53,42 @@ export default function SelectPossibleTimeModal({
 
     useOutsideClickModalClose({ ref: selectScheduleModalRef, isOpen: isOpen, closeModal: onClose });
 
-    const [entries, setEntries] = useState<[string, string][]>([]);
+    const [entries, setEntries] = useState<rows[]>([]);
+    const calendarDates = appointmentDates.map(
+        (item: GetModifyProfilePossibleTimeType) => item.possibleDateTime
+    );
 
+    const renderState = page === 'mypage' ? initialDates : appointmentDates;
     useEffect(() => {
-        const entries: [string, string][] =
+        const entries: rows[] =
             page === 'mypage'
-                ? Object.entries(SELECT_TIME_SCHEDULE)
-                : initialDates
-                      .filter((dateTime) => dateTime.startsWith(selectedDate))
+                ? Object.entries(SELECT_TIME_SCHEDULE).map(([key, value]) => ({
+                      hour: key,
+                      time: value,
+                      status: 'AVAILABLE',
+                  }))
+                : appointmentDates
+                      .filter((dateTime) => dateTime.possibleDateTime.startsWith(selectedDate))
                       .map((dateTime) => {
-                          let hour = dateTime.substring(11, 13);
+                          let hour = dateTime.possibleDateTime.substring(11, 13);
                           if (hour.startsWith('0')) {
                               hour = hour.substring(1);
                           }
                           const time = SELECT_TIME_SCHEDULE[hour];
-                          return [hour, time];
+                          return {
+                              hour: hour,
+                              time: time,
+                              status: dateTime.possibleDateTimeStatus,
+                          };
                       })
-                      .filter((entry): entry is [string, string] => entry[1] !== undefined)
-                      .sort((a, b) => Number(a[0]) - Number(b[0]));
+                      .filter((entry) => entry.time !== undefined)
+                      .sort((a, b) => Number(a.hour) - Number(b.hour));
 
         setEntries(entries);
         checkSelected;
-    }, [page, selectedDate, initialDates]);
+    }, [page, selectedDate, renderState]);
 
-    const rows: [string, string][][] = [];
+    const rows: rows[][] = [];
     for (let i = 0; i < entries.length; i += 4) {
         const rowItems = entries.slice(i, i + 4);
         rows.push(rowItems);
@@ -106,10 +127,10 @@ export default function SelectPossibleTimeModal({
         if (isExist) {
             const filteredTimes = selectedDates.filter(
                 (date) =>
-                    !date.startsWith(`${selectedDate}T${time}`) ||
-                    date.startsWith(`${selectedDate}T0${time}`)
+                    !date.startsWith(`${selectedDate}T${time}`) &&
+                    !date.startsWith(`${selectedDate}T${String(time).padStart(2, '0')}`)
             );
-
+            console.log(`${selectedDate}T${time}`);
             setSelectedDates(filteredTimes);
         } else {
             if (time < 10) {
@@ -148,9 +169,13 @@ export default function SelectPossibleTimeModal({
 
         modifyTimeSchedule(reqBody).then(async (res) => {
             if (res.code === 200) {
-                window.alert('일정 업데이트가 완료되었습니다!');
                 await refetchUserSchedule();
-                onClose();
+                await onClose();
+                if (isAlarmModalOpen) {
+                    await isAlarmModalOpen(); // 함수가 정의되어 있는지 확인한 후 호출
+                } else {
+                    console.error('isAlarmModalOpen이 정의되지 않았습니다.');
+                }
             } else if (res.code === 400) {
                 console.log('에러발생🚨', res.message);
             }
@@ -176,7 +201,7 @@ export default function SelectPossibleTimeModal({
             <CalendarContainer>
                 <PossibleTimeCalendar
                     onClose={onClose}
-                    initialDates={initialDates}
+                    initialDates={page === 'mypage' ? initialDates : calendarDates}
                     selectedDate={selectedDate}
                     setSelectedDate={setSelectedDate}
                     selectedDates={selectedDates}
@@ -191,11 +216,12 @@ export default function SelectPossibleTimeModal({
                 <SelectTimeContainer>
                     {rows.map((row, rowIndex) => (
                         <div key={rowIndex} style={{ display: 'flex', width: '100%' }}>
-                            {row.map(([startTime, time], itemIndex) => (
+                            {row.map(({ hour, time, status }, itemIndex) => (
                                 <SelectTimeItem
                                     key={itemIndex}
-                                    isSelected={checkSelected(Number(startTime))}
-                                    onClick={() => handleSelectTime(Number(startTime))}
+                                    status={status}
+                                    isSelected={checkSelected(Number(hour))}
+                                    onClick={() => handleSelectTime(Number(hour))}
                                 >
                                     <div>{time}</div>
                                 </SelectTimeItem>
@@ -277,15 +303,25 @@ const SelectTimeContainer = styled.div`
     gap: 16px;
     background-color: inherit;
 `;
-const SelectTimeItem = styled.div<{ isSelected: boolean }>`
+const SelectTimeItem = styled.button<{ isSelected: boolean; status: string }>`
     flex: 0 0 calc(25% - 7.5px);
     margin-right: 10px;
-    background-color: ${(props) =>
-        props.isSelected ? `${colors.purple_light_20}` : `${colors.white}`};
+    background-color: ${(props) => {
+        if (props.isSelected) {
+            return `${colors.purple_light_20}`;
+        } else if (props.status === 'RESERVED') {
+            return `${colors.white_20}`;
+        } else {
+            return `${colors.white}`;
+        }
+    }};
+    pointer-events: ${(props) => (props.status === 'RESERVED' ? 'none' : 'auto')};
+    cursor: ${(props) => (props.status === 'RESERVED' ? 'not-allowed' : 'pointer')};
     border-radius: 5px;
     padding: 10px;
     text-align: center;
-    color: ${colors.white_40};
+    color: ${(props) =>
+        props.status === 'RESERVED' ? `${colors.white_10}` : `${colors.white_40}`};
     font-size: 13px;
 
     /* 마지막 요소는 오른쪽 여백을 없애기 위해 margin-right를 0으로 설정합니다 */
