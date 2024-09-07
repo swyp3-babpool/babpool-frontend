@@ -1,6 +1,7 @@
 export type ProfileType = {
     profileId: number;
     userId: number;
+    profileModifyDate: string;
     profileImageUrl: string;
     profileIntro: string;
     profileContents: string;
@@ -10,7 +11,7 @@ export type ProfileType = {
     keywordNameList: string[];
     userGrade: string;
     userNickname: string;
-}
+};
 
 type SoltType = {
     direction: string;
@@ -19,7 +20,7 @@ type SoltType = {
     nullHandling: string;
     ascending: boolean;
     descending: boolean;
-}
+};
 
 type PageType = {
     pageNumber: number;
@@ -28,7 +29,7 @@ type PageType = {
     offset: number;
     paged: boolean;
     unpaged: boolean;
-}
+};
 
 export interface ProfilesType {
     content: ProfileType[];

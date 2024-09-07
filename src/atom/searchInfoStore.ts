@@ -11,6 +11,8 @@ export type SearchInfoType = {
         graduateSchool: string[]; // 대학원
     };
     page: number;
+    lastProfileId?: string;
+    lastProfileModifyDate?: string;
 };
 
 export const INIT_SEARCH_INFO = {
@@ -19,6 +21,8 @@ export const INIT_SEARCH_INFO = {
     filterKeyword: INIT_INTEREST_KEYWORD,
     prevFilterKeyword: INIT_INTEREST_KEYWORD,
     page: 0,
+    lastProfileId: '',
+    lastProfileModifyDate: '',
 };
 
 export const searchInfoState = atom({
@@ -26,7 +30,7 @@ export const searchInfoState = atom({
     default: INIT_SEARCH_INFO,
 });
 
-export const noPossibleDateAlarm  = atom<boolean>({
-  key: 'noPossibleDateAlarm',  // Recoil에서 고유한 key
-  default: false,  // 초기값
+export const noPossibleDateAlarm = atom<boolean>({
+    key: 'noPossibleDateAlarm', // Recoil에서 고유한 key
+    default: false, // 초기값
 });
