@@ -47,7 +47,7 @@ export default function TotalBabpoolPage() {
     const [filterCategory, setFilterCategory] =
         useState<FilterCategoryType>(DEFAULT_FILTER_CATEGORY);
 
-        // 프로필 리스트 요청
+    // 프로필 리스트 요청
     const fetchProfileList = async () => {
         console.log(searchInfo);
         const { searchText, division, filterKeyword } = searchInfo;
@@ -63,6 +63,8 @@ export default function TotalBabpoolPage() {
             page: searchInfo.page,
             size: 10,
             sort: 'profile_intro',
+            lastProfileId: searchInfo.lastProfileId,
+            lastProfileModifyDate: searchInfo.lastProfileModifyDate,
         };
         const res = await getProfiles(params);
         console.log(res);
@@ -71,13 +73,13 @@ export default function TotalBabpoolPage() {
 
     const { data, isError, isLoading } = useQuery<ProfilesType>({
         queryKey: ['profiles', searchInfo],
-        queryFn: fetchProfileList, 
+        queryFn: fetchProfileList,
         staleTime: 1000 * 60 * 5,
     });
     const { navigate, authCheck } = useNavigation();
 
     const handleProfileSelect = (profile: ProfileType) => {
-        console.log("콘솔가동중", profile)
+        console.log('콘솔가동중', profile);
         if (!authCheck()) {
         }
         if (!isProfileRegister) {
@@ -123,7 +125,14 @@ export default function TotalBabpoolPage() {
     };
 
     const handlePageChange = (page: number) => {
-        setSearchInfo((prev) => ({ ...prev, page }));
+        if (data && data.totalPages > 10 && page > 0 && page % 10 === 0) {
+            const lastProfileData = data?.content[data?.content.length - 1];
+            const lastProfileId = String(lastProfileData?.profileId);
+            const lastProfileModifyDate = lastProfileData?.profileModifyDate;
+            setSearchInfo((prev) => ({ ...prev, page, lastProfileId, lastProfileModifyDate }));
+        } else {
+            setSearchInfo((prev) => ({ ...prev, page }));
+        }
     };
 
     useEffect(() => {
@@ -149,7 +158,7 @@ export default function TotalBabpoolPage() {
 
         return () => {
             setSearchInfo(INIT_SEARCH_INFO);
-        }
+        };
     }, [groupName]);
 
     useEffect(() => {
@@ -159,7 +168,6 @@ export default function TotalBabpoolPage() {
             });
         }
     }, []);
-
 
     return (
         <>
@@ -247,9 +255,7 @@ export default function TotalBabpoolPage() {
                         )}
                         {filterModalOpen && <Overlay />}
                         {alarmInfo.requesterProfileId && (
-                            <AlarmModal
-                                messageType={alarmInfo.messageType}
-                            />
+                            <AlarmModal messageType={alarmInfo.messageType} />
                         )}
                     </>
                 ) : (
