@@ -6,8 +6,16 @@ import { logoutRequest } from '@/api/auth/auth';
 import Overlay from '../common/overlay';
 import Popup from '../common/popup';
 import Button from '../common/button';
+import React from 'react';
+import Cookies from 'js-cookie';
 
-export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boolean, handleMenu: () => void}) {
+export default function HomeMenu({
+    isOpenMenu,
+    handleMenu,
+}: {
+    isOpenMenu: boolean;
+    handleMenu: () => void;
+}) {
     const [isLogin, setIsLogin] = useState(false);
     const [isLogoutPopup, setIsLogoutPopup] = useState(false);
 
@@ -18,24 +26,27 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
         if (token) {
             setIsLogin(true);
         }
+        const refreshToken = Cookies.get('refreshToken');
     }, [isOpenMenu]);
 
     const handleLogout = () => {
         logoutRequest()
-        .then((res) => {
-            console.log(res);
-            if(res.code === 200) {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('userId');
-                setIsLogin(false);
-                setIsLogoutPopup(false);
-                handleMenu()
-                handleNavigate('/')
-            }
-        
-        }).finally(() => {
-            handleNavigate('/')
-        })
+            .then((res) => {
+                console.log(res);
+                if (res.code === 200) {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('userId');
+                    // localStorage.clear();
+                    Cookies.remove('accessToken');
+                    setIsLogin(false);
+                    setIsLogoutPopup(false);
+                    handleMenu();
+                    handleNavigate('/');
+                }
+            })
+            .finally(() => {
+                handleNavigate('/');
+            });
     };
 
     const handleLogoutPopup = () => {
@@ -64,7 +75,6 @@ export default function HomeMenu({ isOpenMenu, handleMenu }: { isOpenMenu: boole
             url: `${isLogin ? '' : '/signin'}`,
         },
     ];
-
 
     return (
         <HomeMenuContainer left={isOpenMenu ? '0%' : '100%'}>
