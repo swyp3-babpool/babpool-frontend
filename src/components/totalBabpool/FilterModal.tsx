@@ -20,6 +20,7 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClickModalClose from '@/hooks/useOutsideClickModalClose';
 import { EmptyDiv } from '@/pages/notification/NotificationPage.styles';
 import { SearchInfoType } from '@/atom/searchInfoStore';
+import { getDivisionId, getKeywordId } from '@/utils/util';
 
 type FilterModalProps = {
     open: boolean;
@@ -73,6 +74,7 @@ export default function FilterModal({
         keywordGroup: keyof typeof INTEREST_KEYWORD
     ) => {
         const { name } = e.target;
+        const selectedKeywordId = getKeywordId(name);
         const isSelected = filterRef.current.filterKeyword[keywordGroup].includes(name);
         if (isSelected) {
             filterRef.current = {
@@ -80,7 +82,7 @@ export default function FilterModal({
                 filterKeyword: {
                     ...filterRef.current.filterKeyword,
                     [keywordGroup]: filterRef.current.filterKeyword[keywordGroup].filter(
-                        (keyword) => keyword !== name
+                        (keyword) => keyword !== selectedKeywordId
                     ),
                 },
             };
@@ -89,7 +91,10 @@ export default function FilterModal({
                 ...filterRef.current,
                 filterKeyword: {
                     ...filterRef.current.filterKeyword,
-                    [keywordGroup]: [...filterRef.current.filterKeyword[keywordGroup], name],
+                    [keywordGroup]: [
+                        ...filterRef.current.filterKeyword[keywordGroup],
+                        selectedKeywordId,
+                    ],
                 },
             };
         }
@@ -181,10 +186,7 @@ export default function FilterModal({
                 )}
             </FilterListBox>
             <FilterButtonBox>
-                <Button
-                    text="적용"
-                    onClick={handleSubmit}
-                />
+                <Button text="적용" onClick={handleSubmit} />
             </FilterButtonBox>
         </FilterModalContainer>
     );
